@@ -4,7 +4,7 @@ const errorText  = document.getElementById('errorText');
 const unameInput = document.getElementById('uname');
 const pswInput   = document.getElementById('psw');
 
-// ── Validate on submit ──
+
 form.addEventListener('submit', function (e) {
     const uname = unameInput.value.trim();
     const psw   = pswInput.value.trim();

@@ -7,7 +7,6 @@ body {
     font-family: 'Sora', sans-serif;
 }
 
-/* ── Card ── */
 .card {
     width: 100%;
     max-width: 420px;
@@ -17,7 +16,6 @@ body {
     padding: 48px 40px 40px;
 }
 
-/* ── Logo ── */
 .logo {
     display: flex;
     align-items: center;
@@ -45,7 +43,7 @@ h1 {
     font-weight: 300;
 }
 
-/* ── Form fields ── */
+
 .field {
     margin-bottom: 20px;
 }
@@ -83,7 +81,7 @@ input::placeholder {
     color: #3d4460;
 }
 
-/* ── Buttons ── */
+
 .btn-login,
 .btn-action {
     width: 100%;
@@ -129,14 +127,14 @@ input::placeholder {
     color: black;
 }
 
-/* ── Divider ── */
+
 .divider {
     border: none;
     border-top: 1px solid #ccc;
     margin: 28px 0 20px;
 }
 
-/* ── Error message ── */
+
 .error-msg {
     display: none;
     color: red;
@@ -148,7 +146,7 @@ input::placeholder {
     display: block;
 }
 
-/* ── Navbar (protected page) ── */
+
 body.page {
     display: block;
     background-color: #f0f0f0;
@@ -163,7 +161,7 @@ body.page {
     border-bottom: 1px solid black;
 }
 
-/* ── Page content (protected page) ── */
+
 .page-content {
     max-width: 640px;
     margin: 48px auto;
