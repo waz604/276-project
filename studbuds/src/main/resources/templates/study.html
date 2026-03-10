@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudBuds - Study Mode</title>
+</head>
+<body>
+
+<nav>
+    <h1>StudBuds</h1>
+
+    <a th:href="@{/decks/{id}(id=${deck.id})}">Back to Deck</a>
+
+    <a href="/decks"> My Decks</a>
+</nav>
+
+<main>
+
+
+    <h2 th:text="'Studying: ' + ${deck.name}">Studying: Deck Name</h2> 
+
+    <p th:text="${currentIndex + 1} + ' / ' + ${totalCards}">1 / 10</p> 
+
+
+    <!--flip -->
+
+    <div id="flashcard" onclick="flipCard()">  
+        <div id="card-front"> 
+
+            <p th:text="${card.question}">Question</p> 
+
+        </div>
+
+
+        <div id="card-back" style="display:none;">
+            <p th:text="${card.answer}">Answer</p> 
+        </div>
+
+    </div>
+
+    <button onclick="flipCard()">Flip</button>
+
+    <!-- previous next -->
+    <div>
+        <a th:href="@{/decks/{id}/study(id=${deck.id}, index=${currentIndex - 1})}"
+           th:if="${currentIndex > 0}">Previous</a>
+
+
+        <a th:href="@{/decks/{id}/study(id=${deck.id}, index=${currentIndex + 1})}"
+           th:if="${currentIndex + 1 < totalCards}">Next</a>
+
+
+        <p th:if="${currentIndex + 1 >= totalCards}">This is the end of the deck !!!</p>
+    </div>
+</main>
+
+<script>
+
+
+    function flipCard() {
+        var front = document.getElementById('card-front');
+
+        var back = document.getElementById('card-back');
+
+        if (front.style.display === 'none') {
+            front.style.display = 'block';
+            back.style.display = 'none';
+            
+        } else {
+            front.style.display = 'none';
+            back.style.display = 'block';
+        }
+    }
+</script>
+
+</body>
+</html>
