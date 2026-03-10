@@ -34,11 +34,11 @@ public class DeckController {
         return "decks";
     }
 
-    
-    @GetMapping("/decks/add")
+    // Not needed for iteration 1
+    /* @GetMapping("/decks/add")
     public String addDeckPage() {
         return "decks/add";
-    }
+    } */
     
     @PostMapping("/decks/add")
     public String addDeck(HttpSession session, @RequestParam String name) {
@@ -54,6 +54,7 @@ public class DeckController {
         return "redirect:/decks";
     }
 
+    /*
     @GetMapping("/decks/{id}/delete")
     public String deletePage(@PathVariable long id, Model model, HttpSession session) {
         
@@ -67,6 +68,7 @@ public class DeckController {
 
         return "decks/delete";
     }
+    */
 
     @PostMapping("/deck/{id}/delete")
     public String deleteDeck(@PathVariable long id) {
@@ -96,7 +98,5 @@ public class DeckController {
 
         return "flashcards";
     }
-    
-    
     
 }
