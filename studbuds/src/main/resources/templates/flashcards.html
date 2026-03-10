@@ -4,70 +4,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StudBuds - Flashcards</title>
+    <link rel="stylesheet" href="/shared.css">
+    <link rel="stylesheet" href="/flashcard.css">
 </head>
-<body>
+<body class="page">
 
-<nav>
-    <h1>StudBuds</h1>
+<nav class="navbar">
+    <span class="logo-text">StudBuds</span>
 
-    <a href="/decks">Back to Decks</a>
+    <div style="display:flex; gap:8px;">
+        <a href="/decks" class="btn-logout">Back to Decks</a>
 
-    <a href="/logout">Logout</a>
+        <a href="/logout" class="btn-logout">Logout</a>
+    </div>
 </nav>
 
-<main>
+<main class="content">
 
     <h2 th:text="${deck.name}">Deck Name</h2> <!--section name-->
 
-    <a th:href="@{/decks/{id}/study(id=${deck.id})}">Study This Deck </a> 
+    <a th:href="@{/decks/{id}/study(id=${deck.id})}" class="btn-action" style="width:auto; margin-bottom:24px; display:inline-block;">Study This Deck</a>
 
     <!--create -->
-    <section>
+    <section class="fc-item">
         <h3>Add New Card</h3>
-        <form th:action="@{/decks/{id}/cards(id=${deck.id})}" method="post"> 
+        <form th:action="@{/decks/{id}/cards(id=${deck.id})}" method="post">
 
-            <label for="question">Question</label> 
+            <label for="question">Question</label>
             <input type="text" id="question" name="question" placeholder="Enter question..." required />
 
 
-            <label for="answer">Answer</label> 
+            <label for="answer">Answer</label>
             <input type="text" id="answer" name="answer" placeholder="Enter answer..." required />
 
 
-            <button type="submit">Add Card</button>
+            <button type="submit" class="btn-action">Add Card</button>
         </form>
     </section>
+
 
     
     <section>
         <h3>Cards</h3>
 
 
-        <div th:each="card : ${cards}">
+        <div class="fc-item" th:each="card : ${cards}">
             <p><strong>Q:</strong> <span th:text="${card.question}">Question</span></p>
-            
+
             <p><strong>A:</strong> <span th:text="${card.answer}">Answer</span></p>
 
-            <!-- edit--> 
-            
-            <form th:action="@{/decks/{deckId}/cards/{cardId}/edit(deckId=${deck.id}, cardId=${card.id})}" method="post">
-               
-                <input type="text" name="question" th:value="${card.question}" required />
-                
-                <input type="text" name="answer" th:value="${card.answer}" required />
-                
+            <!-- edit-->
 
-                <button type="submit">Save</button>
+            <form th:action="@{/decks/{deckId}/cards/{cardId}/edit(deckId=${deck.id}, cardId=${card.id})}" method="post" class="edit-form"> 
+ 
+                <input type="text" name="question" th:value="${card.question}" required />
+
+                <input type="text" name="answer" th:value="${card.answer}" required /> 
+
+
+                <button type="submit" class="btn-action btn-sm" style="width:auto;">Save</button>
             </form>
 
 
             <!--delete-->
             <form th:action="@{/decks/{deckId}/cards/{cardId}/delete(deckId=${deck.id}, cardId=${card.id})}" method="post">
-                <button type="submit">Delete</button> 
-            </form>
+                <button type="submit" class="btn-danger btn-sm">Delete</button>
+            </form> 
         </div>
 
-        <p th:if="${#lists.isEmpty(cards)}">No cards yet. Add one above! </p> 
+        <p th:if="${#lists.isEmpty(cards)}">No cards yet. Add one above!</p> 
     </section>
 </main>
 
