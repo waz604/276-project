@@ -2,6 +2,8 @@ package com.cmpt276.studbuds.models;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -64,5 +66,13 @@ public class User {
 
     public void setRole(roleType role) {
         this.role = role;
+    }
+
+    public List<Deck> getDecks() {
+        return this.decks;
+    }
+
+    public void setDecks(List<Deck> decks) {
+        this.decks = decks;
     }
 }

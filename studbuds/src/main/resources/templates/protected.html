@@ -16,6 +16,7 @@
     <div class="page-content">
         <h1>Hello, <span th:text="${user != null ? user.name : 'there'}">there</span></h1>
         <p class="subtitle">You're logged in to StudBuds.</p>
+        <a th:href="@{/decks}">Go to My Decks</a>
     </div>
 
 </body>

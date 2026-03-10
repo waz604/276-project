@@ -22,8 +22,9 @@ public class Deck {
 
     public Deck() {}
 
-    public Deck(String name) {
+    public Deck(String name, User user) {
         this.name = name;
+        this.user = user;
     }
 
     public Long getId() {

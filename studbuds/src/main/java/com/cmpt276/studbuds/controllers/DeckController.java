@@ -11,12 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import jakarta.servlet.http.HttpSession;
 
 import com.cmpt276.studbuds.models.Deck;
-import com.cmpt276.studbuds.models.FlashCard;
 import com.cmpt276.studbuds.models.User;
 import com.cmpt276.studbuds.models.UserRepository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class DeckController {
@@ -27,7 +25,12 @@ public class DeckController {
     @GetMapping("/decks")
     public String getAllDecks(Model model, HttpSession session) {
         
-        User user = (User) session.getAttribute("session_user");
+        Integer userId = (Integer) session.getAttribute("userId");
+        if(userId == null) return "redirect:/login";
+
+        User user = userRepository.findById(userId).orElse(null);
+        if(user == null) return "redirect:/login";
+
         List<Deck> userDeckList = user.getDecks();
 
         model.addAttribute("decks", userDeckList);
@@ -41,12 +44,17 @@ public class DeckController {
     } */
     
     @PostMapping("/decks/add")
-    public String addDeck(HttpSession session, @RequestParam String name) {
+    public String addDeck(HttpSession session, @RequestParam("deckName") String name) {
         
-        User user = (User) session.getAttribute("session_user");
+        Integer userId = (Integer) session.getAttribute("userId");
+        if(userId == null) return "redirect:/login";
+        
+        User user = userRepository.findById(userId).orElse(null);
+        if(user == null) return "redirect:/login";
+
         List<Deck> userDeckList = user.getDecks();
        
-        Deck deck = new Deck(name);
+        Deck deck = new Deck(name, user);
         userDeckList.add(deck);
 
         user.setDecks(userDeckList);
@@ -54,6 +62,7 @@ public class DeckController {
         return "redirect:/decks";
     }
 
+    // not needed for iteration 1
     /*
     @GetMapping("/decks/{id}/delete")
     public String deletePage(@PathVariable long id, Model model, HttpSession session) {
@@ -70,31 +79,39 @@ public class DeckController {
     }
     */
 
-    @PostMapping("/deck/{id}/delete")
-    public String deleteDeck(@PathVariable long id) {
+    @PostMapping("/decks/{id}/delete")
+    public String deleteDeck(@PathVariable long id, HttpSession session) {
     
-        User user = (User) session.getAttribute("session_user");
-        List<Deck> userDeckList = user.getDecks();
-        List<Deck> newDeckList = userDeckList.stream()
-                                             .filter(d -> d.getId() != id)
-                                             .collect(Collectors.toList());
-        user.setDecks(newDeckList);
+        Integer userId = (Integer) session.getAttribute("userId");
+        if(userId == null) return "redirect:/login";
+        
+        User user = userRepository.findById(userId).orElse(null);
+        if(user == null) return "redirect:/login";
+
+        user.getDecks().removeIf(d -> d.getId() == id);
         userRepository.save(user);
 
         return "redirect:/decks";
     }
 
 
-    @GetMapping("/deck/{id}")
+    @GetMapping("/decks/{id}")
     public String getDeck(Model model, @PathVariable long id, HttpSession session) {
-        User user = (User) session.getAttribute("session_user");
+        
+        Integer userId = (Integer) session.getAttribute("userId");
+        if(userId == null) return "redirect:/login";
+        
+        User user = userRepository.findById(userId).orElse(null);
+        if(user == null) return "redirect:/login";
+
         List<Deck> userDeckList = user.getDecks();
         Deck deck = userDeckList.stream()
                                 .filter(d -> d.getId() == id)
-                                .collect(Collectors.toList())
-                                .get(0);
-        List<FlashCard> flashcardList = deck.getFlashcards();
-        model.addAttribute("flashcardList", flashcardList);
+                                .findFirst()
+                                .orElse(null);
+        if(deck == null) return "redirect:/login";
+
+        model.addAttribute("deck", deck);
 
         return "flashcards";
     }
