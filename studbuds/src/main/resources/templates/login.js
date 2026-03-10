@@ -4,7 +4,6 @@ const errorText  = document.getElementById('errorText');
 const unameInput = document.getElementById('uname');
 const pswInput   = document.getElementById('psw');
 
-
 form.addEventListener('submit', function (e) {
     const uname = unameInput.value.trim();
     const psw   = pswInput.value.trim();
@@ -20,9 +19,11 @@ form.addEventListener('submit', function (e) {
             errorText.textContent = 'Please enter your password.';
         }
 
+        errorMsg.classList.remove('visible');
+        void errorMsg.offsetWidth;
+        errorMsg.classList.add('visible');
     }
 });
-
 
 [unameInput, pswInput].forEach(function (input) {
     input.addEventListener('input', function () {
