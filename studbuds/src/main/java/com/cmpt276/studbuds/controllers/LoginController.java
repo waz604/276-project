@@ -29,14 +29,14 @@ public class LoginController {
     // Redirect root to login
     @GetMapping("/")
     public RedirectView process() {
-        return new RedirectView("/login");
+        return new RedirectView("login");
     }
 
     // Show login page, or redirect already-logged-in users to the right place
     @GetMapping("/login")
     public String showLoginPage(Model model, HttpServletRequest request, HttpSession session) {
         User user = (User) session.getAttribute("session_user");
-        if (user == null) return "/login";
+        if (user == null) return "login";
         model.addAttribute("user", user);
         return redirectForRole(user);
     }
@@ -50,7 +50,7 @@ public class LoginController {
 
         // Guard against blank values reaching the DB
         if (name == null || name.isBlank() || psw == null || psw.isBlank()) {
-            return "/login";
+            return "login";
         }
 
         // Check hardcoded admin account first, never touches the DB
@@ -65,7 +65,7 @@ public class LoginController {
         // Regular user login via DB
         List<User> userList = userRepo.findByNameAndPassword(name, psw);
         if (userList.isEmpty()) {
-            return "/login";
+            return "login";
         }
 
         User user = userList.get(0);
@@ -81,7 +81,7 @@ public class LoginController {
         User user = (User) session.getAttribute("session_user");
         if (user == null) return "redirect:/login";
         model.addAttribute("user", user);
-        return "/protected";
+        return "protected";
     }
 
     // View all users (admin only)
@@ -94,7 +94,7 @@ public class LoginController {
         }
         List<User> users = userRepo.findAll();
         model.addAttribute("us", users);
-        return "/viewUsers";
+        return "viewUsers";
     }
 
     // Add user - blocked, no dynamic admin creation
@@ -108,7 +108,7 @@ public class LoginController {
     @GetMapping("/logout")
     public String destroySession(HttpServletRequest request) {
         request.getSession().invalidate();
-        return "/login";
+        return "login";
     }
 
     // Helper: pick destination based on role
