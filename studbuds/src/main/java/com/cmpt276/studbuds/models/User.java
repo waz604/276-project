@@ -17,18 +17,21 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int uid;
     private String name;
+
+    @Enumerated(EnumType.STRING)
+    private roleType role;
+    public enum roleType {USER, ADMIN};
+
     private String password;
-    private int size;
     
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Deck> decks = new ArrayList<>();
 
     public User() {}
 
-    public User(String name, String password, int size) {
+    public User(String name, String password) {
         this.name = name;
         this.password = password;
-        this.size = size;
     }
 
     public String getName() {
@@ -47,14 +50,6 @@ public class User {
         this.password = password;
     }
 
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
     public int getUid() {
         return uid;
     }
@@ -62,13 +57,12 @@ public class User {
     public void setUid(int uid) {
         this.uid = uid;
     }
-
-    public List<Deck> getDecks() {
-        return this.decks;
-    }
-
-    public void setDecks(List<Deck> decks) {
-        this.decks = decks;
-    }
     
+    public roleType getRole() {
+        return role;
+    }
+
+    public void setRole(roleType role) {
+        this.role = role;
+    }
 }
