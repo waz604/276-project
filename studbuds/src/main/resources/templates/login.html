@@ -4,15 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StudBuds - Login</title>
-
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="shared.css">
 </head>
-
 <body>
     <div class="card">
 
         <div class="logo">
-            <div class="logo-text">Stud<span>Buds</span></div>
+            <div class="logo-text">StudBuds</div>
         </div>
 
         <h1>Welcome back</h1>
@@ -20,7 +18,7 @@
 
         <div class="error-msg" id="errorMsg"><span id="errorText"></span></div>
 
-        <form action="/studbuds/login" method="post" id="loginForm" novalidate>
+        <form action="/login" method="post" id="loginForm" novalidate>
 
             <div class="field">
                 <label for="uname">Username</label>
@@ -29,12 +27,10 @@
 
             <div class="field">
                 <label for="psw">Password</label>
-                <input type="password" id="psw" name="psw" placeholder="Enter your password">
+                <input type="password" id="psw" name="psw" placeholder="Enter your password" autocomplete="current-password">
             </div>
 
             <button type="submit" class="btn-login" id="loginBtn">Login</button>
-
-            <hr class="divider">
 
         </form>
     </div>

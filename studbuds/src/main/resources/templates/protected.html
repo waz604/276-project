@@ -1,12 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>StudBuds - Dashboard</title>
+    <link rel="stylesheet" href="shared.css">
 </head>
-<body>
-    Protected Page <br>
-    <a href="/logout">Logout</a>
+<body class="page">
+
+    <nav class="navbar">
+        <div class="logo-text">StudBuds</div>
+        <a href="/logout" class="btn-logout">Logout</a>
+    </nav>
+
+    <div class="page-content">
+        <h1>Hello, <span th:text="${user != null ? user.name : 'there'}">there</span></h1>
+        <p class="subtitle">You're logged in to StudBuds.</p>
+    </div>
+
 </body>
 </html>
