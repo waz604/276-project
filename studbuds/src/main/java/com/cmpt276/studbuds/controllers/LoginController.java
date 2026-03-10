@@ -22,22 +22,22 @@ public class LoginController {
     @Autowired
     private UserRepository userRepo;
 
-   
+    // Redirect root to login
     @GetMapping("/")
     public RedirectView process() {
         return new RedirectView("/login");
     }
 
-
+    // Show login page, or redirect already-logged-in users to the right place
     @GetMapping("/login")
     public String showLoginPage(Model model, HttpServletRequest request, HttpSession session) {
         User user = (User) session.getAttribute("session_user");
         if (user == null) return "/login";
         model.addAttribute("user", user);
-        // Redirect already-logged-in users to the right place
         return redirectForRole(user);
     }
 
+    // Handle login form submission
     @PostMapping("/login")
     public String login(@RequestParam Map<String,String> formData, Model model,
                         HttpServletRequest request, HttpSession session) {
@@ -54,15 +54,17 @@ public class LoginController {
             return "/login";
         }
 
+        // Successful login
         User user = userList.get(0);
         request.getSession().setAttribute("session_user", user);
+        request.getSession().setAttribute("userId", user.getUid());
         model.addAttribute("user", user);
 
         // Admins go to the user list; regular users go to their dashboard
         return redirectForRole(user);
     }
 
-    //Dashboard (regular users)
+    // Dashboard (regular users)
     @GetMapping("/protected")
     public String dashboard(Model model, HttpSession session) {
         User user = (User) session.getAttribute("session_user");
@@ -71,11 +73,10 @@ public class LoginController {
         return "/protected";
     }
 
-    //View all users (admin only)
+    // View all users (admin only)
     @GetMapping("/view")
     public String getAllUsers(Model model, HttpSession session) {
         User user = (User) session.getAttribute("session_user");
-        // Must be logged in and be an admin
         if (user == null) return "redirect:/login";
         if (user.getRole() == null || user.getRole() != User.roleType.ADMIN) {
             return "redirect:/protected";
@@ -102,20 +103,20 @@ public class LoginController {
         }
 
         User u = new User(newName, newPwd);
-        u.setRole(User.roleType.USER); // default new accounts to USER
+        u.setRole(User.roleType.USER);
         userRepo.save(u);
         response.setStatus(201);
         return "redirect:/view";
     }
 
-    //Logout
+    // Logout
     @GetMapping("/logout")
     public String destroySession(HttpServletRequest request) {
         request.getSession().invalidate();
         return "/login";
     }
 
-    //Helper: pick destination based on role
+    // Helper: pick destination based on role
     private String redirectForRole(User user) {
         if (user.getRole() == User.roleType.ADMIN) {
             return "redirect:/view";

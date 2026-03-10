@@ -1,4 +1,4 @@
-package model;
+package com.cmpt276.studbuds.models;
 
 import jakarta.persistence.*;
 import java.util.ArrayList;
@@ -13,15 +13,18 @@ public class Deck {
 
     private String name;
 
+    @ManyToOne
+    private User user;
+
     //used chat gpt to figure out how to connect the two models
     @OneToMany(mappedBy = "deck", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FlashCard> flashcards = new ArrayList<>();
 
-    public Deck() {
-    }
+    public Deck() {}
 
-    public Deck(String name) {
+    public Deck(String name, User user) {
         this.name = name;
+        this.user = user;
     }
 
     public Long getId() {
@@ -41,7 +44,14 @@ public class Deck {
     }
 
     public void setFlashcards(List<FlashCard> flashcards) {
-    this.flashcards = flashcards;
-   
-}
+        this.flashcards = flashcards;
+    }
+
+    public User getUser() {
+        return this.user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
