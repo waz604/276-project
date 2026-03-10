@@ -8,6 +8,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import com.cmpt276.studbuds.models.UserRepository;
 import com.cmpt276.studbuds.models.User;
@@ -20,6 +21,23 @@ public class LoginController {
 
     @Autowired
     private UserRepository userRepo;
+
+    @GetMapping("/view")
+    public String getAllUsers(Model model) {
+
+        List<User> users = userRepo.findAll();
+        model.addAttribute("us",users);
+        return "/viewUsers";
+    }
+    
+        @PostMapping("/users/add")
+    public String addUser(@RequestParam Map<String, String> newuser, HttpServletResponse response) {
+        String newName = newuser.get("name");
+        String newPwd = newuser.get("password");
+        userRepo.save(new User(newName,newPwd));
+        response.setStatus(201);
+        return "/login";
+    }
 
     // redirect root to login
     @GetMapping("/")
