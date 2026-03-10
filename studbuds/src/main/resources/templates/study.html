@@ -4,51 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StudBuds - Study Mode</title>
+    <link rel="stylesheet" href="/shared.css">
+    <link rel="stylesheet" href="/flashcard.css">
 </head>
-<body>
+<body class="page">
 
-<nav>
-    <h1>StudBuds</h1>
+<nav class="navbar">
+    <span class="logo-text">StudBuds</span>
 
-    <a th:href="@{/decks/{id}(id=${deck.id})}">Back to Deck</a>
+    <div style="display:flex; gap:8px;"> 
+        <a th:href="@{/decks/{id}(id=${deck.id})}" class="btn-logout">Back to Deck</a> 
 
-    <a href="/decks"> My Decks</a>
+        <a href="/decks" class="btn-logout">My Decks</a>
+    </div>
 </nav>
 
-<main>
+<main class="content">
 
 
-    <h2 th:text="'Studying: ' + ${deck.name}">Studying: Deck Name</h2> 
+    <h2 th:text="'Studying: ' + ${deck.name}">Studying: Deck Name</h2>
 
-    <p th:text="${currentIndex + 1} + ' / ' + ${totalCards}">1 / 10</p> 
+    <p th:text="${currentIndex + 1} + ' / ' + ${totalCards}">1 / 10</p>
 
 
     <!--flip -->
 
-    <div id="flashcard" onclick="flipCard()">  
-        <div id="card-front"> 
+    <div id="flashcard" class="flip-card" onclick="flipCard()">
+        <div id="card-front">
 
-            <p th:text="${card.question}">Question</p> 
+            <p th:text="${card.question}">Question</p>
 
         </div>
 
 
         <div id="card-back" style="display:none;">
-            <p th:text="${card.answer}">Answer</p> 
+            <p th:text="${card.answer}">Answer</p>
         </div>
 
     </div>
 
-    <button onclick="flipCard()">Flip</button>
+    <button onclick="flipCard()" class="btn-action">Flip</button>
 
     <!-- previous next -->
-    <div>
+    <div class="nav-row" style="margin-top:12px;">
         <a th:href="@{/decks/{id}/study(id=${deck.id}, index=${currentIndex - 1})}"
-           th:if="${currentIndex > 0}">Previous</a>
+           th:if="${currentIndex > 0}" class="btn-action">Previous</a>
 
 
         <a th:href="@{/decks/{id}/study(id=${deck.id}, index=${currentIndex + 1})}"
-           th:if="${currentIndex + 1 < totalCards}">Next</a>
+           th:if="${currentIndex + 1 < totalCards}" class="btn-action">Next</a>
 
 
         <p th:if="${currentIndex + 1 >= totalCards}">This is the end of the deck !!!</p>

@@ -1,0 +1,177 @@
+/* ── Layout ── */
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.content {
+    max-width: 860px;
+    margin: 40px auto;
+    padding: 0 24px;
+}
+
+/* ── Add form row ── */
+.add-form {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 28px;
+}
+
+.add-form input {
+    flex: 1;
+}
+
+/* ── Deck grid ── */
+.deck-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.deck-card {
+    background: #dcdbdb;
+    border: 1px solid black;
+    border-radius: 20px;
+    padding: 24px;
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.deck-card h5 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.deck-card .card-count {
+    font-size: 0.85rem;
+    color: #888;
+    margin: 0;
+}
+
+.deck-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* ── Flashcard list item ── */
+.fc-item {
+    background: #dcdbdb;
+    border: 1px solid black;
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+}
+
+.fc-item p {
+    margin-bottom: 8px;
+}
+
+.edit-form {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.edit-form input {
+    flex: 1;
+}
+
+/* ── Flip card ── */
+.flip-card {
+    background: #dcdbdb;
+    border: 1px solid black;
+    border-radius: 20px;
+    padding: 60px 40px;
+    text-align: center;
+    cursor: pointer;
+    min-height: 200px;
+    margin-bottom: 16px;
+    font-size: 1.3rem;
+}
+
+/* ── Nav row (prev/next) ── */
+.nav-row {
+    display: flex;
+    gap: 12px;
+}
+
+.nav-row a {
+    flex: 1;
+    text-align: center;
+}
+
+/* ── Buttons ── */
+.btn-action {
+    width: 100%;
+    padding: 10px 16px;
+    background: white;
+    border: 1px solid black;
+    border-radius: 10px;
+    color: #b1b1b1;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-action:hover {
+    background: #c9c8c8;
+    color: black;
+}
+
+.btn-action:active {
+    filter: brightness(0.72);
+}
+
+.btn-danger {
+    width: 100%;
+    padding: 8px 16px;
+    background: white;
+    border: 1px solid #cc0000;
+    border-radius: 10px;
+    color: #cc0000;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-danger:hover {
+    background: #fff0f0;
+}
+
+.btn-sm {
+    padding: 6px 14px;
+    font-size: 0.85rem;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+    .deck-grid {
+        flex-direction: column;
+    }
+
+    .deck-card {
+        width: 100%;
+    }
+
+    .add-form {
+        flex-direction: column;
+    }
+
+    .nav-row {
+        flex-direction: column;
+    }
+
+    .edit-form {
+        flex-direction: column;
+    }
+}

@@ -4,45 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StudBuds - My Decks</title>
+    <link rel="stylesheet" href="/shared.css">
+    <link rel="stylesheet" href="/flashcard.css">
 </head>
-<body>
+<body class="page">
 
-<nav>
-    <h1>StudBuds</h1>
-    <a href="/logout">Logout</a>
+<nav class="navbar">
+    <span class="logo-text">StudBuds</span>
+    <a href="/logout" class="btn-logout">Logout</a>
 </nav>
 
-<main>
-    <h2>My Decks </h2> 
+<main class="content">
+    <h2>My Decks </h2>
 
 
-    <!--create --> 
-    <form th:action="@{/decks/add}" method="post">
+    <!--create -->
+    <form th:action="@{/decks/add}" method="post" class="add-form">
 
 
         <input type="text" name="deckName" placeholder="New deck name" required />
-        <button type="submit">+ Add Deck</button> 
+        <button type="submit" class="btn-action" style="width:auto;">+ Add Deck</button>
 
 
-    </form> 
+    </form>
 
     <!--this is for the deck list-->
-    <section>
-        <div th:each="deck : ${decks}"> 
+    <section class="deck-grid">
+        <div class="deck-card" th:each="deck : ${decks}">
 
-            <h3 th:text="${deck.name}">Deck Name</h3>
+            <h5 th:text="${deck.name}">Deck Name</h5>
 
-            <p th:text="${#lists.size(deck.flashcards)} + ' cards'">0 cards</p> <!-- if none. -->
-            <a th:href="@{/decks/{id}(id=${deck.id})}">View Cards</a>
-            <a th:href="@{/decks/{id}/study(id=${deck.id})}">Study</a>
-
+            <p class="card-count" th:text="${#lists.size(deck.flashcards)} + ' cards'">0 cards</p> <!-- if none. -->
+            <div class="deck-actions">
+                <a th:href="@{/decks/{id}(id=${deck.id})}" class="btn-action btn-sm">View Cards</a>
+                <a th:href="@{/decks/{id}/study(id=${deck.id})}" class="btn-action btn-sm">Study</a>
+            </div>
 
             <form th:action="@{/decks/{id}/delete(id=${deck.id})}" method="post">
 
-                <button type="submit">Delete Deck </button>
+                <button type="submit" class="btn-danger btn-sm">Delete Deck</button>
 
             </form>
-            
+
         </div>
 
         <p th:if="${#lists.isEmpty(decks)}">No decks yet. Create one above!</p>
