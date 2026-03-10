@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudBuds - Flashcards</title>
+</head>
+<body>
+
+<nav>
+    <h1>StudBuds</h1>
+
+    <a href="/decks">Back to Decks</a>
+
+    <a href="/logout">Logout</a>
+</nav>
+
+<main>
+
+    <h2 th:text="${deck.name}">Deck Name</h2> <!--section name-->
+
+    <a th:href="@{/decks/{id}/study(id=${deck.id})}">Study This Deck </a> 
+
+    <!--create -->
+    <section>
+        <h3>Add New Card</h3>
+        <form th:action="@{/decks/{id}/cards(id=${deck.id})}" method="post"> 
+
+            <label for="question">Question</label> 
+            <input type="text" id="question" name="question" placeholder="Enter question..." required />
+
+
+            <label for="answer">Answer</label> 
+            <input type="text" id="answer" name="answer" placeholder="Enter answer..." required />
+
+
+            <button type="submit">Add Card</button>
+        </form>
+    </section>
+
+    
+    <section>
+        <h3>Cards</h3>
+
+
+        <div th:each="card : ${cards}">
+            <p><strong>Q:</strong> <span th:text="${card.question}">Question</span></p>
+            
+            <p><strong>A:</strong> <span th:text="${card.answer}">Answer</span></p>
+
+            <!-- edit--> 
+            
+            <form th:action="@{/decks/{deckId}/cards/{cardId}/edit(deckId=${deck.id}, cardId=${card.id})}" method="post">
+               
+                <input type="text" name="question" th:value="${card.question}" required />
+                
+                <input type="text" name="answer" th:value="${card.answer}" required />
+                
+
+                <button type="submit">Save</button>
+            </form>
+
+
+            <!--delete-->
+            <form th:action="@{/decks/{deckId}/cards/{cardId}/delete(deckId=${deck.id}, cardId=${card.id})}" method="post">
+                <button type="submit">Delete</button> 
+            </form>
+        </div>
+
+        <p th:if="${#lists.isEmpty(cards)}">No cards yet. Add one above! </p> 
+    </section>
+</main>
+
+</body>
+</html>

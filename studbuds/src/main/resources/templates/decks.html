@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudBuds - My Decks</title>
+</head>
+<body>
+
+<nav>
+    <h1>StudBuds</h1>
+    <a href="/logout">Logout</a>
+</nav>
+
+<main>
+    <h2>My Decks </h2> 
+
+
+    <!--create --> 
+    <form th:action="@{/decks/add}" method="post">
+
+
+        <input type="text" name="deckName" placeholder="New deck name" required />
+        <button type="submit">+ Add Deck</button> 
+
+
+    </form> 
+
+    <!--this is for the deck list-->
+    <section>
+        <div th:each="deck : ${decks}"> 
+
+            <h3 th:text="${deck.name}">Deck Name</h3>
+
+            <p th:text="${#lists.size(deck.flashcards)} + ' cards'">0 cards</p> <!-- if none. -->
+            <a th:href="@{/decks/{id}(id=${deck.id})}">View Cards</a>
+            <a th:href="@{/decks/{id}/study(id=${deck.id})}">Study</a>
+
+
+            <form th:action="@{/decks/{id}/delete(id=${deck.id})}" method="post">
+
+                <button type="submit">Delete Deck </button>
+
+            </form>
+            
+        </div>
+
+        <p th:if="${#lists.isEmpty(decks)}">No decks yet. Create one above!</p>
+    </section>
+</main>
+
+</body>
+</html>
