@@ -3,26 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>StudBuds - Login</title>
+    <link rel="stylesheet" href="shared.css">
 </head>
-
 <body>
-    <form action="/login" method="post">
+    <div class="card">
 
-        <div class="container">
-            <label for="uname"><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" name="uname" required>
-
-            <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" required>
-
-            <button type="submit">Login</button>
+        <div class="logo">
+            <div class="logo-text">StudBuds</div>
         </div>
 
-        <div class="container" style="background-color:#f1f1f1">
-            <button type="button" class="cancelbtn">Cancel</button>
-        </div>
+        <h1>Welcome back</h1>
+        <p class="subtitle">Sign in to access your flashcard decks</p>
 
-    </form>
+        <div class="error-msg" id="errorMsg"><span id="errorText"></span></div>
+
+        <form action="/login" method="post" id="loginForm" novalidate>
+
+            <div class="field">
+                <label for="uname">Username</label>
+                <input type="text" id="uname" name="uname" placeholder="Enter your username" autocomplete="username">
+            </div>
+
+            <div class="field">
+                <label for="psw">Password</label>
+                <input type="password" id="psw" name="psw" placeholder="Enter your password" autocomplete="current-password">
+            </div>
+
+            <button type="submit" class="btn-login" id="loginBtn">Login</button>
+
+        </form>
+    </div>
+
+    <script src="/login.js"></script>
 </body>
 </html>
