@@ -30,7 +30,7 @@ public class LoginController {
         return "/viewUsers";
     }
     
-        @PostMapping("/users/add")
+    @PostMapping("/users/add")
     public String addUser(@RequestParam Map<String, String> newuser, HttpServletResponse response) {
         String newName = newuser.get("name");
         String newPwd = newuser.get("password");
@@ -70,6 +70,7 @@ public class LoginController {
             // successful login
             User user = userList.get(0);
             request.getSession().setAttribute("session_user", user);
+            request.getSession().setAttribute("userId", user.getUid());
             model.addAttribute("user", user);
             return "/protected";
         }

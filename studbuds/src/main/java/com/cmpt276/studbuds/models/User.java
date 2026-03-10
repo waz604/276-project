@@ -1,6 +1,16 @@
 package com.cmpt276.studbuds.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Table(name="users")
@@ -15,10 +25,11 @@ public class User {
     public enum roleType {USER, ADMIN};
 
     private String password;
+    
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Deck> decks = new ArrayList<>();
 
-    public User() { 
-
-    }
+    public User() {}
 
     public User(String name, String password) {
         this.name = name;
@@ -55,5 +66,13 @@ public class User {
 
     public void setRole(roleType role) {
         this.role = role;
+    }
+
+    public List<Deck> getDecks() {
+        return this.decks;
+    }
+
+    public void setDecks(List<Deck> decks) {
+        this.decks = decks;
     }
 }
