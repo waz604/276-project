@@ -10,6 +10,8 @@ function give_XP(amount) {
     change_Percent();
     //change visuals 
     document.getElementById("myXP").innerHTML = CurrXp + "/" + XpToNextLvl;
+    document.getElementById("totXP").innerHTML = totalXP;
+
     if (CurrXp >= XpToNextLvl){
         levelUp();
     }
@@ -48,6 +50,7 @@ function levelUp(){
 
 function achievement_Detector(){
     if (CurrentLvl % 5 == 0){
+        //replace alert with connection to achievement framework
         alert("ALERT! NEW ACHIEVEMENT UNLOCKED!!!");
     }
 }
