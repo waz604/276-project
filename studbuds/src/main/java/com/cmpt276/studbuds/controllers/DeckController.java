@@ -1,20 +1,20 @@
 package com.cmpt276.studbuds.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PathVariable;
-
-import jakarta.servlet.http.HttpSession;
 
 import com.cmpt276.studbuds.models.Deck;
 import com.cmpt276.studbuds.models.User;
 import com.cmpt276.studbuds.models.UserRepository;
 
-import java.util.List;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class DeckController {
@@ -93,7 +93,6 @@ public class DeckController {
 
         return "redirect:/decks";
     }
-
 
     @GetMapping("/decks/{id}")
     public String getDeck(Model model, @PathVariable long id, HttpSession session) {

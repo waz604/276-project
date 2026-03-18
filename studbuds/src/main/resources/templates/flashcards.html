@@ -48,7 +48,7 @@
         <h3>Cards</h3>
 
 
-        <div class="fc-item" th:each="card : ${cards}">
+        <div class="fc-item" th:each="card : ${deck.flashcards}">
             <p><strong>Q:</strong> <span th:text="${card.question}">Question</span></p>
 
             <p><strong>A:</strong> <span th:text="${card.answer}">Answer</span></p>
