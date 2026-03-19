@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New User</title>
+    <link rel="stylesheet" href="shared.css">
+
+</head>
+<body>
+
+    <div class="card">
+
+        <div class="logo">
+            <div class="logo-text">StudBuds</div>
+        </div>
+
+        <h1>Welcome New User</h1>
+        <p class="subtitle">Organize your study life. Sign in to get started with Studbuds.</p>
+
+		<div class="row justify-content-center">
+			<div class="col-md-4">
+				<form action="/create" method="post">
+
+                <div class="field">
+                    <label for="uname">Username</label>
+                    <input type="text" id="uname" name="uname" placeholder="Enter your username" autocomplete="username">
+                </div>
+
+                <div class="field">
+                    <label for="psw">Password</label>
+                    <input type="password" id="psw" name="psw" placeholder="Enter your password" autocomplete="current-password">
+                </div>
+
+                <button type="submit" class="btn-login">Create User</button>
+                <a href="/login" class="btn btn-secondary">Already have an account?</a>
+
+                </form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
