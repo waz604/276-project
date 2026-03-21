@@ -135,15 +135,17 @@ input::placeholder {
 }
 
 
-.error-msg {
+#errorMsg {
     display: none;
     color: red;
     font-size: 0.85rem;
     margin-bottom: 12px;
 }
 
-.error-msg.visible {
+#errorMsg.visible {
     display: block;
+    color: red;
+
 }
 
 
