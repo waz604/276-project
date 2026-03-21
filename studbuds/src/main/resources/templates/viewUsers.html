@@ -24,6 +24,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Username</th>
+                    <th>Password</th>
                     <th>Role</th>
                 </tr>
             </thead>
@@ -31,10 +32,17 @@
                 <tr th:each="user : ${us}">
                     <td th:text="${user.uid}">1</td>
                     <td th:text="${user.name}">username</td>
+                    <td th:text="${user.password}">password</td>
                     <td>
                         <span class="badge"
                               th:classappend="${user.role != null and user.role.name() == 'ADMIN'} ? 'badge-admin' : 'badge-user'"
                               th:text="${user.role != null ? user.role.name() : 'USER'}">USER</span>
+                    </td>
+                    <td>
+                        <form th:action="@{/delete/{id}(id=${user.uid})}" method="post">
+                            <!-- Temporarily disabled until linked with flashcard set deletion -->
+                            <button type="submit" disabled onclick="return confirm('Delete rating?')">Delete</button> 
+                        </form>
                     </td>
                 </tr>
             </tbody>

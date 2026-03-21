@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -97,11 +98,25 @@ public class LoginController {
         return "viewUsers";
     }
 
-    // Add user - blocked, no dynamic admin creation
-    @PostMapping("/users/add")
-    public String addUser(HttpServletResponse response) {
-        response.setStatus(403);
-        return "redirect:/login";
+    @GetMapping("/add")
+    public String showAddUserPage() {
+        return "add";
+    }
+
+    // Add user
+    @PostMapping("/create")
+    public String addUser(@RequestParam Map<String, String> newuser, HttpServletResponse response) {
+        String newName = newuser.get("name");
+        String newPwd = newuser.get("password");
+
+        // Avoid empty user from entering the database
+        if (newName == null || newName.isBlank() || newPwd == null || newPwd.isBlank()) {
+            return "/add";
+        }
+
+        userRepo.save(new User(newName,newPwd));
+        response.setStatus(201);
+        return "/login";
     }
 
     // Logout
@@ -117,5 +132,19 @@ public class LoginController {
             return "redirect:/view";
         }
         return "redirect:/protected";
+    }
+
+    // Delete user (ADMIN ONLY)
+    @PostMapping("/delete/{id}")
+    public String deleteStaffRating(@PathVariable int id, HttpSession session) {
+        User currentUser = (User) session.getAttribute("session_user");
+    
+        // Check if logged in AND if ADMIN
+        if (currentUser == null || currentUser.getRole() != User.roleType.ADMIN) {
+            return "redirect:/login";
+        }
+
+        userRepo.deleteById(id);
+        return "redirect:/view";
     }
 }
