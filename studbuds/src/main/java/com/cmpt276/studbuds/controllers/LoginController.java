@@ -111,12 +111,12 @@ public class LoginController {
 
         // Avoid empty user from entering the database
         if (newName == null || newName.isBlank() || newPwd == null || newPwd.isBlank()) {
-            return "/add";
+            return "add";
         }
 
         userRepo.save(new User(newName,newPwd));
         response.setStatus(201);
-        return "/login";
+        return "redirect:/login";
     }
 
     // Logout
