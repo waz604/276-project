@@ -1,0 +1,250 @@
+
+.stats-main {
+    max-width: 1000px;
+    margin: 48px auto;
+    padding: 0 24px;
+}
+
+.stats-main h2 {
+    font-size: 1.55rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    margin-bottom: 24px;
+}
+
+.stats-layout {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+
+
+
+.summary-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 180px;
+}
+
+.stat-card {
+    background: #dcdbdb;
+    border: 1px solid black;
+    border-radius: 16px;
+    padding: 18px 20px;
+    text-align: center;
+}
+
+.stat-card .stat-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+    font-family: 'Sora', sans-serif;
+}
+
+.stat-card .stat-label {
+    font-size: 0.8rem;
+    color: #888;
+    margin: 4px 0 0 0;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-family: 'Fira Code', monospace;
+}
+
+
+
+
+
+.heatmap-section {
+    flex: 1;
+    min-width: 0;
+}
+
+.heatmap-wrapper {
+    overflow-x: auto;
+}
+
+.heatmap-table {
+    border-collapse: separate;
+    border-spacing: 4px;
+    font-size: 0.78rem;
+    font-family: 'Sora', sans-serif;
+}
+
+.heatmap-table th {
+    font-weight: 600;
+    color: #888;
+    padding: 0 6px 6px 6px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.heatmap-table .week-label {
+    text-align: right;
+    padding-right: 10px;
+    color: #888;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.heatmap-cell {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: transparent;
+    cursor: default;
+    position: relative;
+}
+
+.heatmap-cell.xp-low   { 
+    background: #072F5F; 
+    border-color: #072F5F; 
+}
+.heatmap-cell.xp-mod   { 
+    background: #1261A0; 
+    border-color: #1261A0; 
+}
+.heatmap-cell.xp-high  { 
+    background: #3895D3; 
+    border-color: #3895D3; 
+}
+.heatmap-cell.xp-vhigh { 
+    background: #58CCED; 
+    border-color: #58CCED; 
+}
+
+.heatmap-cell:hover::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #222;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    z-index: 10;
+    pointer-events: none;
+}
+
+
+
+.legend {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    font-size: 0.8rem;
+    color: #888;
+    font-family: 'Sora', sans-serif;
+}
+
+.legend-cell {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.legend-cell.xp-low   { 
+    background: #072F5F; 
+    border-color: #072F5F; 
+}
+.legend-cell.xp-mod   { 
+    background: #1261A0; 
+    border-color: #1261A0; 
+}
+.legend-cell.xp-high  { 
+    background: #3895D3; 
+    border-color: #3895D3; 
+}
+.legend-cell.xp-vhigh { 
+    background: #58CCED; 
+    border-color: #58CCED; 
+}
+
+
+
+
+
+@media (max-width: 700px) {
+    .stats-layout { flex-direction: column; }
+    .summary-cards { flex-direction: row; flex-wrap: wrap; }
+    .stat-card { flex: 1; min-width: 130px; }
+}
+
+
+
+
+
+
+.profile-card {
+    position: relative;
+    background: #dcdbdb;
+    border: 1px solid black;
+    border-radius: 20px;
+    padding: 28px 32px;
+    margin-bottom: 32px;
+}
+
+.edit-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.pfp-circle {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: #c9c8c8;
+    border: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.profile-username {
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0;
+}
+
+.profile-bio {
+    font-size: 0.9rem;
+    color: #888;
+    margin: 0;
+    font-weight: 300;
+}
+
+.profile-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.profile-edit-form input[type="text"] {
+    padding: 8px 12px;
+    border-radius: 10px;
+}
