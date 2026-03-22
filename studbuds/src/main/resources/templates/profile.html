@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudBuds - Profile</title>
+    <link rel="stylesheet" href="/shared.css">
+    <link rel="stylesheet" href="/stats.css">
+</head>
+<body class="page">
+
+<nav class="navbar">
+
+    <span class="logo-text">StudBuds</span>
+
+
+    <div style="display: flex; gap: 8px;">
+
+        <a href="/decks" class="btn-logout">My Decks</a>
+        <a href="/logout" class="btn-logout">Logout</a>
+      </div>
+
+</nav>
+
+<main class="stats-main"> 
+
+    
+    <div class="profile-card">
+
+        <button class="edit-btn btn-logout" onclick="toggleEdit()">Edit</button>
+
+        <!-- the pfp is from https://www.svgrepo.com/svg/486506/user-profile-filled -->
+       
+
+        <div id="view-mode" class="profile-header">  
+             <div class="pfp-circle">
+                 <img src="/pfp.svg" alt="profile picture" width="52" height="52"/>
+            </div>
+            <div class="profile-info">
+
+                <p class="profile-username" th:text="${username}">Username</p>
+                <p class="profile-bio">Tell me about yourself...</p>
+            </div>
+        </div>
+
+        
+        <div id="edit-mode" class="profile-header" style="display: none;">
+
+            <div class="pfp-circle"> <img src="/pfp.svg" alt="profile picture" width="52" height="52"/> </div>
+
+            <form class="profile-edit-form" th:action="@{/profile/edit}" method="post">
+                <label for="username">Username</label>
+                <input id="username" type="text" name="username" th:value="${username}" maxlength="30"/>
+                <button type="submit" class="btn-action" style="margin-top:8px;">Save</button>
+
+            </form>
+        </div>
+
+    </div>
+
+
+    <!--stats -->
+    <h2>My Stats</h2>
+
+    <div class="stats-layout">
+
+        <!--the summary statistics right now-->
+        <div class="summary-cards">
+            <div class="stat-card">
+                <p class="stat-value" th:text="${totalXp}">0</p>
+                <p class="stat-label">Total XP</p>
+            </div>
+
+            <div class="stat-card">
+                <p class="stat-value" th:text="${currentStreak}">0</p>
+                <p class="stat-label">Current Streak</p>
+            </div>
+
+
+            <div class="stat-card">
+                <p class="stat-value" th:text="${longestStreak}">0</p>
+                <p class="stat-label">Longest Streak</p>
+            </div>
+
+
+            <div class="stat-card">
+                <p class="stat-value" th:text="${mostActiveDay}">N/A</p>
+                <p class="stat-label">Most Active Day</p>
+            </div>
+        </div>
+
+        <!--heatmap -->
+        <div class="heatmap-section">
+
+            <div class="heatmap-wrapper">
+
+                <table class="heatmap-table">
+
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Mon</th>
+                            <th>Tue</th>
+                            <th>Wed</th>
+                            <th>Thu</th>
+                            <th>Fri</th>
+                            <th>Sat</th>
+                            <th>Sun</th>
+                        </tr>
+                    </thead>
+                    <tbody id="heatmap-body">
+
+                    </tbody>
+                </table>
+            </div>
+
+
+
+            <div class="legend">
+                 <span>Less</span>
+                <div class="legend-cell"></div>
+                <div class="legend-cell xp-low"></div>
+                <div class="legend-cell xp-mod"></div>
+                <div class="legend-cell xp-high"></div>
+                <div class="legend-cell xp-vhigh"></div>
+                <span>More</span>
+            </div>
+
+            <details style="margin-top: 12px;">
+                <summary class="subtitle" style="cursor: pointer; margin: 0;">Learn more</summary>
+                <p class="subtitle" style="margin-top: 6px;">
+                    Each cell is one day. Color is based on total XP earned that day:
+                    no activity = empty, 1–99 XP = dark navy, 100–199 = medium blue,
+                    200–299 = bright blue, 300+ = cyan.
+                    The grid starts from your first activity date (or 7 weeks ago, whichever is earlier)
+                    and ends on the Sunday of the current week.
+                </p>
+            </details>
+        </div>
+
+    </div>
+</main>
+
+<!-- I had to use chatgpt to get the template right, and the format !! , other than it, its all my logic  -->
+<script th:inline="javascript">
+
+    const heatmapData = /*[[${heatmap}]]*/ [];
+    const heatmapDates = /*[[${heatmapDates}]]*/ [];
+
+
+    function xpClass(xp) {
+        if (xp <= 0)   return '';
+        if (xp < 100)  return 'xp-low';
+        if (xp < 200)  return 'xp-mod';
+        if (xp < 300)  return 'xp-high';
+        return 'xp-vhigh';
+    }
+
+
+    const tbody = document.getElementById('heatmap-body');
+    let dateIndex = 0;
+
+
+    heatmapData.forEach((week, w) => {
+         const row = document.createElement('tr');
+
+        const weekLabel = document.createElement('td');
+        weekLabel.className = 'week-label';
+        weekLabel.textContent = 'Week ' + (w + 1);
+        row.appendChild(weekLabel);
+
+
+        week.forEach(dayArr => {
+            const xp = dayArr[0];
+            const dateStr = heatmapDates[dateIndex++];
+
+            const td = document.createElement('td');
+            const cell = document.createElement('div');
+            cell.className = 'heatmap-cell ' + xpClass(xp);
+            cell.setAttribute('data-tip', dateStr + ' — ' + xp + ' XP');
+            td.appendChild(cell);
+            row.appendChild(td);
+        });
+
+        tbody.appendChild(row);
+    });
+
+    function toggleEdit() {
+        const view = document.getElementById('view-mode');
+        const edit = document.getElementById('edit-mode');
+        const btn  = document.querySelector('.edit-btn');
+        if (edit.style.display === 'none') {
+            view.style.display = 'none';
+            edit.style.display = 'flex';
+            btn.textContent = 'Cancel';
+        } else {
+            view.style.display = 'flex';
+            edit.style.display = 'none';
+            btn.textContent = 'Edit';
+        }
+    }
+
+
+</script>
+
+</body>
+</html>
