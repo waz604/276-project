@@ -14,7 +14,7 @@ import com.cmpt276.studbuds.models.Deck;
 import com.cmpt276.studbuds.models.User;
 import com.cmpt276.studbuds.models.UserRepository;
 
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class DeckController {
@@ -23,9 +23,9 @@ public class DeckController {
     private UserRepository userRepository;
 
     @GetMapping("/decks")
-    public String getAllDecks(Model model, HttpSession session) {
+    public String getAllDecks(Model model, HttpServletRequest request) {
         
-        Integer userId = (Integer) session.getAttribute("userId");
+        Integer userId = (Integer) request.getSession().getAttribute("userId");
         if(userId == null) return "redirect:/login";
 
         User user = userRepository.findById(userId).orElse(null);
@@ -44,9 +44,9 @@ public class DeckController {
     } */
     
     @PostMapping("/decks/add")
-    public String addDeck(HttpSession session, @RequestParam("deckName") String name) {
+    public String addDeck(HttpServletRequest request, @RequestParam("deckName") String name) {
         
-        Integer userId = (Integer) session.getAttribute("userId");
+        Integer userId = (Integer) request.getSession().getAttribute("userId");
         if(userId == null) return "redirect:/login";
         
         User user = userRepository.findById(userId).orElse(null);
@@ -80,9 +80,9 @@ public class DeckController {
     */
 
     @PostMapping("/decks/{id}/delete")
-    public String deleteDeck(@PathVariable long id, HttpSession session) {
+    public String deleteDeck(@PathVariable long id, HttpServletRequest request) {
     
-        Integer userId = (Integer) session.getAttribute("userId");
+        Integer userId = (Integer) request.getSession().getAttribute("userId");
         if(userId == null) return "redirect:/login";
         
         User user = userRepository.findById(userId).orElse(null);
@@ -96,9 +96,9 @@ public class DeckController {
 
 
 @GetMapping("/decks/{id}/challenge")
-public String getTimeChallenge(Model model, @PathVariable long id, HttpSession session) {
+public String getTimeChallenge(Model model, @PathVariable long id, HttpServletRequest request) {
 
-    Integer userId = (Integer) session.getAttribute("userId");
+    Integer userId = (Integer) request.getSession().getAttribute("userId");
     if (userId == null) return "redirect:/login";
 
     User user = userRepository.findById(userId).orElse(null);
@@ -133,9 +133,9 @@ public String getTimeChallenge(Model model, @PathVariable long id, HttpSession s
 
 
     @GetMapping("/decks/{id}")
-    public String getDeck(Model model, @PathVariable long id, HttpSession session) {
+    public String getDeck(Model model, @PathVariable long id, HttpServletRequest request) {
         
-        Integer userId = (Integer) session.getAttribute("userId");
+        Integer userId = (Integer) request.getSession().getAttribute("userId");
         if(userId == null) return "redirect:/login";
         
         User user = userRepository.findById(userId).orElse(null);

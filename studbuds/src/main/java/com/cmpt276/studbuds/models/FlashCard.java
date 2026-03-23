@@ -1,5 +1,7 @@
 package com.cmpt276.studbuds.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,6 +19,7 @@ public class FlashCard {
     private String answer;
 
     @ManyToOne
+    @JsonBackReference
     private Deck deck;
 
     public FlashCard() {}
