@@ -18,6 +18,10 @@
 
         <div id="errorMsg"><span id="errorText"></span></div>
 
+        <div th:if="${loginError}" id="errorMsg" class="visible">
+            <span id="errorText" th:text="${loginError}"></span>
+        </div>
+
         <form action="/login" method="post" id="loginForm" novalidate>
 
             <div class="field">
