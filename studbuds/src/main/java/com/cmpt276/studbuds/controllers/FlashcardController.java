@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,7 +15,9 @@ import com.cmpt276.studbuds.models.FlashCard;
 import com.cmpt276.studbuds.models.User;
 import com.cmpt276.studbuds.models.UserRepository;
 
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import tools.jackson.databind.ObjectMapper;
+
 
 @Controller
 public class FlashcardController {
@@ -22,12 +25,45 @@ public class FlashcardController {
     @Autowired
     private UserRepository userRepository;
 
+    @GetMapping("/decks/{id}/study")
+    public String getStudyModePage(Model model, HttpServletRequest request, @PathVariable long id) 
+    {
+        Integer userId = (Integer) request.getSession().getAttribute("userId");
+        if (userId == null) return "redirect:/login";
+
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) return "redirect:/login";
+
+        Deck deck = user.getDecks().stream()
+                .filter(d -> d.getId() == id)
+                .findFirst()
+                .orElse(null);
+        if (deck == null) return "redirect:/login";
+
+        List<FlashCard> flashcards = deck.getFlashcards();
+        if(flashcards == null) return "redirect:/decks/{id}";
+
+        int totalCards = flashcards.size();
+
+        if(totalCards == 0) return "redirect:/decks/{id}";
+
+        // Serialize flashcard collection as JSON
+        ObjectMapper mapper = new ObjectMapper();
+        String cardJson = mapper.writeValueAsString(flashcards);
+
+        model.addAttribute("deck", deck);
+        model.addAttribute("cards", cardJson);
+        model.addAttribute("totalCards", flashcards.size());
+        
+        return "study";
+    }
+    
     @PostMapping("/decks/{id}/cards")
-    public String addCard(Model model, HttpSession session, @PathVariable long id,
+    public String addCard(Model model, HttpServletRequest request, @PathVariable long id,
                          @RequestParam("question") String question,
                          @RequestParam("answer") String answer) 
     {
-        Integer userId = (Integer) session.getAttribute("userId");
+        Integer userId = (Integer) request.getSession().getAttribute("userId");
         if(userId == null) return "redirect:/login";
         
         User user = userRepository.findById(userId).orElse(null);
@@ -50,10 +86,10 @@ public class FlashcardController {
     }
 
     @PostMapping("/decks/{deckId}/cards/{cardId}/delete") 
-    public String deleteCard(HttpSession session, 
+    public String deleteCard(HttpServletRequest request, 
                              @PathVariable("deckId") long deckId,
                              @PathVariable("cardId") long cardId) {
-        Integer userId = (Integer) session.getAttribute("userId");
+        Integer userId = (Integer) request.getSession().getAttribute("userId");
         if(userId == null) return "redirect:/login";
         
         User user = userRepository.findById(userId).orElse(null);
@@ -74,13 +110,13 @@ public class FlashcardController {
     }
 
     @PostMapping("/decks/{deckId}/cards/{cardId}/edit")
-    public String editCard(HttpSession session, 
+    public String editCard(HttpServletRequest request, 
                            @PathVariable("deckId") long deckId,
                            @PathVariable("cardId") long cardId,
                            @RequestParam("question") String question,
                            @RequestParam("answer") String answer) 
     {
-        Integer userId = (Integer) session.getAttribute("userId");
+        Integer userId = (Integer) request.getSession().getAttribute("userId");
         if(userId == null) return "redirect:/login";
         
         User user = userRepository.findById(userId).orElse(null);

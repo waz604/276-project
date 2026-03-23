@@ -1,8 +1,17 @@
 package com.cmpt276.studbuds.models;
 
-import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Deck {
@@ -18,6 +27,7 @@ public class Deck {
 
     //used chat gpt to figure out how to connect the two models
     @OneToMany(mappedBy = "deck", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<FlashCard> flashcards = new ArrayList<>();
 
     public Deck() {}
