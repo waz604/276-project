@@ -30,7 +30,7 @@ public class LoginController {
     // Redirect root to login
     @GetMapping("/")
     public RedirectView process() {
-        return new RedirectView("login");
+        return new RedirectView("home");
     }
 
     // Show login page, or redirect already-logged-in users to the right place
