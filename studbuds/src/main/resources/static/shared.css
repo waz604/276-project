@@ -177,3 +177,73 @@ body.page {
 .page-content .subtitle {
     margin-bottom: 32px;
 }
+
+/* DROPDOWN BUTTON ------------------------------------- */
+
+.dropbtn {
+    padding: 8px 18px;
+    background: #dcdbdb;
+    border: 1px solid black;
+    border-radius: 10px;
+    color: #000000;
+    font-family: 'Sora', sans-serif;
+    font-size: 1.0rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: rgb(0, 0, 0);
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {    
+    background: #c9c8c8;
+    color: black;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background: #ffffff;
+    color: #b1b1b1;
+}
+
+/* Return Home ------------------------ */
+
+.returnbtn {
+    padding: 8px 18px;
+    background: #dcdbdb;
+    border: 1px solid black;
+    border-radius: 10px;
+    color: #000000;
+    font-family: 'Sora', sans-serif;
+    font-size: 1.0rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.returnbtn:hover {
+    background: #ffffff;
+    color: #b1b1b1;
+}

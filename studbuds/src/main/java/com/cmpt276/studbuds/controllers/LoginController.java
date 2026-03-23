@@ -82,7 +82,7 @@ public class LoginController {
         User user = (User) session.getAttribute("session_user");
         if (user == null) return "redirect:/login";
         model.addAttribute("user", user);
-        return "protected";
+        return "redirect:/profile";
     }
 
     // View all users (admin only)

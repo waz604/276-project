@@ -181,4 +181,15 @@ public class ProfileController {
 
         return "redirect:/profile";
     }
+
+    @GetMapping("/tutorial")
+    public String displayTutorial(HttpSession session) {
+        Integer userId = (Integer) session.getAttribute("userId");
+        if (userId == null) return "redirect:/login";
+
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) return "redirect:/login";
+
+        return "tutorial";
+    }
 }

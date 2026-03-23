@@ -11,12 +11,16 @@
 
 <nav class="navbar">
     <span class="logo-text">StudBuds</span>
-    <a href="/logout" class="btn-logout">Logout</a>
+    <div style="display: flex; gap: 8px;">
+        <a href="/logout" class="btn-logout">Logout</a>
+    </div>
 </nav>
+
+<div style="height: 16px;"></div>
+<a href="/profile" class="returnbtn">Return to Profile</a>
 
 <main class="content">
     <h2>My Decks </h2>
-
 
     <!--create -->
     <form th:action="@{/decks/add}" method="post" class="add-form">
