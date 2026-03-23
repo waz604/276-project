@@ -4,6 +4,31 @@ const errorText  = document.getElementById('errorText');
 const unameInput = document.getElementById('uname');
 const pswInput   = document.getElementById('psw');
 
+// Validate user password for numbers & special characters
+function getPasswordErrorMsg(password) {
+    const numbers = "0123456789";
+    const specials = "!@#$%";
+    
+    let hasNumbers = false;
+    let hasSpecial = false;
+
+    // Check for numbers & special chars
+    for (let char of password) {
+        if (numbers.includes(char)) hasNumbers = true;
+        if (specials.includes(char)) hasSpecial = true;
+
+        // Password is valid
+        if (hasNumbers && hasSpecial) break;
+    }
+
+    // Error Detected
+    if (!hasNumbers) return 'Your password must contain a number.';
+    if (!hasSpecial) return 'Your password must contain a special character (!@#$%).';
+    
+    // No error found
+    return "";
+}
+
 form.addEventListener('submit', function (e) {
     const uname = unameInput.value.trim();
     const psw   = pswInput.value.trim();
@@ -25,32 +50,13 @@ form.addEventListener('submit', function (e) {
 
     // INVALID PASSWORD LENGTH
     else if (psw.length < 8) {
-        message = 'You password must be at least 8 characters.'
+        message = 'You password must be at least 8 characters.';
     }
 
-    // PSW DOES NOT CONTAIN NUMBER
-    else if (!psw.includes('0') ||
-        !psw.includes('1') ||
-        !psw.includes('2') ||
-        !psw.includes('3') ||
-        !psw.includes('4') ||
-        !psw.includes('5') ||
-        !psw.includes('6') ||
-        !psw.includes('7') ||
-        !psw.includes('8') ||
-        !psw.includes('9') ||
-        !psw.includes('10')) {
-            message = 'You password must contain a number'
-        }
-
-    // PSW DOES NOT CONTAIN SPECIAL CHAR
-    else if (!psw.includes('!') ||
-        !psw.includes('@') ||
-        !psw.includes('#') ||
-        !psw.includes('$') ||
-        !psw.includes('%')) {
-            message = 'You password must contain a special character. (!@#$%)'
-        }
+    // PSW DOES NOT CONTAIN NUMBER OR SPECIAL CHARACTER
+    else { 
+        message = getPasswordErrorMsg(psw);
+    }
 
     // If there is an error, display it depending on which field is incorrect
     if (message) {

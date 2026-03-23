@@ -66,6 +66,7 @@ public class LoginController {
         // Regular user login via DB
         List<User> userList = userRepo.findByNameAndPassword(name, psw);
         if (userList.isEmpty()) {
+            model.addAttribute("loginError", "Invalid username or password.");
             return "login";
         }
 
