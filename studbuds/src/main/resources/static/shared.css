@@ -426,6 +426,13 @@ body.page {
     background-color: rgb(108, 173, 108);
 }
 
+.mySlides img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+
 .mySlides {
     display: none; 
     flex-direction: column;

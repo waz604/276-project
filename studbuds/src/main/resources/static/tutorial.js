@@ -28,15 +28,17 @@ function showSlides(n) {
     let slides = activeTutorial.getElementsByClassName("mySlides");
     let dots = activeTutorial.getElementsByClassName("dot");
 
+    // last slide -> back to first slide
     if (n > slides.length) {slideIndex = 1}
+
+    // first slide -> left arrow -> last slide
     if (n < 1) {slideIndex = slides.length}
 
     let currentDisplay = activeTutorial.querySelector('.current-slide-num');
-  let totalDisplay = activeTutorial.querySelector('.total-slides-num');
+    let totalDisplay = activeTutorial.querySelector('.total-slides-num');
 
-  // 2. Update the text to match the current index and total count
-  if (currentDisplay) currentDisplay.textContent = slideIndex;
-  if (totalDisplay) totalDisplay.textContent = slides.length;
+    if (currentDisplay) currentDisplay.textContent = slideIndex;
+    if (totalDisplay) totalDisplay.textContent = slides.length;
 
     for (i = 0; i < slides.length; i++) {
         slides[i].style.display = "none";
