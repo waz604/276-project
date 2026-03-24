@@ -1,10 +1,10 @@
 const flashcardBtn = document.querySelector('.flashcard-tutorial-btn');
 const challengeBtn = document.querySelector('.challenge-tutorial-btn');
-const XPBtn = document.querySelector('.XP-tutorial-btn');
+// const XPBtn = document.querySelector('.XP-tutorial-btn');
 
 const flashcardCard = document.querySelector('.tutorial-card-flashcards');
 const challengeCard = document.querySelector('.tutorial-card-challenge');
-const XPCard = document.querySelector('.tutorial-card-XP');
+// const XPCard = document.querySelector('.tutorial-card-XP');
 
 let slideIndex = 1;
 showSlides(slideIndex);
@@ -56,14 +56,16 @@ function showSlides(n) {
 function closeSlideshows() {
     flashcardCard.classList.remove('is-active');
     challengeCard.classList.remove('is-active');
-    XPCard.classList.remove('is-active');
+    // XPCard.classList.remove('is-active');
     
     flashcardBtn.classList.remove('button-activated');
     challengeBtn.classList.remove('button-activated');
-    XPBtn.classList.remove('button-activated');
+    // XPBtn.classList.remove('button-activated');
 }
 
 // Slideshow toggling
+
+// Flashcard Slideshow
 flashcardBtn.addEventListener('click', function() {
     const isActive = this.classList.contains('button-activated');
     
@@ -78,6 +80,7 @@ flashcardBtn.addEventListener('click', function() {
     }
 });
 
+// Time Challenge Slideshow
 challengeBtn.addEventListener('click', function() {
     const isActive = this.classList.contains('button-activated');
     
@@ -92,6 +95,8 @@ challengeBtn.addEventListener('click', function() {
     }
 });
 
+/* Iteration 3
+// XP Slideshow
 XPBtn.addEventListener('click', function() {
     const isActive = this.classList.contains('button-activated');
     
@@ -105,3 +110,4 @@ XPBtn.addEventListener('click', function() {
         showSlides(slideIndex);
     }
 });
+*/

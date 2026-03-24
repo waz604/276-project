@@ -396,6 +396,8 @@ body.page {
     color: #b1b1b1;
 }
 
+/* Iteration 3
+
 .XP-tutorial-btn {
     position: absolute;
     padding: 8px 18px;
@@ -415,6 +417,7 @@ body.page {
     background: #ffffff;
     color: #b1b1b1;
 }
+*/
 
 /* Button Toggles */
 
@@ -453,4 +456,22 @@ body.page {
     align-items: center;
     width: 100%;
     margin-bottom: 20px;
+}
+
+.decks-btn {
+    padding: 8px 18px;
+    background: white;
+    border: 1px solid black;
+    border-radius: 10px;
+    color: #000000;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.decks-btn:hover {
+    background: #6d6d6d;
+    color: #b1b1b1;
 }

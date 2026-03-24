@@ -24,7 +24,7 @@
 <div>
     <button type = button class="flashcard-tutorial-btn">How do the Flashcards work?</button>
     <button type = button class="challenge-tutorial-btn">How does the Time Challenge work?</button>
-    <button type = button class="XP-tutorial-btn">How can I gain XP?</button>
+    <!-- <button type = button class="XP-tutorial-btn">How can I gain XP?</button> -->
 
     <!---------------------------------- Flashcard Tutorial ----------------------------------------->
     <div class = "tutorial-card-flashcards">
@@ -83,6 +83,13 @@
                 style="display: block; margin: 0 auto; width: 80%; max-height: 300px;">
             </div>
 
+            <div class="mySlides fade">
+                <div class="text">Try it out!</div>
+                <br>
+
+                <a href="/decks" class ="decks-btn">My Flashcard Decks</a>
+            </div>
+
             <!-- Next and previous buttons -->
             <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
             <a class="next" onclick="plusSlides(1)">&#10095;</a>
@@ -97,6 +104,7 @@
                 <span class="dot" onclick="currentSlide(3)"></span>
                 <span class="dot" onclick="currentSlide(4)"></span>
                 <span class="dot" onclick="currentSlide(5)"></span>
+                <span class="dot" onclick="currentSlide(6)"></span>
             </div>
         </div>
     </div>
@@ -141,6 +149,12 @@
                 style="display: block; margin: 0 auto; width: 80%; max-height: 300px;">
             </div>
 
+            <div class="mySlides fade">
+                <div class="text">Try it out!</div>
+                <br>
+
+                <a href="/decks" class = "decks-btn">My Flashcard Decks</a>
+            </div>
             <!-- Next and previous buttons -->
             <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
             <a class="next" onclick="plusSlides(1)">&#10095;</a>
@@ -153,11 +167,12 @@
                 <span class="dot" onclick="currentSlide(1)"></span>
                 <span class="dot" onclick="currentSlide(2)"></span>
                 <span class="dot" onclick="currentSlide(3)"></span>
+                <span class="dot" onclick="currentSlide(4)"></span>
             </div>
         </div>
     </div>
 
-    <!--------------------------------------- XP Tutorial -------------------------------------->
+<!--  --------------------  Saving for Iteration 3  -----------------------------------
     <div class = "tutorial-card-XP">
         <div class="slideshow-container">
 
@@ -172,7 +187,6 @@
 
             </div>
 
-        <!-- The Slides -->
             <div class="mySlides fade">
                 <div class="text">You can earn XP by completing flashcard sets.</div>
                 <br>
@@ -197,13 +211,11 @@
                 style="display: block; margin: 0 auto; width: 80%; max-height: 300px;">
             </div>
 
-            <!-- Next and previous buttons -->
             <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
             <a class="next" onclick="plusSlides(1)">&#10095;</a>
             </div>
             <br>
 
-            <!-- The dots/circles -->
             <div class="dot-container">
                 <div style="text-align:center">
                 <span class="dot" onclick="currentSlide(1)"></span>
@@ -213,6 +225,7 @@
         </div>
     </div>
 </div>
+-->
 
     <script src="/tutorial.js"></script>
 </body>
