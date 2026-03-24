@@ -95,44 +95,43 @@ public class DeckController {
     }
 
 
-@GetMapping("/decks/{id}/challenge")
-public String getTimeChallenge(Model model, @PathVariable long id, HttpServletRequest request) {
+    @GetMapping("/decks/{id}/challenge")
+    public String getTimeChallenge(Model model, @PathVariable long id, HttpServletRequest request) {
 
-    Integer userId = (Integer) request.getSession().getAttribute("userId");
-    if (userId == null) return "redirect:/login";
+        Integer userId = (Integer) request.getSession().getAttribute("userId");
+        if (userId == null) return "redirect:/login";
 
-    User user = userRepository.findById(userId).orElse(null);
-    if (user == null) return "redirect:/login";
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) return "redirect:/login";
 
-    Deck deck = user.getDecks().stream()
-                    .filter(d -> d.getId() == id)
-                    .findFirst()
-                    .orElse(null);
+        Deck deck = user.getDecks().stream()
+                        .filter(d -> d.getId() == id)
+                        .findFirst()
+                        .orElse(null);
 
-    if (deck == null) return "redirect:/decks";
+        if (deck == null) return "redirect:/decks";
 
-    
-    model.addAttribute("deck", deck);
+        model.addAttribute("deck", deck);
 
-    List<String> questions = new java.util.ArrayList<>();
-    List<String> answers = new java.util.ArrayList<>();
+        List<String> questions = new java.util.ArrayList<>();
+        List<String> answers = new java.util.ArrayList<>();
 
-    if (deck.getFlashcards() != null) {
-        deck.getFlashcards().forEach(card -> {
-            questions.add(card.getQuestion());
-            answers.add(card.getAnswer());
-        });
+        if (deck.getFlashcards() != null) {
+            deck.getFlashcards().forEach(card -> {
+                questions.add(card.getQuestion());
+                answers.add(card.getAnswer());
+            });
+        }
+
+        model.addAttribute("questions", questions);
+        model.addAttribute("answers", answers);
+        model.addAttribute("totalCards", questions.size());
+
+        return "timeChallenge";
     }
 
-    model.addAttribute("questions", questions);
-    model.addAttribute("answers", answers);
-    model.addAttribute("totalCards", questions.size());
 
-    return "timeChallenge";
-}
-
-
-    @GetMapping("/decks/{id}")
+    @GetMapping("/decks/{id}/cards")
     public String getDeck(Model model, @PathVariable long id, HttpServletRequest request) {
         
         Integer userId = (Integer) request.getSession().getAttribute("userId");

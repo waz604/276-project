@@ -1,9 +1,8 @@
-package com.cmpt276.studbuds;
+package com.cmpt276.studbuds.controllers;
 
-import com.cmpt276.studbuds.controllers.DeckController;
-import com.cmpt276.studbuds.models.Deck;
-import com.cmpt276.studbuds.models.User;
-import com.cmpt276.studbuds.models.UserRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,9 +15,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import com.cmpt276.studbuds.models.Deck;
+import com.cmpt276.studbuds.models.User;
+import com.cmpt276.studbuds.models.UserRepository;
 
 @WebMvcTest(DeckController.class)
 public class DeckControllerTest {
@@ -157,14 +156,14 @@ public class DeckControllerTest {
 
     @Test
     void getDeck_deckNotFound_redirectsToLogin() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/decks/999").session(session))
+        mockMvc.perform(MockMvcRequestBuilders.get("/decks/999/cards").session(session))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/login"));
     }
 
     @Test
     void getDeck_withoutSession_redirectsToLogin() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/decks/1"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/decks/1/cards"))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/login"));
     }
@@ -174,7 +173,7 @@ public class DeckControllerTest {
     void getDeck_userNotFound_redirectsToLogin() throws Exception {
         Mockito.when(userRepository.findById(1)).thenReturn(Optional.empty());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/decks/1").session(session))
+        mockMvc.perform(MockMvcRequestBuilders.get("/decks/1/cards").session(session))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/login"));
     }
