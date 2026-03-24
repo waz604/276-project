@@ -26,10 +26,10 @@ public class LoginController {
     @Autowired
     private UserRepository userRepo;
 
-    // Redirect root to login
+    Redirect root to login
     @GetMapping("/")
     public RedirectView process() {
-        return new RedirectView("login");
+    return new RedirectView("login");
     }
 
     // Show login page, or redirect already-logged-in users to the right place
