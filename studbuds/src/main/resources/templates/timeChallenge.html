@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StudBuds - Time Challenge</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Fira+Code&display=swap"
+      rel="stylesheet"   />
     <link rel="stylesheet" href="/shared.css" />
     <link rel="stylesheet" href="/flashcard.css" />
   </head>
@@ -17,7 +19,7 @@
       <span class="logo-text">StudBuds</span>
 
       <div style="display: flex; gap: 8px">
-        <a th:href="@{/decks/{id}(id=${deck.id})}" class="btn-logout">
+        <a th:href="@{/decks/{id}/cards(id=${deck.id})}" class="btn-logout">
           Back to Deck
         </a>
         <a href="/decks" class="btn-logout">My Decks</a>
@@ -42,12 +44,14 @@
         <p id="progress">0 / <span th:text="${totalCards}">0</span></p>
 
         <div id="flashcard" class="flip-card" onclick="flipCard()">
-          <div id="card-front">
-            <p id="questionText">Question</p>
-          </div>
+          <div class="flip-card-inner" id="inner-card">
+            <div id="card-front" class="flip-card-front">
+              <p id="questionText">Question</p>
+            </div>
 
-          <div id="card-back" style="display: none">
-            <p id="answerText">Answer</p>
+            <div id="card-back" class="flip-card-back">
+              <p id="answerText">Answer</p>
+            </div>
           </div>
         </div>
 
@@ -133,8 +137,7 @@
         document.getElementById("progress").innerText =
           currentCard + 1 + " / " + totalCards;
 
-        document.getElementById("card-front").style.display = "block";
-        document.getElementById("card-back").style.display = "none";
+        document.getElementById("inner-card").classList.remove("is-flipped");
         document.getElementById("userAnswer").value = "";
 
         answeredCorrectly = false;
@@ -143,16 +146,7 @@
       function flipCard() {
         if (challengeOver) return;
 
-        let front = document.getElementById("card-front");
-        let back = document.getElementById("card-back");
-
-        if (front.style.display === "none") {
-          front.style.display = "block";
-          back.style.display = "none";
-        } else {
-          front.style.display = "none";
-          back.style.display = "block";
-        }
+        document.getElementById("inner-card").classList.toggle("is-flipped");
       }
 
       function checkAnswer() {

@@ -44,5 +44,7 @@ nextBtn.addEventListener('click', () => {
 flip.addEventListener('click', () => {
     flipCard();
 })
-    
+
+// calculate_XP(flashcard_num, time, correct cards)
+
 renderCard();

@@ -41,28 +41,31 @@ public class FlashcardController {
         if (deck == null) return "redirect:/login";
 
         List<FlashCard> flashcards = deck.getFlashcards();
-        if(flashcards == null) return "redirect:/decks/{id}";
+        if(flashcards == null) return "redirect:/decks/{id}/cards";
 
         int totalCards = flashcards.size();
 
-        if(totalCards == 0) return "redirect:/decks/{id}";
+        if(totalCards == 0) return "redirect:/decks/{id}/cards";
 
         // Serialize flashcard collection as JSON
         ObjectMapper mapper = new ObjectMapper();
-        String cardJson = mapper.writeValueAsString(flashcards);
+        String cardsJson = mapper.writeValueAsString(flashcards);
 
         model.addAttribute("deck", deck);
-        model.addAttribute("cards", cardJson);
+        model.addAttribute("cards", cardsJson);
         model.addAttribute("totalCards", flashcards.size());
         
         return "study";
     }
     
     @PostMapping("/decks/{id}/cards")
-    public String addCard(Model model, HttpServletRequest request, @PathVariable long id,
+    public String addCard(HttpServletRequest request, @PathVariable long id,
                          @RequestParam("question") String question,
                          @RequestParam("answer") String answer) 
     {
+        if(question.isBlank()) return "redirect:/decks/{id}/cards";
+        if(answer.isBlank()) return "redirect:/decks/{id}/cards";
+
         Integer userId = (Integer) request.getSession().getAttribute("userId");
         if(userId == null) return "redirect:/login";
         
@@ -82,7 +85,7 @@ public class FlashcardController {
 
         userRepository.save(user);
 
-        return "redirect:/decks/{id}";
+        return "redirect:/decks/{id}/cards";
     }
 
     @PostMapping("/decks/{deckId}/cards/{cardId}/delete") 
@@ -106,7 +109,7 @@ public class FlashcardController {
         userFlashcards.removeIf(f -> f.getId() == cardId);
         userRepository.save(user);
 
-        return "redirect:/decks/{deckId}";                   
+        return "redirect:/decks/{deckId}/cards";                   
     }
 
     @PostMapping("/decks/{deckId}/cards/{cardId}/edit")
@@ -116,6 +119,9 @@ public class FlashcardController {
                            @RequestParam("question") String question,
                            @RequestParam("answer") String answer) 
     {
+        if(question.isBlank()) return "redirect:/decks/{deckId}/cards";
+        if(answer.isBlank()) return "redirect:/decks/{deckId}/cards";
+
         Integer userId = (Integer) request.getSession().getAttribute("userId");
         if(userId == null) return "redirect:/login";
         
@@ -140,7 +146,7 @@ public class FlashcardController {
         card.setAnswer(answer);
         userRepository.save(user);
 
-        return "redirect:/decks/{deckId}";
+        return "redirect:/decks/{deckId}/cards";
     } 
     
 

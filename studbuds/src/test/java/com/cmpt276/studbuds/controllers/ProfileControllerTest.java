@@ -1,10 +1,9 @@
-package com.cmpt276.studbuds;
+package com.cmpt276.studbuds.controllers;
 
-import com.cmpt276.studbuds.controllers.ProfileController;
-import com.cmpt276.studbuds.models.User;
-import com.cmpt276.studbuds.models.UserRepository;
-import com.cmpt276.studbuds.models.XpLog;
-import com.cmpt276.studbuds.models.XpLogRepository;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,10 +16,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import com.cmpt276.studbuds.models.User;
+import com.cmpt276.studbuds.models.UserRepository;
+import com.cmpt276.studbuds.models.XpLog;
+import com.cmpt276.studbuds.models.XpLogRepository;
 
 @WebMvcTest(ProfileController.class)
 public class ProfileControllerTest {
@@ -49,12 +48,9 @@ public class ProfileControllerTest {
         Mockito.when(xpLogRepository.findByUser(testUser)).thenReturn(new ArrayList<>());
     }
 
-   
-
-
-
     @Test
     void getProfile_withSession_returnsProfileView() throws Exception {
+
         mockMvc.perform(MockMvcRequestBuilders.get("/profile").session(session))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("profile"))
@@ -66,7 +62,6 @@ public class ProfileControllerTest {
                 .andExpect(MockMvcResultMatchers.model().attributeExists("heatmap"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("heatmapDates"));
     }
-
 
     @Test
     void getProfile_withoutSession_redirectsToLogin() throws Exception {
@@ -133,7 +128,7 @@ public class ProfileControllerTest {
 
         Mockito.verify(userRepository, Mockito.never()).save(Mockito.any());
     }
-
+    
     
 
     
