@@ -20,5 +20,213 @@
 <div style="height: 16px;"></div>
 <a href="/profile" class="returnbtn">Return to Profile</a>
 
+
+<div>
+    <button type = button class="flashcard-tutorial-btn">How do the Flashcards work?</button>
+    <button type = button class="challenge-tutorial-btn">How does the Time Challenge work?</button>
+    <!-- <button type = button class="XP-tutorial-btn">How can I gain XP?</button> -->
+
+    <!---------------------------------- Flashcard Tutorial ----------------------------------------->
+    <div class = "tutorial-card-flashcards">
+        <div class="slideshow-container">
+
+            <div class = "tutorial-header-container">
+
+                <header> Flashcard Tutorial</header>
+
+                <div class="numbertext">
+                    <span class="current-slide-num">1</span> / 
+                    <span class="total-slides-num">x</span>
+                </div>
+
+            </div>
+
+        <!-- The Slides -->
+            <div class="mySlides fade">
+                <div class="text">Begin by naming your first deck and adding it to your collection!</div>
+                <br>
+
+                <img class = "tutorialImg" src="tutorial-imgs/deckcreation.png" 
+                style="display: block; margin: 0 auto; width: 80%; max-height: 300px;">
+            </div>
+
+            <div class="mySlides fade">
+                <div class="text">Next, create some flashcards by clicking "View Cards."</div>
+                <br>
+
+                <img class = "tutorialImg" src="tutorial-imgs/viewcards.png" 
+                style="display: block; margin: 0 auto; width: 80%; max-height: 300px;">
+            </div>
+
+            <div class="mySlides fade">
+                <div class="text">Create a flashcard by entering a question with its corresponding answer.</div>
+                <br>
+
+                <img class = "tutorialImg" src="tutorial-imgs/createcards.png" 
+                style="display: block; margin: 0 auto; width: 80%; max-height: 300px;">
+            </div>
+
+            <div class="mySlides fade">
+                <div class="text">Study your newly created flashcards here!</div>
+                <br>
+
+                <img class = "tutorialImg" src="tutorial-imgs/studycards.png" 
+                style="display: block; margin: 0 auto; width: 80%; max-height: 300px;">
+            </div>
+
+            
+            <div class="mySlides fade">
+                <div class="text">Flip the card to see its answer and click "Next" to study the next card!</div>
+                <br>
+
+                <img class = "tutorialImg" src="tutorial-imgs/flipcards.png" 
+                style="display: block; margin: 0 auto; width: 80%; max-height: 300px;">
+            </div>
+
+            <div class="mySlides fade">
+                <div class="text">Try it out!</div>
+                <br>
+
+                <a href="/decks" class ="decks-btn">My Flashcard Decks</a>
+            </div>
+
+            <!-- Next and previous buttons -->
+            <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+            <a class="next" onclick="plusSlides(1)">&#10095;</a>
+            </div>
+            <br>
+
+            <!-- The dots/circles -->
+            <div class="dot-container">
+                <div style="text-align:center">
+                <span class="dot" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+                <span class="dot" onclick="currentSlide(3)"></span>
+                <span class="dot" onclick="currentSlide(4)"></span>
+                <span class="dot" onclick="currentSlide(5)"></span>
+                <span class="dot" onclick="currentSlide(6)"></span>
+            </div>
+        </div>
+    </div>
+
+    <!------------------------------ Challenge Tutorial ---------------------------------->
+    <div class = "tutorial-card-challenge">
+        <div class="slideshow-container">
+
+            <div class = "tutorial-header-container">
+
+                <header> Time Challenge Tutorial</header>
+
+                <div class="numbertext">
+                    <span class="current-slide-num">1</span> / 
+                    <span class="total-slides-num">x</span>
+                </div>
+
+            </div>
+
+        <!-- The Slides -->
+            <div class="mySlides fade">
+                <div class="text">Try out the Time Challenge using any deck!</div>
+                <br>
+
+                <img class = "tutorialImg" src="tutorial-imgs/timechallenge.png" 
+                style="display: block; margin: 0 auto; width: 80%; max-height: 300px;">
+            </div>
+
+            <div class="mySlides fade">
+                <div class="text">Answer the questions before your time runs out to earn XP.</div>
+                <br>
+
+                <img class = "tutorialImg" src="tutorial-imgs/timechallenge-example.png" 
+                style="display: block; margin: 0 auto; width: 80%; max-height: 300px;">
+            </div>
+
+            <div class="mySlides fade">
+                <div class="text">If you get stuck you can exit by clicking "Retry."</div>
+                <br>
+
+                <img class = "tutorialImg" src="tutorial-imgs/timechallenge-example2.png" 
+                style="display: block; margin: 0 auto; width: 80%; max-height: 300px;">
+            </div>
+
+            <div class="mySlides fade">
+                <div class="text">Try it out!</div>
+                <br>
+
+                <a href="/decks" class = "decks-btn">My Flashcard Decks</a>
+            </div>
+            <!-- Next and previous buttons -->
+            <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+            <a class="next" onclick="plusSlides(1)">&#10095;</a>
+            </div>
+            <br>
+
+            <!-- The dots/circles -->
+            <div class="dot-container">
+                <div style="text-align:center">
+                <span class="dot" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+                <span class="dot" onclick="currentSlide(3)"></span>
+                <span class="dot" onclick="currentSlide(4)"></span>
+            </div>
+        </div>
+    </div>
+
+<!--  --------------------  Saving for Iteration 3  -----------------------------------
+    <div class = "tutorial-card-XP">
+        <div class="slideshow-container">
+
+            <div class = "tutorial-header-container">
+
+                <header> XP Tutorial</header>
+
+                <div class="numbertext">
+                    <span class="current-slide-num">1</span> / 
+                    <span class="total-slides-num">x</span>
+                </div>
+
+            </div>
+
+            <div class="mySlides fade">
+                <div class="text">You can earn XP by completing flashcard sets.</div>
+                <br>
+
+                <img class = "tutorialImg" src="tutorial-imgs/earnXP.png" 
+                style="display: block; margin: 0 auto; width: 80%; max-height: 300px;">
+            </div>
+
+            <div class="mySlides fade">
+                <div class="text">You can also earn XP by completing the Time Challenge.</div>
+                <br>
+
+                <img class = "tutorialImg" src="tutorial-imgs/timechallenge.png" 
+                style="display: block; margin: 0 auto; width: 80%; max-height: 300px;">
+            </div>
+
+            <div class="mySlides fade">
+                <div class="text">Earn an XP multilpier by maintaining a login streak!</div>
+                <br>
+
+                <img class = "tutorialImg" src="tutorial-imgs/XP.png" 
+                style="display: block; margin: 0 auto; width: 80%; max-height: 300px;">
+            </div>
+
+            <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+            <a class="next" onclick="plusSlides(1)">&#10095;</a>
+            </div>
+            <br>
+
+            <div class="dot-container">
+                <div style="text-align:center">
+                <span class="dot" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+                <span class="dot" onclick="currentSlide(3)"></span>
+            </div>
+        </div>
+    </div>
+</div>
+-->
+
+    <script src="/tutorial.js"></script>
 </body>
 </html>
