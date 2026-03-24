@@ -1,4 +1,4 @@
-package com.cmpt276.studbuds;
+package com.cmpt276.studbuds.controllers;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import com.cmpt276.studbuds.controllers.DeckController;
 import com.cmpt276.studbuds.models.User;
 import com.cmpt276.studbuds.models.UserRepository;
 
