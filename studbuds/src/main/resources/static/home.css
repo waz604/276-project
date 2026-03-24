@@ -133,6 +133,15 @@
     border: 1px solid black;
     border-radius: 20px;
     flex-shrink: 0;
+    overflow: hidden;
+}
+
+.feature-image-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+    display: block;
 }
 
 .feature-text {
