@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StudBuds - Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="shared.css">
 </head>
 <body>
@@ -14,9 +17,13 @@
         </div>
 
         <h1>Welcome back</h1>
-        <p class="subtitle">Sign in to access your flashcard decks</p>
+        <p class="subtitle">Log in to access your flashcard decks</p>
 
-        <div class="error-msg" id="errorMsg"><span id="errorText"></span></div>
+        <div id="errorMsg"><span id="errorText"></span></div>
+
+        <div th:if="${loginError}" id="errorMsg" class="visible">
+            <span id="errorText" th:text="${loginError}"></span>
+        </div>
 
         <form action="/login" method="post" id="loginForm" novalidate>
 
@@ -32,9 +39,7 @@
 
             <button type="submit" class="btn-login" id="loginBtn">Login</button>
             
-            <a href="../static/add.html">
-                <button>Create New Account</button>
-            </a>
+            <a href="/add" class="btn btn-secondary">Create New Account</a>
         </form>
     </div>
 

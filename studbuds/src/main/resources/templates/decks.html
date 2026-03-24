@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StudBuds - My Decks</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/shared.css">
     <link rel="stylesheet" href="/flashcard.css">
 </head>
@@ -11,12 +14,16 @@
 
 <nav class="navbar">
     <span class="logo-text">StudBuds</span>
-    <a href="/logout" class="btn-logout">Logout</a>
+    <div style="display: flex; gap: 8px;">
+        <a href="/logout" class="btn-logout">Logout</a>
+    </div>
 </nav>
+
+<div style="height: 16px;"></div>
+<a href="/profile" class="returnbtn">Return to Profile</a>
 
 <main class="content">
     <h2>My Decks </h2>
-
 
     <!--create -->
     <form th:action="@{/decks/add}" method="post" class="add-form">
@@ -36,10 +43,15 @@
 
             <p class="card-count" th:text="${#lists.size(deck.flashcards)} + ' cards'">0 cards</p> <!-- if none. -->
             <div class="deck-actions">
-                <a th:href="@{/decks/{id}(id=${deck.id})}" class="btn-action btn-sm">View Cards</a>
+                <a th:href="@{/decks/{id}/cards(id=${deck.id})}" class="btn-action btn-sm">View Cards</a>
                 <a th:href="@{/decks/{id}/study(id=${deck.id})}" class="btn-action btn-sm">Study</a>
+                
             </div>
-
+            
+            <div class="deck-actions">
+                <a th:href="@{/decks/{id}/challenge(id=${deck.id})}" class="btn-action btn-sm">Challenge</a>
+            </div>
+            
             <form th:action="@{/decks/{id}/delete(id=${deck.id})}" method="post">
 
                 <button type="submit" class="btn-danger btn-sm">Delete Deck</button>

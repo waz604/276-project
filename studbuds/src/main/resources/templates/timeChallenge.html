@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StudBuds - Time Challenge</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Fira+Code&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/shared.css" />
+    <link rel="stylesheet" href="/flashcard.css" />
+  </head>
+
+  <body class="page">
+    <nav class="navbar">
+      <span class="logo-text">StudBuds</span>
+
+      <div style="display: flex; gap: 8px">
+        <a th:href="@{/decks/{id}/cards(id=${deck.id})}" class="btn-logout">
+          Back to Deck
+        </a>
+        <a href="/decks" class="btn-logout">My Decks</a>
+      </div>
+    </nav>
+
+    <main class="content">
+      <div id="startScreen">
+        <h2 th:text="'Time Challenge: ' + ${deck.name}">Time Challenge</h2>
+
+        <p>Total Cards: <span th:text="${totalCards}">0</span></p>
+        <p>Complete all cards before time runs out.</p>
+
+        <button onclick="startChallenge()" class="btn-action">
+          Start Challenge
+        </button>
+      </div>
+
+      <div id="challengeScreen" style="display: none">
+        <h3>Time Remaining: <span id="timer">--</span>s</h3>
+
+        <p id="progress">0 / <span th:text="${totalCards}">0</span></p>
+
+        <div id="flashcard" class="flip-card">
+          <div class="flip-card-inner" id="inner-card">
+            <div id="card-front" class="flip-card-front">
+              <p id="questionText">Question</p>
+            </div>
+          </div>
+        </div>
+
+        <br /><br />
+        <input type="text" id="userAnswer" placeholder="type your answer" />
+
+        <button onclick="checkAnswer()" class="btn-action">
+          Submit Answer
+        </button>
+        <button onclick="nextCard()" class="btn-action">Next Card</button>
+
+        <h3 id="result"></h3>
+
+        <button onclick="restartChallenge()" class="btn-action">Retry</button>
+      </div>
+    </main>
+
+    <script th:inline="javascript">
+      let questions = /*[[${questions}]]*/ [];
+      let answers = /*[[${answers}]]*/ [];
+      let totalCards = /*[[${totalCards}]]*/ 0;
+
+      let currentCard = 0;
+      let score = 0;
+      let answeredCorrectly = false;
+      let challengeOver = false;
+
+      let timeLimit = totalCards > 0 ? totalCards * 10 : 10;
+      let timeRemaining = timeLimit;
+      let timer;
+
+      function startChallenge() {
+        document.getElementById("startScreen").style.display = "none";
+        document.getElementById("challengeScreen").style.display = "block";
+
+        document.getElementById("timer").innerText = timeRemaining;
+
+        showCard();
+
+        timer = setInterval(function () {
+          if (challengeOver) {
+            clearInterval(timer);
+            return;
+          }
+
+          timeRemaining--;
+          document.getElementById("timer").innerText = timeRemaining;
+
+          if (timeRemaining <= 0) {
+            clearInterval(timer);
+            challengeOver = true;
+
+            document.getElementById("result").innerText =
+              "time's up. challenge failed.\n" +
+              "score: " +
+              score +
+              " / " +
+              totalCards +
+              "\n" +
+              "cards completed: " +
+              currentCard +
+              " / " +
+              totalCards;
+          }
+        }, 1000);
+      }
+
+      function showCard() {
+        if (totalCards === 0) {
+          document.getElementById("questionText").innerText =
+            "No flashcards loaded";
+          challengeOver = true;
+          return;
+        }
+
+        document.getElementById("questionText").innerText =
+          questions[currentCard];
+        document.getElementById("progress").innerText =
+          currentCard + 1 + " / " + totalCards;
+
+        document.getElementById("userAnswer").value = "";
+
+        answeredCorrectly = false;
+      }
+
+      function checkAnswer() {
+        if (challengeOver) return;
+
+        let userAnswer = document
+          .getElementById("userAnswer")
+          .value.trim()
+          .toLowerCase();
+        let correctAnswer = answers[currentCard].trim().toLowerCase();
+
+        if (userAnswer === "") {
+          document.getElementById("result").innerText =
+            "please type an answer first.";
+        } else if (userAnswer === correctAnswer) {
+          if (!answeredCorrectly) {
+            score++;
+            answeredCorrectly = true;
+          }
+          document.getElementById("result").innerText = "correct.";
+        } else {
+          document.getElementById("result").innerText = "incorrect.";
+        }
+      }
+
+      function nextCard() {
+        if (challengeOver) return;
+
+        currentCard++;
+
+        if (currentCard >= totalCards) {
+          clearInterval(timer);
+          challengeOver = true;
+
+          document.getElementById("progress").innerText =
+            totalCards + " / " + totalCards;
+
+          document.getElementById("result").innerText =
+            "challenge complete.\n" +
+            "score: " +
+            score +
+            " / " +
+            totalCards +
+            "\n" +
+            "time remaining: " +
+            timeRemaining +
+            "s";
+
+          return;
+        }
+
+        showCard();
+        document.getElementById("result").innerText = "";
+      }
+
+      function restartChallenge() {
+        location.reload();
+      }
+    </script>
+  </body>
+</html>

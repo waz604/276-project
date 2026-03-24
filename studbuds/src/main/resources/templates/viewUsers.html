@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StudBuds - All Users</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="shared.css">
     
     </style>
@@ -24,6 +27,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Username</th>
+                    <th>Password</th>
                     <th>Role</th>
                 </tr>
             </thead>
@@ -31,10 +35,16 @@
                 <tr th:each="user : ${us}">
                     <td th:text="${user.uid}">1</td>
                     <td th:text="${user.name}">username</td>
+                    <td th:text="${user.password}">password</td>
                     <td>
                         <span class="badge"
                               th:classappend="${user.role != null and user.role.name() == 'ADMIN'} ? 'badge-admin' : 'badge-user'"
                               th:text="${user.role != null ? user.role.name() : 'USER'}">USER</span>
+                    </td>
+                    <td>
+                        <form th:action="@{/delete/{id}(id=${user.uid})}" method="post">
+                            <button type="submit" onclick="return confirm('Are you sure you want to permanently ban this user?')">Ban</button> 
+                        </form>
                     </td>
                 </tr>
             </tbody>
