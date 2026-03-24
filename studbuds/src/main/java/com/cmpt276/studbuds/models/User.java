@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -25,7 +26,9 @@ public class User {
     public enum roleType {USER, ADMIN};
 
     private String password;
-    
+
+    private LocalDate createdAt;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Deck> decks = new ArrayList<>();
 
@@ -34,6 +37,7 @@ public class User {
     public User(String name, String password) {
         this.name = name;
         this.password = password;
+        this.createdAt = LocalDate.now();
     }
 
     public String getName() {
@@ -66,6 +70,14 @@ public class User {
 
     public void setRole(roleType role) {
         this.role = role;
+    }
+
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
     }
 
     public List<Deck> getDecks() {

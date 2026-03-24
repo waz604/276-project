@@ -124,7 +124,7 @@ public class LoginController {
     @GetMapping("/logout")
     public String destroySession(HttpServletRequest request) {
         request.getSession().invalidate();
-        return "login";
+        return "home";
     }
 
     // Helper: pick destination based on role

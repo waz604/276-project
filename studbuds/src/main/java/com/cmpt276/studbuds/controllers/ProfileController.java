@@ -125,16 +125,27 @@ public class ProfileController {
 
         // heatmap: always show at least 7 weeks then it will be aligned more beautifully,
         LocalDate sevenWeeksAgo = today.minusWeeks(6).with(DayOfWeek.MONDAY);
+        // Use account creation date as the earliest start if available, otherwise fall back to 7 weeks ago
+        LocalDate accountWeekStart;
+        if (user.getCreatedAt() != null) {
+            accountWeekStart = user.getCreatedAt().with(DayOfWeek.MONDAY);
+        } else {
+            accountWeekStart = sevenWeeksAgo;
+        }
+        // Don't go further back than 7 weeks
+        LocalDate baseStart;
+        if (accountWeekStart.isAfter(sevenWeeksAgo)) {
+            baseStart = accountWeekStart;
+        } else {
+            baseStart = sevenWeeksAgo;
+        }
+
         LocalDate startDate;
         if (sortedDates.isEmpty()) {
-            startDate = sevenWeeksAgo;
+            startDate = baseStart;
         } else {
             LocalDate firstLog = sortedDates.get(0).with(DayOfWeek.MONDAY);
-            if (firstLog.isBefore(sevenWeeksAgo)) {
-                startDate = firstLog;
-            } else {
-                startDate = sevenWeeksAgo;
-            }
+            startDate = firstLog.isBefore(baseStart) ? firstLog : baseStart;
         }
 
         List<List<int[]>> heatmap = new ArrayList<>();
