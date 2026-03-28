@@ -52,17 +52,58 @@
                 <a th:href="@{/decks/{id}/challenge(id=${deck.id})}" class="btn-action btn-sm">Challenge</a>
             </div>
             
-            <form th:action="@{/decks/{id}/delete(id=${deck.id})}" method="post">
+            <form th:action="@{/decks/{id}/delete(id=${deck.id})}" method="get">
 
                 <button type="submit" class="btn-danger btn-sm">Delete Deck</button>
-
             </form>
 
+            <div class="content popup" id="pop-up">
+                <p id="delete-warning">
+                    <strong>Warning!</strong><br><br>
+                    You are about to delete this deck: 
+                    <strong><span th:text="${deleteDeck != null ? deleteDeck.name : 'Default Name'}">
+                        deck name
+                    </span></strong><br><br>
+
+                    <strong>This action cannot be undone.</strong><br><br>
+                    
+                    <form class="delete-form" th:action="@{/decks/{id}/delete(id=${deleteDeck != null ? deleteDeck.id : 0})}" method="post">
+                        <button type="submit" class="btn-danger">Delete</button>
+                    </form>
+                    
+                </p>
+                <button class="btn-popup" onclick="hidePopUp()"></button>
+            </div>
         </div>
 
         <p th:if="${#lists.isEmpty(decks)}">No decks yet. Create one above!</p>
     </section>
 </main>
 
+<script th:inline="javascript" defer>
+
+    function showPopUp() {
+        const popup = document.getElementById('pop-up');
+        if(popup) {
+            popup.classList.add('popup-visible');
+        }
+    }
+
+    function hidePopUp() {
+        const popup = document.getElementById('pop-up');
+        console.log(popup);
+        if(popup) {
+            if(popup.classList.contains('popup-visible')) {
+                popup.classList.remove('popup-visible');
+            }
+        }
+    }
+
+    const showPopup = /*[[${showPopup}]]*/;
+
+    if (showPopup) {
+        showPopUp();
+    }
+</script>
 </body>
 </html>

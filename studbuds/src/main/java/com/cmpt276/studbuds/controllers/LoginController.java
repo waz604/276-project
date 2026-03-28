@@ -27,7 +27,7 @@ public class LoginController {
     @Autowired
     private UserRepository userRepo;
 
-    Redirect root to login
+    // Redirect root to login
     @GetMapping("/")
     public RedirectView process() {
     return new RedirectView("login");

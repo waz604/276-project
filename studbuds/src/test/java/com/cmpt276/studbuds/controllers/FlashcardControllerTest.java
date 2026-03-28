@@ -23,7 +23,7 @@ import com.cmpt276.studbuds.models.XpLogRepository;
 
 import tools.jackson.databind.ObjectMapper;
 
-@WebMvcTest
+@WebMvcTest(FlashcardController.class)
 public class FlashcardControllerTest {
 
     @Autowired

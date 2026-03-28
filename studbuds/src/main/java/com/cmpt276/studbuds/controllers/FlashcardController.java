@@ -16,7 +16,6 @@ import com.cmpt276.studbuds.models.User;
 import com.cmpt276.studbuds.models.UserRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
-import tools.jackson.databind.ObjectMapper;
 
 
 @Controller
@@ -28,31 +27,29 @@ public class FlashcardController {
     @GetMapping("/decks/{id}/study")
     public String getStudyModePage(Model model, HttpServletRequest request, @PathVariable long id) 
     {
-        Integer userId = (Integer) request.getSession().getAttribute("userId");
-        if (userId == null) return "redirect:/login";
+        User user = null;
+        Deck deck = null;
 
-        User user = userRepository.findById(userId).orElse(null);
-        if (user == null) return "redirect:/login";
+        try {
+            user = findUser(request);
+        } catch(NullPointerException e) {
+            return "redirect:/login";
+        }
 
-        Deck deck = user.getDecks().stream()
-                .filter(d -> d.getId() == id)
-                .findFirst()
-                .orElse(null);
-        if (deck == null) return "redirect:/login";
+        try {
+            deck = getDeck(user, id);
+        } catch(NullPointerException e) {
+            return "redirect:/decks";
+        }
 
         List<FlashCard> flashcards = deck.getFlashcards();
         if(flashcards == null) return "redirect:/decks/{id}/cards";
 
         int totalCards = flashcards.size();
-
         if(totalCards == 0) return "redirect:/decks/{id}/cards";
 
-        // Serialize flashcard collection as JSON
-        ObjectMapper mapper = new ObjectMapper();
-        String cardsJson = mapper.writeValueAsString(flashcards);
-
         model.addAttribute("deck", deck);
-        model.addAttribute("cards", cardsJson);
+        model.addAttribute("cards", deck.flashcardsJson());
         model.addAttribute("totalCards", flashcards.size());
         
         return "study";
@@ -66,22 +63,23 @@ public class FlashcardController {
         if(question.isBlank()) return "redirect:/decks/{id}/cards";
         if(answer.isBlank()) return "redirect:/decks/{id}/cards";
 
-        Integer userId = (Integer) request.getSession().getAttribute("userId");
-        if(userId == null) return "redirect:/login";
-        
-        User user = userRepository.findById(userId).orElse(null);
-        if(user == null) return "redirect:/login";
+        User user = null;
+        Deck deck = null;
 
-        List<Deck> userDeckList = user.getDecks();
-        Deck deck = userDeckList.stream()
-                                .filter(d -> d.getId() == id)
-                                .findFirst()
-                                .orElse(null);
-        if(deck == null) return "redirect:/login";
+        try {
+            user = findUser(request);
+        } catch(NullPointerException e) {
+            return "redirect:/login";
+        }
+
+        try {
+            deck = getDeck(user, id);
+        } catch(NullPointerException e) {
+            return "redirect:/decks";
+        }
 
         FlashCard card = new FlashCard(question, answer, deck);
-        List<FlashCard> flashcards = deck.getFlashcards();
-        flashcards.add(card);
+        deck.getFlashcards().add(card);
 
         userRepository.save(user);
 
@@ -92,21 +90,24 @@ public class FlashcardController {
     public String deleteCard(HttpServletRequest request, 
                              @PathVariable("deckId") long deckId,
                              @PathVariable("cardId") long cardId) {
-        Integer userId = (Integer) request.getSession().getAttribute("userId");
-        if(userId == null) return "redirect:/login";
+        User user = null;
+        Deck deck = null;
+                        
+        try {
+            user = findUser(request);
+        } catch(NullPointerException e) {
+            return "redirect:/login";
+        }
         
-        User user = userRepository.findById(userId).orElse(null);
-        if(user == null) return "redirect:/login";
+        try {
+            deck = getDeck(user, deckId);
+        } catch(NullPointerException e) {
+            return "redirect:/decks";
+        }
 
-        List<Deck> userDeckList = user.getDecks();
-        Deck deck = userDeckList.stream()
-                                .filter(d -> d.getId() == deckId)
-                                .findFirst()
-                                .orElse(null);
-        if(deck == null) return "redirect:/login";
-        
-        List<FlashCard> userFlashcards = deck.getFlashcards();
-        userFlashcards.removeIf(f -> f.getId() == cardId);
+        deck.getFlashcards()
+            .removeIf(card -> card.getId() == cardId);
+    
         userRepository.save(user);
 
         return "redirect:/decks/{deckId}/cards";                   
@@ -122,25 +123,27 @@ public class FlashcardController {
         if(question.isBlank()) return "redirect:/decks/{deckId}/cards";
         if(answer.isBlank()) return "redirect:/decks/{deckId}/cards";
 
-        Integer userId = (Integer) request.getSession().getAttribute("userId");
-        if(userId == null) return "redirect:/login";
-        
-        User user = userRepository.findById(userId).orElse(null);
-        if(user == null) return "redirect:/login";
+        User user = null;
+        Deck deck = null;
+        FlashCard card = null;
 
-        List<Deck> userDeckList = user.getDecks();
-        Deck deck = userDeckList.stream()
-                                .filter(d -> d.getId() == deckId)
-                                .findFirst()
-                                .orElse(null);
-        if(deck == null) return "redirect:/login";
+        try {
+            user = findUser(request);
+        } catch(NullPointerException e) {
+            return "redirect:/login";
+        }
 
-        List<FlashCard> userFlashcards = deck.getFlashcards();
-        FlashCard card = userFlashcards.stream()
-                                       .filter(f -> f.getId() == cardId)
-                                       .findFirst()
-                                       .orElse(null);
-        if(card == null) return "redirect:/login";
+        try {
+            deck = getDeck(user, deckId);
+        } catch(NullPointerException e) {
+            return "redirect:/decks";
+        }
+
+        try {
+            card = getFlashcard(deck, cardId);
+        } catch(NullPointerException e) {
+            return "redirect:/decks/{deckId}/cards";
+        }
 
         card.setQuestion(question);
         card.setAnswer(answer);
@@ -149,5 +152,41 @@ public class FlashcardController {
         return "redirect:/decks/{deckId}/cards";
     } 
     
+    // === Helper Methods === //
+    private User findUser(HttpServletRequest request) throws NullPointerException {
+        Integer userId = (Integer) request.getSession()
+                                          .getAttribute("userId");
+        if(userId == null) throw new NullPointerException();
+
+        User user = userRepository.findById(userId).orElse(null);
+        if(user == null) throw new NullPointerException();
+
+        return user;
+    }
+
+    private Deck getDeck(User user, long deckId) throws NullPointerException {
+
+        Deck deck = user.getDecks().stream()
+                .filter(d -> d.getId() == deckId)
+                .findFirst()
+                .orElse(null);
+        if (deck == null) throw new NullPointerException();
+
+        return deck;
+    }
+
+    private FlashCard getFlashcard(Deck deck, long cardId) throws NullPointerException {
+
+        List<FlashCard> flashcards = deck.getFlashcards();
+        if(flashcards == null) throw new NullPointerException();
+
+        FlashCard card = flashcards.stream()
+                                       .filter(f -> f.getId() == cardId)
+                                       .findFirst()
+                                       .orElse(null);
+        if(card == null) throw new NullPointerException();
+
+        return card;
+    }
 
 }   
