@@ -5,12 +5,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.cmpt276.studbuds.exceptions.NullDeckException;
+import com.cmpt276.studbuds.exceptions.NullUserException;
 import com.cmpt276.studbuds.models.Deck;
 import com.cmpt276.studbuds.models.User;
 import com.cmpt276.studbuds.models.UserRepository;
@@ -26,14 +29,7 @@ public class DeckController {
     @GetMapping("/decks")
     public String getAllDecks(Model model, HttpServletRequest request) {
         
-        User user = null;
-
-        try {
-            user = findUser(request);
-        } catch(NullPointerException e) {
-            return "redirect:/login";
-        }
-
+        User user = findUser(request);
         List<Deck> decks = user.getDecks();
 
         model.addAttribute("decks", decks);
@@ -49,15 +45,9 @@ public class DeckController {
     @PostMapping("/decks/add")
     public String addDeck(HttpServletRequest request, @RequestParam("deckName") String name) {
         
-        User user = null;
-
-        try {
-            user = findUser(request);
-        } catch(NullPointerException e) {
-            return "redirect:/login";
-        }
-
+        User user = findUser(request);
         List<Deck> decks = user.getDecks();
+        if(decks == null) throw new NullDeckException("Deck collection not found");
 
         Deck deck = new Deck(name, user);
         decks.add(deck);
@@ -72,18 +62,10 @@ public class DeckController {
                             HttpServletRequest request,
                             RedirectAttributes redirectAttributes) {
         
-        User user = null;
-        Deck deckToDelete = null;
+        User user = findUser(request);
+        Deck deckToDelete = findDeck(user, id);
+        if(deckToDelete == null) throw new NullDeckException("Deck  not found");
 
-        try {
-            user = findUser(request);
-        } catch(NullPointerException e) {
-            return "redirect:/login";
-        }
-
-        deckToDelete = findDeck(user, id);
-
-        
         redirectAttributes.addFlashAttribute("showPopup", true);
         redirectAttributes.addFlashAttribute("deleteDeck", deckToDelete);
         
@@ -92,16 +74,13 @@ public class DeckController {
 
     @PostMapping("/decks/{id}/delete")
     public String deleteDeck(@PathVariable long id, HttpServletRequest request) {
-    
-        User user = null;
         
-        try {
-            user = findUser(request);
-        } catch(NullPointerException e) {
-            return "redirect:/login";
-        }
-
-        user.getDecks().removeIf(d -> d.getId() == id);
+        User user = findUser(request);
+        
+        List<Deck> decks = user.getDecks();
+        if(decks == null) throw new NullDeckException("Deck collection not found");
+        
+        decks.removeIf(d -> d.getId() == id);
         userRepository.save(user);
 
         return "redirect:/decks";
@@ -111,21 +90,8 @@ public class DeckController {
     @GetMapping("/decks/{id}/challenge")
     public String getTimeChallenge(Model model, @PathVariable long id, HttpServletRequest request) {
 
-        User user = null;
-        Deck deck = null;
-
-        try {
-            user = findUser(request);
-        } catch(NullPointerException e) {
-            return "redirect:/login";
-        }
-
-        try {
-            deck = findDeck(user, id);
-        } catch(NullPointerException e) {
-            return "redirect:/decks";
-        }
-
+        User user = findUser(request);
+        Deck deck = findDeck(user, id);
         model.addAttribute("deck", deck);
 
         List<String> questions = new java.util.ArrayList<>();
@@ -149,19 +115,8 @@ public class DeckController {
     @GetMapping("/decks/{id}/cards")
     public String getDeck(Model model, @PathVariable long id, HttpServletRequest request) {
         
-        User user = null;
-        Deck deck = null;
-        try {
-            user = findUser(request);
-        } catch(NullPointerException e) {
-            return "redirect:/login";
-        }
-
-        try {
-            deck = findDeck(user, id);
-        } catch(NullPointerException e) {
-            return "redirect:/decks";
-        }
+        User user = findUser(request);
+        Deck deck = findDeck(user, id);
 
         model.addAttribute("deck", deck);
 
@@ -169,26 +124,37 @@ public class DeckController {
     }
     
     // === Helper Methods === //
-    private User findUser(HttpServletRequest request) throws NullPointerException {
+    private User findUser(HttpServletRequest request) {
         
         Integer userId = (Integer) request.getSession().getAttribute("userId");
-        if(userId == null) throw new NullPointerException("userId not found");
+        if(userId == null) throw new NullUserException("userId not found");
         
         User user = userRepository.findById(userId).orElse(null);
-        if(user == null) throw new NullPointerException("user not found");
+        if(user == null) throw new NullUserException("user not found");
 
         return user;
     }
 
-    private Deck findDeck(User user, long deckId) throws NullPointerException {
+    private Deck findDeck(User user, long deckId) {
         
         Deck deck = user.getDecks().stream()
                         .filter(d -> d.getId() == deckId)
                         .findFirst()
                         .orElse(null);
 
-        if (deck == null) throw new NullPointerException("Deck not found");
+        if (deck == null) throw new NullDeckException("Deck not found");
 
         return deck;
+    }
+
+    // === Exception Handling Methods === //
+    @ExceptionHandler(NullUserException.class)
+    public String nullUserHandler() {
+        return "redirect:/login";
+    }
+
+    @ExceptionHandler(NullDeckException.class)
+    public String nullDeckHandler() {
+        return "redirect:/decks";
     }
 }
