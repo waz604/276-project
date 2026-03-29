@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.cmpt276.studbuds.exceptions.NullDeckException;
 import com.cmpt276.studbuds.exceptions.NullFlashcardException;
@@ -30,7 +31,8 @@ public class FlashcardController {
     @GetMapping("/decks/{id}/study")
     public String getStudyModePage(Model model, 
                                    HttpServletRequest request, 
-                                   @PathVariable long id) 
+                                   @PathVariable long id,
+                                   RedirectAttributes redirectAttributes) 
     {
         User user = findUser(request);
         Deck deck = getDeck(user, id);
@@ -39,7 +41,12 @@ public class FlashcardController {
         if(flashcards == null) throw new NullFlashcardException(deck.getId());
 
         int totalCards = flashcards.size();
-        if(totalCards == 0) return "redirect:/decks/{id}/cards";
+        if(totalCards == 0) 
+        {   
+            String errorMsg = "You cannot study on an empty deck";
+            redirectAttributes.addFlashAttribute("errorMsg", errorMsg);
+            return "redirect:/decks/{id}/cards";
+        }
 
         model.addAttribute("deck", deck);
         model.addAttribute("cards", deck.flashcardsJson());
@@ -110,10 +117,10 @@ public class FlashcardController {
     {
         Integer userId = (Integer) request.getSession()
                                           .getAttribute("userId");
-        if(userId == null) throw new NullUserException("UserId not found");
+        if(userId == null) throw new NullUserException("userId not found");
 
         User user = userRepository.findById(userId).orElse(null);
-        if(user == null) throw new NullUserException("User not found");
+        if(user == null) throw new NullUserException("user not found");
 
         return user;
     }
@@ -124,7 +131,7 @@ public class FlashcardController {
                 .filter(d -> d.getId() == deckId)
                 .findFirst()
                 .orElse(null);
-        if (deck == null) throw new NullDeckException("Deck doesn't exist");
+        if (deck == null) throw new NullDeckException("deck doesn't exist");
 
         return deck;
     }
@@ -135,9 +142,9 @@ public class FlashcardController {
         if(flashcards == null) throw new NullFlashcardException(deck.getId());
 
         FlashCard card = flashcards.stream()
-                                       .filter(f -> f.getId() == cardId)
-                                       .findFirst()
-                                       .orElse(null);
+                                   .filter(f -> f.getId() == cardId)
+                                   .findFirst()
+                                   .orElse(null);
         if(card == null) throw new NullFlashcardException(deck.getId());
 
         return card;

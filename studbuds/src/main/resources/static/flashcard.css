@@ -41,6 +41,34 @@ body {
     width: 100%;
 }
 
+.notification {
+    display: flex;
+    justify-content: center;
+    border: 1px solid rgb(255, 0, 0);
+    border-radius: 5px;
+    position: absolute;
+    bottom: 20px;
+    right: 10px;
+    max-width: 500px;
+    width: 100%;
+    max-height: 100px;
+    height: 100%;
+    background-color: rgb(255, 118, 118);
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out; 
+}
+
+#error-msg {
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: bold;
+    width: 100%;
+}
+
 .popup-visible {
     visibility: visible;
     opacity: 1;
@@ -62,8 +90,6 @@ body {
 .add-form input {
     flex: 1;
 }
-
-
 
 .deck-grid {
     display: flex;
@@ -179,22 +205,19 @@ body {
     text-align: center;
 }
 
-
-
+.btn-add {
+    margin-top: 20px;
+    padding: 10px;
+    width: 100%;
+    font-size: 1.25rem;
+    font-weight: bold;
+    font-family: 'Sora', sans-serif;
+    cursor: pointer;
+}
 
 .btn-action {
-    width: 100%;
-    padding: 10px 16px;
-    background: white;
-    border: 1px solid black;
-    border-radius: 10px;
-    color: #b1b1b1;
-    font-family: 'Sora', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
     text-decoration: none;
-    display: inline-block;
+    color: black;
     text-align: center;
 }
 
@@ -202,7 +225,6 @@ body {
     background: #c9c8c8;
     color: black;
 }
-
 
 .btn-action:active {
     filter: brightness(0.72);
@@ -238,7 +260,7 @@ body {
     border: 0;
     font-weight: bold;
     font-size: 1.5rem;
-    color: rgb(169, 162, 114);
+    color: rgb(72, 72, 69);
     background-color: transparent;
 }
 
