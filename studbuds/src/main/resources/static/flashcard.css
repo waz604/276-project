@@ -1,3 +1,7 @@
+body {
+    position: relative;
+}
+
 .page-header {
     display: flex;
     align-items: center;
@@ -12,7 +16,71 @@
     padding: 0 24px;
 }
 
+.popup {
+    position: absolute;
+    max-width: 600px;
+    max-height:400px;
+    height: 100%;
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    background:  #fff0a4;
+    border: 1px solid rgb(204, 186, 87);
+    border-radius: 10px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out; 
+}
 
+#delete-warning {
+    display: block;
+    text-align: center;
+    height: 90%;
+    width: 100%;
+}
+
+.notification {
+    display: flex;
+    justify-content: center;
+    border: 1px solid rgb(255, 0, 0);
+    border-radius: 5px;
+    position: absolute;
+    bottom: 20px;
+    right: 10px;
+    max-width: 500px;
+    width: 100%;
+    max-height: 100px;
+    height: 100%;
+    background-color: rgb(255, 118, 118);
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out; 
+}
+
+#error-msg {
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: bold;
+    width: 100%;
+}
+
+.popup-visible {
+    visibility: visible;
+    opacity: 1;
+}
+
+.delete-form {
+    position: absolute;
+    top: 50%;
+    left: 35%;
+    width: 30%;
+}
+  
 .add-form {
     display: flex;
     gap: 12px;
@@ -23,14 +91,11 @@
     flex: 1;
 }
 
-
-
 .deck-grid {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
 }
-
 
 
 .deck-card {
@@ -61,8 +126,6 @@
     display: flex;
     gap: 8px;
 }
-
-
 
 .fc-item {
     background: #dcdbdb;
@@ -142,22 +205,19 @@
     text-align: center;
 }
 
-
-
+.btn-add {
+    margin-top: 20px;
+    padding: 10px;
+    width: 100%;
+    font-size: 1.25rem;
+    font-weight: bold;
+    font-family: 'Sora', sans-serif;
+    cursor: pointer;
+}
 
 .btn-action {
-    width: 100%;
-    padding: 10px 16px;
-    background: white;
-    border: 1px solid black;
-    border-radius: 10px;
-    color: #b1b1b1;
-    font-family: 'Sora', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
     text-decoration: none;
-    display: inline-block;
+    color: black;
     text-align: center;
 }
 
@@ -165,7 +225,6 @@
     background: #c9c8c8;
     color: black;
 }
-
 
 .btn-action:active {
     filter: brightness(0.72);
@@ -193,7 +252,25 @@
     font-size: 0.85rem;
 }
 
+.btn-popup {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding-right: 10px;
+    border: 0;
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: rgb(72, 72, 69);
+    background-color: transparent;
+}
 
+.btn-popup:hover {
+    color: black;
+}
+
+.btn-popup:after {
+    content: "\00d7";
+}
 
 /*making it responsive for phone*/
 @media (max-width: 600px) {

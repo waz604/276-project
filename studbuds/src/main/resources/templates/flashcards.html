@@ -26,7 +26,7 @@
 
     <h2 th:text="${deck.name}">Deck Name</h2> <!--section name-->
 
-    <a th:href="@{/decks/{id}/study(id=${deck.id})}" class="btn-action" style="width:auto; margin-bottom:24px; display:inline-block;">Study This Deck</a>
+    <a th:href="@{/decks/{id}/study(id=${deck.id})}" class="btn-action" style="width:auto; margin-bottom:24px; display:inline-block;">Study Deck</a>
 
     <!--create -->
     <section class="fc-item">
@@ -39,7 +39,7 @@
             <label for="answer">Answer</label>
             <input type="text" id="answer" name="answer" placeholder="Enter answer..." required />
 
-            <button type="submit" class="btn-action">Add Card</button>
+            <button type="submit" class="btn-add">Add Card</button>
         </form>
     </section>
 
@@ -75,7 +75,45 @@
 
         <p th:if="${#lists.isEmpty(cards)}">No cards yet. Add one above!</p> 
     </section>
+
+    <div class="notification" id="notif">
+        <p id="error-msg">Error Message</p>
+        <button class="btn-popup" onclick="hideErrorMsg()"></button>
+    </div>
 </main>
+
+<script th:inline="javascript">
+    function showErrorMsg(errorMsg) {
+        const notif = document.getElementById('notif');
+        const errorText = document.getElementById('error-msg');
+
+        if(notif) {
+            errorText.textContent = errorMsg;
+            notif.classList.add('popup-visible');
+            setTimeout(() => {
+                if(notif.classList.contains('popup-visible')) {
+                    notif.classList.remove('popup-visible');
+                }
+            }, 3000)
+        }
+    }
+
+    function hideErrorMsg() {
+        const notif = document.getElementById('notif');
+        console.log('gey');
+        if(notif) {
+            if(notif.classList.contains('popup-visible')) {
+                notif.classList.remove('popup-visible');
+            }
+        }
+    }
+
+    const errorMsg = /*[[${errorMsg}]]*/;
+
+    if (errorMsg) {
+        showErrorMsg(errorMsg);
+    }
+</script>
 
 </body>
 </html>

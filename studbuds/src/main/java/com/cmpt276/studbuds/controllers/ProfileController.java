@@ -1,22 +1,29 @@
 package com.cmpt276.studbuds.controllers;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.cmpt276.studbuds.exceptions.NullUserException;
 import com.cmpt276.studbuds.models.User;
 import com.cmpt276.studbuds.models.UserRepository;
 import com.cmpt276.studbuds.models.XpLog;
 import com.cmpt276.studbuds.models.XpLogRepository;
 
-import jakarta.servlet.http.HttpSession;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.time.LocalDate;
-import java.time.DayOfWeek;
-import java.util.*;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class ProfileController {
@@ -28,19 +35,13 @@ public class ProfileController {
     private XpLogRepository xpLogRepository;
 
     @GetMapping("/profile")
-    public String getProfile(Model model, HttpSession session) {
+    public String getProfile(Model model, HttpServletRequest request) {
 
-        Integer userId = (Integer) session.getAttribute("userId");
-        if (userId == null) return "redirect:/login";
-
-        User user = userRepository.findById(userId).orElse(null);
-        if (user == null) return "redirect:/login";
+        User user = findUser(request);
 
         model.addAttribute("username", user.getName());
 
         // stats logic
-
-
         List<XpLog> logs = xpLogRepository.findByUser(user);
 
         //add xp per days
@@ -50,10 +51,7 @@ public class ProfileController {
 
         }
 
-
-
         int totalXp = dailyXp.values().stream().mapToInt(Integer::intValue).sum();
-
 
         //current
         int currentStreak = 0;
@@ -61,21 +59,16 @@ public class ProfileController {
         LocalDate check = today;
 
         while (dailyXp.containsKey(check) && dailyXp.get(check) > 0) {
-
-
             currentStreak++;
             check = check.minusDays(1);
         }
-
 
         //longest
         int longestStreak = 0;
         int tempStreak = 0;
 
-
         List<LocalDate> sortedDates = new ArrayList<>(dailyXp.keySet());
         Collections.sort(sortedDates);
-
 
         for (int i = 0; i < sortedDates.size(); i++) {
             if (i == 0 || sortedDates.get(i).minusDays(1).equals(sortedDates.get(i - 1))) {
@@ -87,9 +80,7 @@ public class ProfileController {
 
             }
             longestStreak = Math.max(longestStreak, tempStreak);
-
         }
-
 
         Map<DayOfWeek, Integer> dayTotals = new EnumMap<>(DayOfWeek.class);
         for (Map.Entry<LocalDate, Integer> entry : dailyXp.entrySet()) {
@@ -127,11 +118,13 @@ public class ProfileController {
         LocalDate sevenWeeksAgo = today.minusWeeks(6).with(DayOfWeek.MONDAY);
         // Use account creation date as the earliest start if available, otherwise fall back to 7 weeks ago
         LocalDate accountWeekStart;
+        
         if (user.getCreatedAt() != null) {
             accountWeekStart = user.getCreatedAt().with(DayOfWeek.MONDAY);
         } else {
             accountWeekStart = sevenWeeksAgo;
         }
+
         // Don't go further back than 7 weeks
         LocalDate baseStart;
         if (accountWeekStart.isAfter(sevenWeeksAgo)) {
@@ -152,7 +145,6 @@ public class ProfileController {
         List<String> heatmapDates = new ArrayList<>();
         LocalDate cursor = startDate;
         LocalDate end = today.with(DayOfWeek.SUNDAY);
-
 
         //grid (i used the help of copilot to help me figure out the way to make the grid 2d)
         while (!cursor.isAfter(end)) {
@@ -179,13 +171,9 @@ public class ProfileController {
     }
 
     @PostMapping("/profile/edit")
-    public String editUsername(@RequestParam String username, HttpSession session) {
+    public String editUsername(@RequestParam String username, HttpServletRequest request) {
 
-        Integer userId = (Integer) session.getAttribute("userId");
-        if (userId == null) return "redirect:/login";
-
-        User user = userRepository.findById(userId).orElse(null);
-        if (user == null) return "redirect:/login";
+        User user = findUser(request);
 
         user.setName(username.trim());
         userRepository.save(user);
@@ -194,13 +182,31 @@ public class ProfileController {
     }
 
     @GetMapping("/tutorial")
-    public String displayTutorial(HttpSession session) {
-        Integer userId = (Integer) session.getAttribute("userId");
-        if (userId == null) return "redirect:/login";
-
+    public String displayTutorial(HttpServletRequest request) {
+        Integer userId = (Integer) request.getSession().getAttribute("userId");
+        if(userId == null) throw new NullUserException("userId not found");
+        
         User user = userRepository.findById(userId).orElse(null);
-        if (user == null) return "redirect:/login";
-
+        if(user == null) throw new NullUserException("user not found");
+        
         return "tutorial";
+    }
+
+    // === Helper Methods === //
+    private User findUser(HttpServletRequest request) {
+        
+        Integer userId = (Integer) request.getSession().getAttribute("userId");
+        if(userId == null) throw new NullUserException("userId not found");
+        
+        User user = userRepository.findById(userId).orElse(null);
+        if(user == null) throw new NullUserException("user not found");
+
+        return user;
+    }
+
+    // === Exception Handling Methods === //
+    @ExceptionHandler(NullUserException.class)
+    public String nullUserHandler() {
+        return "redirect:/login";
     }
 }

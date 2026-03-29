@@ -155,10 +155,10 @@ public class DeckControllerTest {
     
 
     @Test
-    void getDeck_deckNotFound_redirectsToLogin() throws Exception {
+    void getDeck_deckNotFound_redirectsToDecks() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/decks/999/cards").session(session))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/login"));
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/decks"));
     }
 
     @Test

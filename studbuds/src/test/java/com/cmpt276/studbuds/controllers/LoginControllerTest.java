@@ -127,7 +127,7 @@ public class LoginControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/logout").session(session))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("login"));
+                .andExpect(MockMvcResultMatchers.view().name("home"));
     }
 
     // Failure Tests

@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import tools.jackson.databind.ObjectMapper;
 
 @Entity
 public class Deck {
@@ -67,5 +68,14 @@ public class Deck {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String flashcardsJson() {
+
+        // Serialize flashcard collection for JSON
+        ObjectMapper mapper = new ObjectMapper();
+        String cardsJson = mapper.writeValueAsString(flashcards);
+        
+        return cardsJson;
     }
 }
