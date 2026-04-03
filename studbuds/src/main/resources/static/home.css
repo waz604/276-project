@@ -1,4 +1,15 @@
-/* Nav Bar*/
+
+body.page {
+    background-color: var(--color-base-100) !important;
+    color: var(--color-base-content) !important;
+}
+
+.navbar {
+    background: var(--color-base-200) !important;
+    border-bottom-color: var(--color-base-300) !important;
+}
+
+/* Nav Bar but i use daisyui*/
 .nav-links {
     display: flex;
     align-items: center;
@@ -38,6 +49,10 @@
     font-weight: 700;
     letter-spacing: -0.04em;
     margin-bottom: 24px;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 3px solid rgba(0,0,0,.6);
 }
 
 .btn-get-started {
@@ -66,11 +81,12 @@
     max-width: 520px;
     margin: 0 auto 32px;
     line-height: 1.6;
+    margin-top: 30px;
 }
 
 
 
-/* this is generated from. https://codepen.io/TKS31/pen/gOaKaxx */
+/* this is generated from. https://codepen.io/TKS31/pen/gOaKaxx then i inherited it*/
 .mouse {
     width: 50px;
     height: 90px;
@@ -112,54 +128,110 @@
 
 
 
-.feature {
-    display: flex;
-    align-items: center;
-    gap: 48px;
-    max-width: 960px;
-    margin: 48px auto;
-    padding: 0 24px;
+/* Stacked cards feature, i had to use chatgpt to help me get the alignments right and positioings plus animations */
+.c-features {
+    width: min(1100px, 90%);
+    margin: 0 auto;
+    padding: 48px 0;
 }
 
-.feature-reverse {
-    flex-direction: row-reverse;
+.c-features__list {
+    display: grid;
+    grid-gap: 40px;
+    list-style: none;
+    padding: 0;
 }
 
-.feature-image-placeholder {
-    width: 360px;
-    height: 240px;
-    min-width: 280px;
-    background: #dcdbdb;
-    border: 1px solid black;
-    border-radius: 20px;
-    flex-shrink: 0;
+.c-features__item {
+    position: sticky;
+    top: 50px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 260px auto;
+    height: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
     overflow: hidden;
+    background: #fff;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.07);
 }
 
-.feature-image-placeholder img {
+@media (min-width: 768px) {
+    .c-features__item {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: 480px;
+        height: 480px;
+    }
+}
+
+.c-features__item:not(.c-features__item:last-child) {
+    view-timeline-name: --card;
+    view-timeline-axis: block;
+    animation-timeline: --card;
+    animation-name: card-shrink;
+    animation-range: entry 90% cover 50%;
+    animation-fill-mode: both;
+}
+
+.c-features__item-figure {
+    grid-column: 1 / -1;
+    grid-row: 1 / 2;
+    overflow: hidden;
+    display: block;
+    height: 260px;
+}
+
+@media (min-width: 768px) {
+    .c-features__item-figure {
+        grid-column: 1 / 2;
+        grid-row: 1 / -1;
+        height: 100%;
+    }
+}
+
+.c-features__item-figure img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 20px;
-    display: block;
+    object-position: center top;
 }
 
-.feature-text {
-    flex: 1;
+.c-features__item-info {
+    grid-column: 1 / -1;
+    grid-row: 2 / -1;
+    display: grid;
+    align-content: center;
+    padding: 40px;
+    background: #fff;
+    overflow: hidden;
 }
 
-.feature-text h2 {
-    font-size: 1.55rem;
-    font-weight: 600;
+@media (min-width: 768px) {
+    .c-features__item-info {
+        grid-column: 2 / -1;
+        grid-row: 1 / -1;
+    }
+}
+
+.c-features__item-title {
+    font-size: 1.75rem;
+    font-weight: 700;
     letter-spacing: -0.03em;
     margin-bottom: 12px;
+    color: #1a1a1a;
 }
 
-.feature-text p {
+.c-features__item-excerpt {
     font-size: 0.95rem;
     color: #888;
     font-weight: 300;
-    line-height: 1.6;
+    line-height: 1.7;
+}
+
+@keyframes card-shrink {
+    0%, 75% { scale: 100%; }
+    100%     { scale: 85%; }
 }
 
 /* ── About Us ── */
@@ -210,21 +282,28 @@
         font-size: 2.5rem;
     }
 
-    .feature {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .feature-reverse {
-        flex-direction: column;
-    }
-
-    .feature-image-placeholder {
-        width: 100%;
-        min-width: unset;
-    }
-
     .nav-links {
         gap: 12px;
     }
 }
+
+
+
+
+.anim-typewriter {
+    animation:
+        typewriter 1s steps(8) 0.3s 1 normal both,
+        blinkTextCursor 600ms steps(8) infinite normal;
+}
+
+@keyframes typewriter {
+    from { width: 0; }
+    to   { width: 22rem; }
+}
+
+@keyframes blinkTextCursor {
+    from { border-right-color: rgba(0,0,0,.6); }
+    to   { border-right-color: transparent; }
+}
+
+
