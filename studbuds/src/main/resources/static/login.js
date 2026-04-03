@@ -29,11 +29,13 @@ form.addEventListener('submit', function (e) {
     }
 });
 
-[unameInput, pswInput].forEach(function (input) {
-    input.addEventListener('input', function () {
-        errorMsg.classList.remove('visible');
-    });
-});
+if (unameInput && pswInput) {
+    [unameInput, pswInput].forEach(function (input) {
+        input.addEventListener('input', function () {
+            errorMsg.classList.remove('visible');
+        });    
+    })
+};
 
 function onSignIn(googleUser) {
     var profile = googleUser.getBasicProfile();

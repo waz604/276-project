@@ -68,6 +68,7 @@ public class LoginController {
         return userRepo.findByGoogleID(googleId)
             .map(existingUser -> {
                 session.setAttribute("session_user", existingUser);
+                session.setAttribute("userId", existingUser.getUid());
                 return "redirect:/protected";
             })
             .orElseGet(() -> {
@@ -79,6 +80,7 @@ public class LoginController {
                 userRepo.save(newUser);
                 
                 session.setAttribute("session_user", newUser);
+                session.setAttribute("userId", newUser.getUid());
                 return "redirect:/protected";
             });
     }
@@ -112,7 +114,7 @@ public class LoginController {
         User user = (User) session.getAttribute("session_user");
         if (user == null) return "redirect:/login";
         model.addAttribute("user", user);
-        return "redirect:/profile";
+        return "profile";
     }
 
     // View all users (admin only)
@@ -140,7 +142,7 @@ public class LoginController {
         String newPwd = newuser.get("password");
 
         // Avoid empty user from entering the database
-        if (newName == null || newName.isBlank()) {
+        if ((newName == null || newName.isBlank()) || (newPwd == null || newName.isBlank())) {
             return "add";
         }
 
