@@ -26,6 +26,7 @@
         </div>
 
         <form action="/login" method="post" id="loginForm" novalidate>
+        <input type="hidden" id="google_id_input" name="google_id">
 
             <div class="field">
                 <label for="uname">Username</label>
@@ -40,9 +41,21 @@
             <button type="submit" class="btn-login" id="loginBtn">Login</button>
             
             <a href="/add" class="btn btn-secondary">Create New Account</a>
+            
+
+            <!-- Google Login -->
+            <div id="g_id_onload"
+                data-client_id="336551242956-bfb2p5256d8gbpvbv8bbls11q6bgteq4.apps.googleusercontent.com"
+                data-callback="handleCredentialResponse">
+            </div>
+
+            <div class="g_id_signin" data-type="standard"></div>
+
         </form>
     </div>
 
     <script src="/login.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script></body>
+
 </body>
 </html>

@@ -48,11 +48,40 @@ public class LoginController {
                         HttpServletRequest request, HttpSession session) {
         String name = formData.get("uname");
         String psw  = formData.get("psw");
+        String googleId = formData.get("google_id");
+
+        boolean isGoogleUser = (googleId != null && !googleId.isBlank());
+
 
         // Guard against blank values reaching the DB
-        if (name == null || name.isBlank() || psw == null || psw.isBlank()) {
+        if (name == null || name.isBlank()) {
             return "login";
         }
+
+        // If the user is NOT a google user, block them if they are missing a password
+        if (!isGoogleUser && (psw == null || psw.isBlank())) {
+            return "login";
+        }
+
+    // Google user login
+    if (isGoogleUser) {
+        return userRepo.findByGoogleID(googleId)
+            .map(existingUser -> {
+                session.setAttribute("session_user", existingUser);
+                return "redirect:/protected";
+            })
+            .orElseGet(() -> {
+                // Create new Google User
+                User newUser = new User();
+                newUser.setName(name);
+                newUser.setGoogleId(googleId);
+                newUser.setPassword(null);
+                userRepo.save(newUser);
+                
+                session.setAttribute("session_user", newUser);
+                return "redirect:/protected";
+            });
+    }
 
         // Check hardcoded admin account first, never touches the DB
         if (name.equals(ADMIN_USERNAME) && psw.equals(ADMIN_PASSWORD)) {
@@ -109,32 +138,17 @@ public class LoginController {
     public String addUser(@RequestParam Map<String, String> newuser, HttpServletResponse response) {
         String newName = newuser.get("name");
         String newPwd = newuser.get("password");
-        String googleId = newuser.get("google_id");
-
-        boolean isGoogleUser = (googleId != null && !googleId.isBlank());
 
         // Avoid empty user from entering the database
         if (newName == null || newName.isBlank()) {
             return "add";
         }
 
-        // If the user is NOT a google user, block them if they are missing a password
-        if (!isGoogleUser && (newPwd == null || newPwd.isBlank())) {
-            return "add";
-        }
-
         User addedUser = new User();
         addedUser.setName(newName);
-
-        if (isGoogleUser) {
-            addedUser.setPassword(null);
-            addedUser.setGoogleId(googleId);
-        } else {
-            addedUser.setPassword(newPwd);
-        }
-
         userRepo.save(addedUser);
         response.setStatus(201);
+
         return "redirect:/login";
     }
 
