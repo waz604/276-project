@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cmpt276.studbuds.exceptions.NullUserException;
 import com.cmpt276.studbuds.models.User;
@@ -160,7 +161,11 @@ public class ProfileController {
             heatmap.add(week);
         }
 
+        // calculate level from total XP (mirrors XP.js formula)
+        int level = calculateLevel(totalXp);
+
         model.addAttribute("totalXp", totalXp);
+        model.addAttribute("level", level);
         model.addAttribute("currentStreak", currentStreak);
         model.addAttribute("longestStreak", longestStreak);
         model.addAttribute("mostActiveDay", mostActiveDay);
@@ -192,7 +197,32 @@ public class ProfileController {
         return "tutorial";
     }
 
+    // Saves XP earned during a study session to the database
+    @PostMapping("/xp/award")
+    @ResponseBody
+    public void awardXp(@RequestParam int amount, HttpServletRequest request) {
+        User user = findUser(request);
+        xpLogRepository.save(new XpLog(user, LocalDate.now(), amount));
+    }
+
     // === Helper Methods === //
+
+    // Calculates level from total XP — mirrors the formula in XP.js
+    // Level 1 needs 100 XP, Level 2 needs 200, Level 3 needs 300, etc.
+    private int calculateLevel(int totalXp) {
+        int level = 1;
+        int xpToNextLevel = 100;
+        int remaining = totalXp;
+
+        while (remaining >= xpToNextLevel && level < 20) {
+            remaining -= xpToNextLevel;
+            level++;
+            xpToNextLevel = level * 100;
+        }
+
+        return level;
+    }
+
     private User findUser(HttpServletRequest request) {
         
         Integer userId = (Integer) request.getSession().getAttribute("userId");
