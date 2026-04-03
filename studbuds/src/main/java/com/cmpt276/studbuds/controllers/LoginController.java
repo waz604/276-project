@@ -56,7 +56,7 @@ public class LoginController {
 
         // Check hardcoded admin account first, never touches the DB
         if (name.equals(ADMIN_USERNAME) && psw.equals(ADMIN_PASSWORD)) {
-            User adminUser = new User(ADMIN_USERNAME, ADMIN_PASSWORD);
+            User adminUser = new User(ADMIN_USERNAME, ADMIN_PASSWORD, null);
             adminUser.setRole(User.roleType.ADMIN);
             request.getSession().setAttribute("session_user", adminUser);
             model.addAttribute("user", adminUser);
@@ -109,13 +109,31 @@ public class LoginController {
     public String addUser(@RequestParam Map<String, String> newuser, HttpServletResponse response) {
         String newName = newuser.get("name");
         String newPwd = newuser.get("password");
+        String googleId = newuser.get("google_id");
+
+        boolean isGoogleUser = (googleId != null && !googleId.isBlank());
 
         // Avoid empty user from entering the database
-        if (newName == null || newName.isBlank() || newPwd == null || newPwd.isBlank()) {
+        if (newName == null || newName.isBlank()) {
             return "add";
         }
 
-        userRepo.save(new User(newName,newPwd));
+        // If the user is NOT a google user, block them if they are missing a password
+        if (!isGoogleUser && (newPwd == null || newPwd.isBlank())) {
+            return "add";
+        }
+
+        User addedUser = new User();
+        addedUser.setName(newName);
+
+        if (isGoogleUser) {
+            addedUser.setPassword(null);
+            addedUser.setGoogleId(googleId);
+        } else {
+            addedUser.setPassword(newPwd);
+        }
+
+        userRepo.save(addedUser);
         response.setStatus(201);
         return "redirect:/login";
     }
