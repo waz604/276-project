@@ -50,7 +50,7 @@ form.addEventListener('submit', function (e) {
 
     // INVALID PASSWORD LENGTH
     else if (psw.length < 8) {
-        message = 'You password must be at least 8 characters.';
+        message = 'Your password must be at least 8 characters.';
     }
 
     // PSW DOES NOT CONTAIN NUMBER OR SPECIAL CHARACTER
