@@ -1,6 +1,7 @@
 package com.cmpt276.studbuds.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,6 +58,22 @@ public class LoginControllerTest {
         Mockito.verify(userRepository, Mockito.never()).save(Mockito.any(User.class));
     }
 
+    @Test
+    void login_withValidGoogleUser() throws Exception {
+        Mockito.when(userRepository.findByGoogleID("user@gmail.com"))
+               .thenReturn(Optional.of(user));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/login")
+                .param("uname", "GoogleUser")
+                .param("psw", "")
+                .param("google_id", "user@gmail.com"))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/protected"));
+
+        Mockito.verify(userRepository, Mockito.times(1))
+               .findByGoogleID("user@gmail.com");
+        Mockito.verify(userRepository, Mockito.never()).save(Mockito.any(User.class));
+    }
     
     @Test
     void login_withValidAdminUser() throws Exception {
