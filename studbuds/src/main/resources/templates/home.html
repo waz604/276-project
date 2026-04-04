@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" data-theme="silk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="/shared.css">
     <link rel="stylesheet" href="/home.css">
 
@@ -15,24 +18,44 @@
 
 <!--I used chatgpt to refine my original sentences into something more informative yet persuasive-->
 
-<body class="page">
+<body class="page bg-gradient-to-bl from-stone-200 to-amber-100">
 
-    <nav class="navbar">
-        <span class="logo-text">StudBuds</span>
-        <div class="nav-links">
-            <a href="/home" class="nav-link">Home</a>
-            <a href="#about" class="nav-link">About Us</a>
-            <a href="/login" class="nav-link">Login</a>
+    <div class="navbar bg-base-100 shadow-sm sticky top-0 z-50">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+                    </svg>
+                </div>
+                <ul tabindex="-1" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                    <li><a href="/home">Home</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="/login">Login</a></li>
+                </ul>
+            </div>
+            <a href="/home" class="btn btn-ghost text-xl logo-text">StudBuds</a>
         </div>
-    </nav>
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="/home">Home</a></li>
+                <li><a href="#about">About Us</a></li>
+            </ul>
+        </div>
+        <div class="navbar-end">
+            <a href="/login" class="btn">Login</a>
+        </div>
+    </div>
 
     <section class="hero">
-        <h1 class="hero-title">STUDBUDS</h1>
-        <a href="/add" class="btn-get-started">Get Started</a>
+
+        <!-- this typing anitmion is inherited from https://css-tricks.com/snippets/css/typewriter-effect/-->
+        <h1 class="hero-title anim-typewriter">STUDBUDS</h1>
+        <a href="/add" class="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl">Get Started</a>
 
         
         <p class="hero-description">
-            Your all-in-one study companion. Create flashcards, challenge yourself with timed quizzes, and track your progress over time. </p>
+            Your all-in-one study companion. Create flashcards, challenge yourself with timed quizzes, and track your progress over time.</p>
 
         
           <div class="mouse"></div>
@@ -40,41 +63,41 @@
 
 
 
-    <!--left-->
-    <section class="feature">
-        <div class="feature-image-placeholder">
-            <img src="/flashcard.jpg" alt="Flashcard Decks">
-        </div>
 
-        <div class="feature-text">
-            <h2>Flashcard Decks</h2>
-            <p>Create and organize custom flashcard decks for any subject. Flip through cards to test your knowledge and master new concepts.</p>
-        </div>
-    </section>
+    <!-- this is inherited from https://codepen.io/HugoSalazar/pen/dyBzOdj this design css-->
+    <div class="c-features ">
+        <ul class="c-features__list">
+            <article class="c-features__item">
+                <figure class="c-features__item-figure ">
+                    <img src="/flashcard.jpg" alt="Flashcard Decks">
+                </figure>
+                <div class="c-features__item-info bg-gradient-to-r from-zinc-100 to-zinc-300">
+                    <h2 class="c-features__item-title">Flashcard Decks</h2>
+                    <p class="c-features__item-excerpt">Create and organize custom flashcard decks for any subject. Flip through cards to test your knowledge and master new concepts.</p>
+                </div>
+            </article>
 
-    <!--right-->
-    <section class="feature feature-reverse">
-        <div class="feature-image-placeholder">
-            <img src="/timechallenge.jpg" alt="Time Challenge">
-        </div>
+            <article class="c-features__item">
+                <figure class="c-features__item-figure ">
+                    <img src="/timechallenge.jpg" alt="Time Challenge">
+                </figure>
+                <div class="c-features__item-info">
+                    <h2 class="c-features__item-title">Time Challenge</h2>
+                    <p class="c-features__item-excerpt">Race against the clock to complete your flashcard decks. Build speed and confidence with timed study sessions.</p>
+                </div>
+            </article>
 
-        <div class="feature-text">
-            <h2>Time Challenge</h2>
-            <p>Race against the clock to complete your flashcard decks. Build speed and confidence with timed study sessions.</p>
-        </div>
-    </section>
-
-
-    <!--left-->
-    <section class="feature">
-        <div class="feature-image-placeholder">
-            <img src="/statistic.jpg" alt="Review Your Stats">
-        </div>
-        <div class="feature-text">
-            <h2>Review Your Stats</h2>
-            <p>Track your XP, study streaks, and activity over time with detailed statistics and a visual heatmap.</p>
-        </div>
-    </section>
+            <article class="c-features__item">
+                <figure class="c-features__item-figure">
+                    <img src="/statistic.jpg" alt="Review Your Stats">
+                </figure>
+                <div class="c-features__item-info">
+                    <h2 class="c-features__item-title">Review Your Stats</h2>
+                    <p class="c-features__item-excerpt">Track your XP, study streaks, and activity over time with detailed statistics and a visual heatmap.</p>
+                </div>
+            </article>
+        </ul>
+    </div>
 
 
 

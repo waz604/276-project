@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="silk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,45 +7,60 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="shared.css">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <style>
+        h1 {
+            font-family: 'Sora', sans-serif;
+        }
+
+        input label {
+            font-family: 'Fira Code', monospace;
+        }
+    </style>
 
 </head>
-<body>
+<body class="bg-gradient-to-l from-amber-100 to-gray-400">
 
-    <div class="card">
+    <div class="hero min-h-screen">
+        <div class="hero-content flex-col lg:flex-row-reverse">
 
-        <div class="logo">
-            <div class="logo-text">StudBuds</div>
+            <div class="text-center lg:text-left">
+                <h1 class="text-5xl font-bold" style="font-size: 50px;">Welcome New User!</h1>
+                <p class="py-6">Organize your study life. Sign up to get started with StudBuds.</p>
+            </div>
+
+            <div class="divider divider-horizontal"> </div>
+
+            <div class="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl bg-gradient-to-r from-zinc-100 to-zinc-300">
+                <div class="card-body">
+
+                    <div role="alert" class="alert alert-error alert-soft" id="errorMsg" style="display:none">
+                        <span id="errorText"></span>
+                    </div>
+
+                    <form action="/create" method="post" id="addForm" novalidate>
+                        <fieldset class="fieldset">
+                            <label class="label" for="uname">Username</label>
+                            <input type="text" id="uname" name="name" class="input w-full" placeholder="Enter your username" autocomplete="username">
+
+                            <label class="label" for="psw">Password</label>
+                            <input type="password" id="psw" name="password" class="input w-full" placeholder="Enter your password" autocomplete="current-password">
+
+                            <button type="submit" class="btn btn-neutral w-full mt-4">Create User</button>
+                            <a href="/login" class="btn btn-outline w-full mt-2">Already have an account?</a>
+                        </fieldset>
+                    </form>
+
+                </div>
+            </div>
+
         </div>
+    </div>
 
-        <h1>Welcome New User</h1>
-        <p class="subtitle">Organize your study life. Sign in to get started with Studbuds.</p>
-
-        <div id="errorMsg"><span id="errorText"></span></div>
-
-		<div class="row justify-content-center">
-			<div class="col-md-4">
-
-				<form action="/create" method="post" id="addForm" novalidate>
-
-                <div class="field">
-                    <label for="uname">Username</label>
-                    <input type="text" id="uname" name="name" placeholder="Enter your username" autocomplete="username">
-                </div>
-
-                <div class="field">
-                    <label for="psw">Password</label>
-                    <input type="password" id="psw" name="password" placeholder="Enter your password" autocomplete="current-password">
-                </div>
-
-                <button type="submit" class="btn-login">Create User</button>
-
-                <!-- Sign-in redirect -->
-                <a href="/login" class="btn btn-secondary">Already have an account?</a>
-
-                </form>
-			</div>
-		</div>
-	</div>
     <script src="/add.js"></script>
+
+</body>
 </html>

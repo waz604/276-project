@@ -186,9 +186,6 @@
 
 .profile-card {
     position: relative;
-    background: #dcdbdb;
-    border: 1px solid black;
-    border-radius: 20px;
     padding: 28px 32px;
     margin-bottom: 32px;
 }
@@ -205,17 +202,7 @@
     gap: 24px;
 }
 
-.pfp-circle {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    background: #c9c8c8;
-    border: 1px solid black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
+
 
 .profile-info {
     display: flex;

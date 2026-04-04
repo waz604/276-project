@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="silk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,49 +7,80 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="shared.css">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    
+    <style>
+
+        
+
+
+        h1 {
+            font-family: 'Sora', sans-serif;
+        }
+
+        input label {
+            font-family: 'Fira Code', monospace;
+        }
+
+    </style>
+
 </head>
-<body>
-    <div class="card">
+<body class="bg-gradient-to-l from-amber-100 to-gray-400">
 
-        <div class="logo">
-            <div class="logo-text">StudBuds</div>
-        </div>
+    <div class="hero min-h-screen">
+        <div class="hero-content flex-col lg:flex-row-reverse">
 
-        <h1>Welcome back</h1>
-        <p class="subtitle">Log in to access your flashcard decks</p>
-
-        <div id="errorMsg"><span id="errorText"></span></div>
-
-        <div th:if="${loginError}" id="errorMsg" class="visible">
-            <span id="errorText" th:text="${loginError}"></span>
-        </div>
-
-        <form action="/login" method="post" id="loginForm" novalidate>
-        <input type="hidden" id="google_id_input" name="google_id">
-
-            <div class="field">
-                <label for="uname">Username</label>
-                <input type="text" id="uname" name="uname" placeholder="Enter your username" autocomplete="username">
+            <div class="text-center lg:text-left">
+                <h1 class="text-5xl font-bold" style="font-size: 50px;">Welcome back!</h1>
+                <p class="py-6">Log in to access your flashcard decks, track your progress, and challenge yourself with timed quizzes.</p>
             </div>
 
-            <div class="field">
-                <label for="psw">Password</label>
-                <input type="password" id="psw" name="psw" placeholder="Enter your password" autocomplete="current-password">
+            <div class="divider divider-horizontal"> </div>
+
+            <div class="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl bg-gradient-to-r from-zinc-100 to-zinc-300">
+                <div class="card-body">
+
+                    <div role="alert" class="alert alert-error alert-soft" id="errorMsg" style="display:none">
+                        
+                        <span id="errorText"></span>
+                    </div>
+                    <div role="alert" class="alert alert-error alert-soft" th:if="${loginError}">
+                        
+                        <span th:text="${loginError}"></span>
+                    </div>
+
+                    <form action="/login" method="post" id="loginForm" novalidate>
+                    <input type="hidden" id="google_id_input" name="google_id">
+
+                        <fieldset class="fieldset">
+                            <label class="label" for="uname">Username</label>
+                            <input type="text" id="uname" name="uname" class="input w-full" placeholder="Enter your username" autocomplete="username">
+
+                            <label class="label" for="psw">Password</label>
+                            <input type="password" id="psw" name="psw" class="input w-full" placeholder="Enter your password" autocomplete="current-password">
+
+                            <button type="submit" class="btn btn-neutral w-full mt-4" id="loginBtn">Login</button>
+                            <a href="/add" class="btn btn-outline w-full mt-2">Create New Account</a>
+                        </fieldset>
+                    </form>
+
+                    <div class="divider">OR</div>
+
+                    <!-- Google Login -->
+                    <button id = "googleBtn" class="btn bg-white text-black border-[#e5e5e5]">
+                    <svg aria-label="Google logo" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><g><path d="m0 0H512V512H0" fill="#fff"></path><path fill="#34a853" d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"></path><path fill="#4285f4" d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"></path><path fill="#fbbc02" d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"></path><path fill="#ea4335" d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"></path></g></svg>
+                    Login with Google
+                    </button>
+
+                    <div id="g_id_onload"
+                        data-client_id="336551242956-bfb2p5256d8gbpvbv8bbls11q6bgteq4.apps.googleusercontent.com"
+                        data-callback="handleCredentialResponse">
+                    </div>
+
+                </div>
             </div>
-
-            <button type="submit" class="btn-login" id="loginBtn">Login</button>
-            
-            <a href="/add" class="btn btn-secondary">Create New Account</a>
-            
-
-            <!-- Google Login -->
-            <div id="g_id_onload"
-                data-client_id="336551242956-bfb2p5256d8gbpvbv8bbls11q6bgteq4.apps.googleusercontent.com"
-                data-callback="handleCredentialResponse">
-            </div>
-
-            <div class="g_id_signin" data-type="standard"></div>
 
         </form>
     </div>

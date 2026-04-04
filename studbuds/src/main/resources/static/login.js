@@ -58,3 +58,7 @@ function handleCredentialResponse(response) {
 
     document.getElementById('loginForm').submit();
 }
+
+document.getElementById('googleBtn').onclick = () => {
+        google.accounts.id.prompt();
+    };
