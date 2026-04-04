@@ -31,14 +31,13 @@ public class LoginControllerTest {
    
     @BeforeEach
     void setUp() {
-        adminUser = new User("admin", "admin123");
+        adminUser = new User("admin", "admin123", "admin@gmail.com");
         adminUser.setRole(User.roleType.ADMIN);
         adminUser.setUid(1);
 
-        user = new User("User", "password123");
+        user = new User("User", "password123", "user@gmail.com");
         user.setUid(2);
         user.setRole(User.roleType.USER);
-
     }
 
     // Success Tests

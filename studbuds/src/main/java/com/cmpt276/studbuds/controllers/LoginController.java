@@ -142,12 +142,13 @@ public class LoginController {
         String newPwd = newuser.get("password");
 
         // Avoid empty user from entering the database
-        if ((newName == null || newName.isBlank()) || (newPwd == null || newName.isBlank())) {
+        if (newName == null || newName.isBlank() || newPwd == null || newPwd.isBlank()) {
             return "add";
         }
 
         User addedUser = new User();
         addedUser.setName(newName);
+        addedUser.setPassword(newPwd);
         userRepo.save(addedUser);
         response.setStatus(201);
 
