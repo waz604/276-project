@@ -239,4 +239,32 @@ public class ProfileController {
     public String nullUserHandler() {
         return "redirect:/login";
     }
+
+
+@PostMapping("/xp/time-challenge")
+@ResponseBody
+public void awardTimeChallengeXp(
+        @RequestParam int totalCards,
+        @RequestParam int score,
+        @RequestParam int timeRemaining,
+        HttpServletRequest request
+) {
+    User user = findUser(request);
+
+    int xp = 0;
+
+    if (score == totalCards && timeRemaining > 0) {
+        xp = totalCards * 10;
+
+        if (timeRemaining >= totalCards * 5) {
+            xp = (int) Math.round(xp * 1.5);
+        } else if (timeRemaining >= totalCards * 2) {
+            xp = (int) Math.round(xp * 1.25);
+        }
+    }
+
+    if (xp > 0) {
+        xpLogRepository.save(new XpLog(user, LocalDate.now(), xp));
+    }
+}
 }
