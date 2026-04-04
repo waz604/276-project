@@ -29,14 +29,17 @@ public class User {
 
     private LocalDate createdAt;
 
+    private String googleID;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Deck> decks = new ArrayList<>();
 
     public User() {}
 
-    public User(String name, String password) {
+    public User(String name, String password, String googleID) {
         this.name = name;
         this.password = password;
+        this.googleID = googleID;
         this.createdAt = LocalDate.now();
     }
 
@@ -86,5 +89,13 @@ public class User {
 
     public void setDecks(List<Deck> decks) {
         this.decks = decks;
+    }
+
+    public String getGoogleId() {
+        return this.googleID;
+    }
+
+    public void setGoogleId(String googleID) {
+        this.googleID = googleID;
     }
 }
