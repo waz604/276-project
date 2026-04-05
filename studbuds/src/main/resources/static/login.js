@@ -37,16 +37,19 @@ if (unameInput && pswInput) {
     })
 };
 
-function onSignIn(googleUser) {
-    var profile = googleUser.getBasicProfile();
-    
-        document.getElementById('uname').value = profile.getName();
-        document.getElementById('google_id_input').value = profile.getId();
-        
-        document.getElementById('psw').value = "GOOGLE_USER_PSW1!"; 
-
-        document.getElementById('loginForm').submit();
-}
+// https://developers.google.com/identity/gsi/web/reference/js-reference#google.accounts.id.renderButton
+window.onload = function () {
+    google.accounts.id.renderButton(
+        document.getElementById("googleBtn"),
+        { 
+            theme: "outline", 
+            size: "large", 
+            text: "signin_with",
+            shape: "rectangular" 
+        } 
+    );
+    google.accounts.id.prompt(); 
+};
 
 function handleCredentialResponse(response) {
     const responsePayload = JSON.parse(atob(response.credential.split('.')[1]));
@@ -58,7 +61,3 @@ function handleCredentialResponse(response) {
 
     document.getElementById('loginForm').submit();
 }
-
-document.getElementById('googleBtn').onclick = () => {
-        google.accounts.id.prompt();
-    };
