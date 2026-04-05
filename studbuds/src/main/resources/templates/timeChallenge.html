@@ -35,15 +35,43 @@
     </nav>
 
     <main class="content">
-      <div id="startScreen">
-        <h2 th:text="'Time Challenge: ' + ${deck.name}">Time Challenge</h2>
+      <div
+        id="startScreen"
+        class="card bg-base-100 shadow-xl border border-base-200 mx-auto text-center"
+        style="max-width: 560px; margin-top: 80px"
+      >
+        <div class="card-body text-center">
+          <h2
+            class="card-title justify-center text-3xl"
+            th:text="'Time Challenge: ' + ${deck.name}"
+          >
+            Time Challenge
+          </h2>
 
-        <p>Total Cards: <span th:text="${totalCards}">0</span></p>
-        <p>Complete all cards before time runs out.</p>
+          <p class="text-base-content/70">
+            Race the clock and answer every card before the timer runs out.
+          </p>
 
-        <button onclick="startChallenge()" class="btn-action">
-          Start Challenge
-        </button>
+          <div class="stats shadow mx-auto">
+            <div class="stat place-items-center">
+              <div class="stat-title">Total Cards</div>
+              <div class="stat-value text-primary">
+                <span th:text="${totalCards}">0</span>
+              </div>
+              <div class="stat-desc">10 seconds per card</div>
+            </div>
+          </div>
+
+          <div class="alert alert-info mt-4">
+            <span>Complete all cards to earn XP.</span>
+          </div>
+
+          <div class="card-actions justify-center mt-2">
+            <button onclick="startChallenge()" class="btn btn-primary btn-wide">
+              Start Challenge
+            </button>
+          </div>
+        </div>
       </div>
 
       <div id="challengeScreen" style="display: none">
@@ -85,7 +113,7 @@
         </button>
         <button onclick="nextCard()" class="btn-action">Next Card</button>
 
-        <h3 id="result"></h3>
+        <div id="result" class="hidden"></div>
 
         <button onclick="restartChallenge()" class="btn-action">Retry</button>
       </div>
@@ -138,6 +166,21 @@
         });
       }
 
+      function showAlert(message, type) {
+        const result = document.getElementById("result");
+        result.className = "alert";
+        result.style.marginTop = "10px";
+        if (type === "success") {
+          result.classList.add("alert-success");
+        } else if (type === "error") {
+          result.classList.add("alert-error");
+        } else {
+          result.classList.add("alert-info");
+        }
+        result.innerHTML = message.replace(/\n/g, "<br>");
+        result.classList.remove("hidden");
+      }
+
       function startChallenge() {
         document.getElementById("startScreen").style.display = "none";
         document.getElementById("challengeScreen").style.display = "block";
@@ -159,17 +202,14 @@
             clearInterval(timer);
             challengeOver = true;
 
-            document.getElementById("result").innerText =
-              "time's up. challenge failed.\n" +
-              "score: " +
-              score +
-              " / " +
-              totalCards +
-              "\n" +
-              "cards completed: " +
-              currentCard +
-              " / " +
-              totalCards;
+            showAlert(
+              "Time's up. Challenge failed.\n" +
+                "Score: " +
+                score +
+                " / " +
+                totalCards,
+              "error",
+            );
           }
         }, 1000);
       }
@@ -212,8 +252,9 @@
             answeredCorrectly = true;
           }
           document.getElementById("result").innerText = "correct.";
+          nextCard();
         } else {
-          document.getElementById("result").innerText = "incorrect.";
+          showAlert("Incorrect.", "error");
         }
       }
 
@@ -235,22 +276,23 @@
             awardTimeChallengeXp();
             xpAwarded = true;
           }
-          document.getElementById("result").innerText =
-            "challenge complete.\n" +
-            "score: " +
-            score +
-            " / " +
-            totalCards +
-            "\n" +
-            "time remaining: " +
-            timeRemaining +
-            "s";
+          showAlert(
+            "Challenge complete!\n" +
+              "Score: " +
+              score +
+              " / " +
+              totalCards +
+              "\nTime remaining: " +
+              timeRemaining +
+              "s",
+            "success",
+          );
 
           return;
         }
 
         showCard();
-        document.getElementById("result").innerText = "";
+        document.getElementById("result").classList.add("hidden");
       }
 
       function restartChallenge() {
