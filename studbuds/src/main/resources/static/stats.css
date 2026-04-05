@@ -19,9 +19,6 @@
     flex-wrap: wrap;
 }
 
-
-
-
 .summary-cards {
     display: flex;
     flex-direction: column;
