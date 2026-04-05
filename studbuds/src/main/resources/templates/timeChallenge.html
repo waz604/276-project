@@ -13,6 +13,13 @@
     />
     <link rel="stylesheet" href="/shared.css" />
     <link rel="stylesheet" href="/flashcard.css" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   </head>
 
   <body class="page">
@@ -40,9 +47,27 @@
       </div>
 
       <div id="challengeScreen" style="display: none">
-        <h3>Time Remaining: <span id="timer">--</span>s</h3>
+        <h3>
+          Time Remaining:
+          <span class="countdown font-mono text-2xl">
+            <span
+              id="timerDisplay"
+              style="--value: 0"
+              aria-live="polite"
+              aria-label="0"
+              >0</span
+            > </span
+          >s
+        </h3>
 
         <p id="progress">0 / <span th:text="${totalCards}">0</span></p>
+
+        <progress
+          id="progressBar"
+          class="progress progress-primary w-full"
+          value="0"
+          th:max="${totalCards}"
+        ></progress>
 
         <div id="flashcard" class="flip-card">
           <div class="flip-card-inner" id="inner-card">
@@ -79,12 +104,45 @@
       let timeLimit = totalCards > 0 ? totalCards * 10 : 10;
       let timeRemaining = timeLimit;
       let timer;
+      let xpAwarded = false;
+
+      function updateTimerDisplay() {
+        const timerDisplay = document.getElementById("timerDisplay");
+        timerDisplay.innerText = timeRemaining;
+        timerDisplay.style.setProperty("--value", timeRemaining);
+        timerDisplay.setAttribute("aria-label", timeRemaining);
+      }
+
+      function updateProgressBar() {
+        const bar = document.getElementById("progressBar");
+        if (bar) {
+          bar.max = totalCards > 0 ? totalCards : 1;
+          bar.value = currentCard + 1;
+        }
+      }
+      function awardTimeChallengeXp() {
+        fetch("/xp/time-challenge", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body:
+            "totalCards=" +
+            encodeURIComponent(totalCards) +
+            "&score=" +
+            encodeURIComponent(score) +
+            "&timeRemaining=" +
+            encodeURIComponent(timeRemaining),
+        }).catch((err) => {
+          console.error("failed to save time challenge xp", err);
+        });
+      }
 
       function startChallenge() {
         document.getElementById("startScreen").style.display = "none";
         document.getElementById("challengeScreen").style.display = "block";
 
-        document.getElementById("timer").innerText = timeRemaining;
+        updateTimerDisplay();
 
         showCard();
 
@@ -95,7 +153,7 @@
           }
 
           timeRemaining--;
-          document.getElementById("timer").innerText = timeRemaining;
+          updateTimerDisplay();
 
           if (timeRemaining <= 0) {
             clearInterval(timer);
@@ -128,6 +186,8 @@
           questions[currentCard];
         document.getElementById("progress").innerText =
           currentCard + 1 + " / " + totalCards;
+
+        updateProgressBar();
 
         document.getElementById("userAnswer").value = "";
 
@@ -169,6 +229,12 @@
           document.getElementById("progress").innerText =
             totalCards + " / " + totalCards;
 
+          const bar = document.getElementById("progressBar");
+          if (bar) bar.value = totalCards;
+          if (!xpAwarded) {
+            awardTimeChallengeXp();
+            xpAwarded = true;
+          }
           document.getElementById("result").innerText =
             "challenge complete.\n" +
             "score: " +
