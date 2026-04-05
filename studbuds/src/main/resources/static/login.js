@@ -45,7 +45,8 @@ window.onload = function () {
             theme: "outline", 
             size: "large", 
             text: "signin_with",
-            shape: "rectangular" 
+            shape: "rectangular" ,
+            width: 350
         } 
     );
     google.accounts.id.prompt(); 
