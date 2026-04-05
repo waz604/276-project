@@ -40,7 +40,7 @@ public class FlashcardControllerTest {
 
     @BeforeEach
     void setUp() {
-        testUser = new User("testUser", "password");
+        testUser = new User("testUser", "password", "test@gmail.com");
         testUser.setUid(1);
         Deck testDeck = new Deck();
         testDeck.setId(1);

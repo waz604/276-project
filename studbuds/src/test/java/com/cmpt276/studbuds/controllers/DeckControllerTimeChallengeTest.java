@@ -31,7 +31,7 @@ public class DeckControllerTimeChallengeTest {
 
     @BeforeEach
     void setUp() {
-        testUser = new User("testUser", "password");
+        testUser = new User("testUser", "password", "test@gmail.com");
         testUser.setUid(1);
         testUser.setDecks(new ArrayList<>());
 
