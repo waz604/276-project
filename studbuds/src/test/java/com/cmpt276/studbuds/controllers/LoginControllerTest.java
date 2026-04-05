@@ -51,7 +51,7 @@ public class LoginControllerTest {
                 .param("uname", "User")
                 .param("psw", "password123"))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/protected"));
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/profile"));
 
         Mockito.verify(userRepository, Mockito.times(1))
                .findByNameAndPassword("User", "password123");
@@ -68,7 +68,7 @@ public class LoginControllerTest {
                 .param("psw", "")
                 .param("google_id", "user@gmail.com"))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/protected"));
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/profile"));
 
         Mockito.verify(userRepository, Mockito.times(1))
                .findByGoogleID("user@gmail.com");
@@ -172,7 +172,7 @@ public class LoginControllerTest {
                .get("/view")
                .session(session))
                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-               .andExpect(MockMvcResultMatchers.redirectedUrl("/protected"));
+               .andExpect(MockMvcResultMatchers.redirectedUrl("/profile"));
     }
 
     @Test
