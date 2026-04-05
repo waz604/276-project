@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" data-theme="silk" class="bg-gradient-to-tr from-slate-200 to-amber-50">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,113 +7,128 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/shared.css">
     <link rel="stylesheet" href="/flashcard.css">
+    <link rel="stylesheet" href="/home.css">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body class="page">
-
-<nav class="navbar">
-    <span class="logo-text">StudBuds</span>
-
-    <div style="display:flex; gap:8px;">
-        <a href="/decks" class="btn-logout">Back to Decks</a>
-
-        <a href="/logout" class="btn-logout">Logout</a>
-    </div>
-</nav>
-
-<main class="content">
-
-    <h2 th:text="${deck.name}">Deck Name</h2> <!--section name-->
-
-    <a th:href="@{/decks/{id}/study(id=${deck.id})}" class="btn-action" style="width:auto; margin-bottom:24px; display:inline-block;">Study Deck</a>
-
-    <!--create -->
-    <section class="fc-item">
-        <h3>Add New Card</h3>
-        <form th:action="@{/decks/{id}/cards(id=${deck.id})}" method="post">
-
-            <label for="question">Question</label>
-            <input type="text" id="question" name="question" placeholder="Enter question..." required />
-
-            <label for="answer">Answer</label>
-            <input type="text" id="answer" name="answer" placeholder="Enter answer..." required />
-
-            <button type="submit" class="btn-add">Add Card</button>
-        </form>
-    </section>
-
-
-    
-    <section>
-        <h3>Cards</h3>
-
-
-        <div class="fc-item" th:each="card : ${deck.flashcards}">
-            <p><strong>Q:</strong> <span th:text="${card.question}">Question</span></p>
-
-            <p><strong>A:</strong> <span th:text="${card.answer}">Answer</span></p>
-
-            <!-- edit-->
-
-            <form th:action="@{/decks/{deckId}/cards/{cardId}/edit(deckId=${deck.id}, cardId=${card.id})}" method="post" class="edit-form"> 
- 
-                <input type="text" name="question" th:value="${card.question}" required />
-
-                <input type="text" name="answer" th:value="${card.answer}" required /> 
-
-
-                <button type="submit" class="btn-action btn-sm" style="width:auto;">Save</button>
-            </form>
-
-
-            <!--delete-->
-            <form th:action="@{/decks/{deckId}/cards/{cardId}/delete(deckId=${deck.id}, cardId=${card.id})}" method="post">
-                <button type="submit" class="btn-danger btn-sm">Delete</button>
-            </form> 
+<body class="page bg-gradient-to-tr from-slate-200 to-amber-50">
+    <div class="navbar bg-base-100 shadow-sm sticky top-0 z-50">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+                    </svg>
+                </div>
+                <ul tabindex="-1" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                    <li><a href="/home">Home</a></li>
+                    <li><a href="/decks">My Flashcard Decks</a></li>
+                    <li><a href="/tutorial">Tutorial</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+            </div>
+            <a href="/home" class="btn btn-ghost text-xl logo-text">StudBuds</a>
         </div>
-
-        <p th:if="${#lists.isEmpty(cards)}">No cards yet. Add one above!</p> 
-    </section>
-
-    <div class="notification" id="notif">
-        <p id="error-msg">Error Message</p>
-        <button class="btn-popup" onclick="hideErrorMsg()"></button>
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="/tutorial">Tutorial</a></li>
+            </ul>
+        </div>
+        <div class="navbar-end">
+            <a href="/decks" class="btn mr-2">Return to Decks</a>
+            <a href="/logout" class="btn">Logout</a>
+        </div>
     </div>
-</main>
+    <main>
+        <section class="content">
+            <h2 class="section-header" th:text="${deck.name}">Deck Name</h2> <!--section name-->
+            <a class="btn mb-4 mt-4"
+               th:href="@{/decks/{id}/study(id=${deck.id})}">
+                Study Deck
+            </a>
+            <button class="btn btn-success mb-4 mt-4" onclick="add_flashcard.showModal()">Add Flashcard</button>
+            <dialog id="add_flashcard" class="modal">
+                <div class="modal-box">
+                    <form method="dialog">
+                        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                    </form>
 
-<script th:inline="javascript">
-    function showErrorMsg(errorMsg) {
-        const notif = document.getElementById('notif');
-        const errorText = document.getElementById('error-msg');
+                    <h3 class="text-lg font-bold text-center mb-4">Add Flashcard</h3>
+                 
+                    <form th:action="@{/decks/{id}/cards(id=${deck.id})}" method="post" class="add-form w-100% flex flex-col items-center">
+                        <label class="input">
+                            <span class="label">Prompt</span>
+                            <input type="text" id="question" name="question" placeholder="Enter question..." required />
+                        </label>
+                          
+                        <label class="input">
+                            <span class="label">Solution</span>
+                            <input type="text" id="answer" name="answer" placeholder="Enter answer..." required />
+                        </label>
+                        
+                        <button type="submit" class="btn btn-success mt-4 btn-wide">Add</button>
+                    </form>
+                    
+                </div>
+            </dialog>
 
-        if(notif) {
-            errorText.textContent = errorMsg;
-            notif.classList.add('popup-visible');
-            setTimeout(() => {
-                if(notif.classList.contains('popup-visible')) {
-                    notif.classList.remove('popup-visible');
-                }
-            }, 3000)
-        }
-    }
+            <ul class="list bg-base-100 rounded-box shadow-md">
+                <li class="p-4 pb-2 text-lg font-semibold tracking-wide">Flashcards</li>
+                <li class="p-4 pb-2 text-md font-semibold tracking-wide border-t opacity-70" th:if="${#lists.isEmpty(deck.flashcards)}">
+                    No flashcard has been created
+                </li>    
+                <li class="p-4 border-t" th:each="card : ${deck.flashcards}">
+                    <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_auto_auto] gap-4 items-start">
+                        <div class="min-w-0">
+                            <h2><strong>Prompt</strong></h2>
+                            <p class="whitespace-normal break-words" th:text="${card.question}">Question</p>
+                        </div>
 
-    function hideErrorMsg() {
-        const notif = document.getElementById('notif');
-        console.log('gey');
-        if(notif) {
-            if(notif.classList.contains('popup-visible')) {
-                notif.classList.remove('popup-visible');
-            }
-        }
-    }
+                        <div class="min-w-0">
+                            <h2><strong>Solution</strong></h2>
+                            <p class="whitespace-normal break-words" th:text="${card.answer}">Answer</p>
+                        </div>
 
-    const errorMsg = /*[[${errorMsg}]]*/;
+                        <button
+                            type="button"
+                            class="btn"
+                            th:onclick="|document.getElementById('edit_flashcard_${card.id}').showModal()|">
+                            Edit
+                        </button>
 
-    if (errorMsg) {
-        showErrorMsg(errorMsg);
-    }
-</script>
+                        <dialog th:id="|edit_flashcard_${card.id}|" class="modal">
+                            <div class="modal-box">
+                                <form method="dialog">
+                                    <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                                </form>
 
+                                <h3 class="text-lg font-bold text-center mb-4">Edit Flashcard</h3>
+
+                                <form th:action="@{/decks/{deckId}/cards/{cardId}/edit(deckId=${deck.id}, cardId=${card.id})}"
+                                    method="post"
+                                    class="add-form w-full flex flex-col items-center">
+                                    <label class="input">
+                                        <span class="label">Prompt</span>
+                                        <input type="text" name="question" th:value="${card.question}" required />
+                                    </label>
+
+                                    <label class="input">
+                                        <span class="label">Solution</span>
+                                        <input type="text" name="answer" th:value="${card.answer}" required />
+                                    </label>
+
+                                    <button type="submit" class="btn btn-success mt-4 btn-wide">Save Changes</button>
+                                </form>
+                            </div>
+                        </dialog>
+                        <form th:action="@{/decks/{deckId}/cards/{cardId}/delete(deckId=${deck.id}, cardId=${card.id})}" method="post">
+                            <button type="submit" class="w-full btn btn-error">Delete</button>
+                        </form>
+                    </div>
+                </li>
+            </ul>
+        </section>
+    </main>
 </body>
-</html>
