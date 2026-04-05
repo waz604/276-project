@@ -69,7 +69,7 @@ public class LoginController {
             .map(existingUser -> {
                 session.setAttribute("session_user", existingUser);
                 session.setAttribute("userId", existingUser.getUid());
-                return "redirect:/protected";
+                return "redirect:/profile";
             })
             .orElseGet(() -> {
                 // Create new Google User
@@ -81,7 +81,7 @@ public class LoginController {
                 
                 session.setAttribute("session_user", newUser);
                 session.setAttribute("userId", newUser.getUid());
-                return "redirect:/protected";
+                return "redirect:/profile";
             });
     }
 
@@ -108,22 +108,13 @@ public class LoginController {
         return redirectForRole(user);
     }
 
-    // Dashboard (regular users)
-    @GetMapping("/protected")
-    public String dashboard(Model model, HttpSession session) {
-        User user = (User) session.getAttribute("session_user");
-        if (user == null) return "redirect:/login";
-        model.addAttribute("user", user);
-        return "profile";
-    }
-
     // View all users (admin only)
     @GetMapping("/view")
     public String getAllUsers(Model model, HttpSession session) {
         User user = (User) session.getAttribute("session_user");
         if (user == null) return "redirect:/login";
         if (user.getRole() == null || user.getRole() != User.roleType.ADMIN) {
-            return "redirect:/protected";
+            return "redirect:/profile";
         }
         List<User> users = userRepo.findAll();
         model.addAttribute("us", users);
@@ -167,7 +158,7 @@ public class LoginController {
         if (user.getRole() == User.roleType.ADMIN) {
             return "redirect:/view";
         }
-        return "redirect:/protected";
+        return "redirect:/profile";
     }
 
     // Delete user (ADMIN ONLY)
