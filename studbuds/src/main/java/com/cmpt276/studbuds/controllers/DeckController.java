@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.cmpt276.studbuds.exceptions.NullDeckException;
+import com.cmpt276.studbuds.exceptions.NullFlashcardException;
 import com.cmpt276.studbuds.exceptions.NullUserException;
 import com.cmpt276.studbuds.models.Deck;
+import com.cmpt276.studbuds.models.FlashCard;
 import com.cmpt276.studbuds.models.User;
 import com.cmpt276.studbuds.models.UserRepository;
 
@@ -35,12 +37,6 @@ public class DeckController {
         model.addAttribute("decks", decks);
         return "decks";
     }
-
-    // Not needed for iteration 1
-    /* @GetMapping("/decks/add")
-    public String addDeckPage() {
-        return "decks/add";
-    } */
     
     @PostMapping("/decks/add")
     public String addDeck(HttpServletRequest request, @RequestParam("deckName") String name) {
@@ -88,10 +84,26 @@ public class DeckController {
 
 
     @GetMapping("/decks/{id}/challenge")
-    public String getTimeChallenge(Model model, @PathVariable long id, HttpServletRequest request) {
+    public String getTimeChallenge(Model model, 
+                                   @PathVariable long id, 
+                                   HttpServletRequest request,
+                                   RedirectAttributes redirectAttributes) 
+    {
 
         User user = findUser(request);
         Deck deck = findDeck(user, id);
+
+        List<FlashCard> flashcards = deck.getFlashcards();
+        if(flashcards == null) throw new NullFlashcardException(deck.getId());
+        int totalCards = flashcards.size();
+        
+        if(totalCards == 0) 
+        {   
+            String errorMsg = "You cannot do Time Challenge mode on empty deck";
+            redirectAttributes.addFlashAttribute("errorMsg", errorMsg);
+            return "redirect:/decks/{id}/cards";
+        }
+
         model.addAttribute("deck", deck);
 
         List<String> questions = new java.util.ArrayList<>();
@@ -124,10 +136,24 @@ public class DeckController {
     }
 
     @GetMapping("/decks/{id}/quiz")
-    public String quizPage(Model model, HttpServletRequest request, @PathVariable long id)
+    public String quizPage(Model model, 
+                           HttpServletRequest request, 
+                           @PathVariable long id,
+                           RedirectAttributes redirectAttributes)
     {   
         User user = findUser(request);
         Deck deck = findDeck(user, id);
+
+        List<FlashCard> flashcards = deck.getFlashcards();
+        if(flashcards == null) throw new NullFlashcardException(deck.getId());
+        int totalCards = flashcards.size();
+        
+        if(totalCards == 0) 
+        {   
+            String errorMsg = "You cannot do quiz mode on empty deck";
+            redirectAttributes.addFlashAttribute("errorMsg", errorMsg);
+            return "redirect:/decks/{id}/cards";
+        }
 
         model.addAttribute("deck", deck);
         model.addAttribute("flashcards", deck.flashcardsJson());
