@@ -1,14 +1,14 @@
 .rank-one {
-    background-color: #fef9c3;
+    background-color: #fff9ba;
     font-weight: bold;
 }
 
 .rank-two {
-    background-color: #c4c4c4;
+    background-color: #dfdfdf;
 }
 
 .rank-three {
-    background-color: #f09d4a;
+    background-color: #fdba76;
 }
 
 .leaderboard {
@@ -20,7 +20,7 @@
     border-radius: 20px;
     width: 90%;
     max-width: 700px;
-    padding: 10px;
+    padding: 20px;
     box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.3);
 }
 
