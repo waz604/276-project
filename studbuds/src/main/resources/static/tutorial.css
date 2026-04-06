@@ -36,7 +36,7 @@ html, body {
 }
 
 .tutorial-card-challenge {
-    position: fixed; 
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -44,7 +44,6 @@ html, body {
     height: 100%;
     max-height: 700px;
     max-width: 1000px;
-    background: #dcdbdb;
     box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.3);
     border-radius: 20px;
     padding: 30px;
@@ -60,7 +59,7 @@ html, body {
 }
 
 .tutorial-card-XP {
-    position: fixed; 
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -68,7 +67,6 @@ html, body {
     height: 100%;
     max-height: 700px;
     max-width: 1000px;
-    background: #dcdbdb;
     box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.3);
     border-radius: 20px;
     padding: 30px;
@@ -91,7 +89,7 @@ html, body {
   width: auto;
   margin-top: -22px;
   padding: 16px;
-  color: rgb(0, 0, 0);
+  color: oklch(var(--bc));
   font-weight: bold;
   font-size: 18px;
   transition: 0.6s ease;
@@ -137,19 +135,8 @@ html, body {
 /* Tutorial Buttons ----------------------------- */
 .flashcard-tutorial-btn,
 .challenge-tutorial-btn,
-.XP-tutorial-btn,
-.decks-btn {
+.XP-tutorial-btn {
     position: absolute;
-    padding: 8px 18px;
-    background: #f6f2f0;
-    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
-    color: #000000;
-    font-family: 'Sora', sans-serif;
-    font-weight: 500;
-    font-size: 1.0rem;
-    cursor: pointer;
-    text-decoration: none;
 }
 
 .flashcard-tutorial-btn {
@@ -158,8 +145,8 @@ html, body {
 
 .challenge-tutorial-btn {
     bottom: 50%;
-
 }
+
 .XP-tutorial-btn {
     bottom: 44%;
 }
@@ -167,12 +154,9 @@ html, body {
 
 /* Button Toggles */
 
-.is-active {
-    background-color: #f6f2f0;
-}
-
 .button-activated {
-    background-color: rgb(177, 218, 177);
+    outline: 2px solid oklch(var(--p));
+    outline-offset: 2px;
 }
 
 .mySlides img {
@@ -206,10 +190,3 @@ html, body {
     margin-bottom: 20px;
 }
 
-.XP-tutorial-btn:hover,
-.flashcard-tutorial-btn:hover,
-.challenge-tutorial-btn:hover,
-.decks-btn:hover {
-    background: #dcdbdb;
-    color: #535353;
-}
