@@ -52,6 +52,15 @@
         </div>
     </div>
     <main>
+
+        <!--Alert UI-->
+        <div role="alert" id="alert" class="alert alert-error w-1/2 absolute m-auto left-0 right-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span id="error-msg">Error! Task failed successfully.</span>
+        </div>
+
         <section class="content">
             <h2 class="section-header" th:text="${deck.name}">Deck Name</h2> <!--section name-->
             <a class="btn mb-4 mt-4"
@@ -141,4 +150,33 @@
             </ul>
         </section>
     </main>
+    <script th:inline="javascript">
+        function showErrorMsg(errorMsg) {
+            const alert = document.getElementById('alert');
+            const errorText = document.getElementById('error-msg');
+            if (!alert || !errorText) return;
+
+            errorText.textContent = errorMsg;
+            alert.classList.add('fade'); 
+
+            setTimeout(() => {
+                alert.classList.remove('fade');
+            }, 3000);
+        }
+
+        function closeErrorMsg() {
+            const alert = document.getElementById('alert');
+            
+            if(!alert) return;
+            if(alert.classList.contains('fade')) {
+                alert.classList.remove('fade');
+            }
+        }
+
+        const errorMsg = /*[[${errorMsg}]]*/ null;
+        if (errorMsg) {
+            showErrorMsg(errorMsg);
+        }
+    </script>
 </body>
+</html>

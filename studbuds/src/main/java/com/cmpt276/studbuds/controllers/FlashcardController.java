@@ -54,7 +54,7 @@ public class FlashcardController {
         
         return "study";
     }
-    
+
     @PostMapping("/decks/{id}/cards")
     public String addCard(HttpServletRequest request, @PathVariable long id,
                          @RequestParam("question") String question,

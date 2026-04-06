@@ -1,57 +1,90 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" data-theme="silk" class="bg-gradient-to-tr from-slate-200 to-amber-50">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudBuds - Study Mode</title>
-    <link rel="stylesheet" href="/shared.css">
+    <title>StudBuds - Flashcards</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/flashcard.css">
+    <link rel="stylesheet" href="/home.css">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body class="page">
-
-<nav class="navbar">
-    <span class="logo-text">StudBuds</span>
-
-    <div style="display:flex; gap:8px;">
-        <a th:href="@{/decks/{id}/cards(id=${deck.id})}" class="btn-logout">Back to Deck</a>
-
-        <a href="/decks" class="btn-logout">My Decks</a>
-    </div>
-</nav>
-
-<main class="content">
-
-
-    <h2 th:text="'Studying: ' + ${deck.name}">Studying: Deck Name</h2>
-
-    <p id="total">1 / 10</p>
-
-
-    <!--flip -->
-
-    <div id="flashcard" class="flip-card" th:attr="data-cards=${cards}">
-        <div class="flip-card-inner" id="inner-card">
-            <div id="card-front" class="flip-card-front">
-                <p id="questionText">Question</p>
+<body class="page bg-gradient-to-tr from-slate-200 to-amber-50">
+    <div class="navbar bg-base-100 shadow-sm sticky top-0 z-50">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+                    </svg>
+                </div>
+                <ul tabindex="-1" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                    <li><a href="/home">Home</a></li>
+                    <li><a href="/decks">My Flashcard Decks</a></li>
+                    <li><a href="/tutorial">Tutorial</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
             </div>
-
-            <div id="card-back" class="flip-card-back">
-                <p id="answerText">Answer</p>
-            </div>
+            <a href="/home" class="btn btn-ghost text-xl logo-text">StudBuds</a>
+        </div>
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="/tutorial">Tutorial</a></li>
+            </ul>
+        </div>
+        <div class="navbar-end">
+            <a th:href="@{/decks/{id}/cards(id=${deck.id})}" class="btn mr-2">Return to Deck</a>
+            <a href="/logout" class="btn">Logout</a>
         </div>
     </div>
+    <main>
+        <section class="content px-4 py-6">
+            <div class="max-w-3xl mx-auto">
+                <div class="mb-4 flex items-center justify-between">
+                    <h2 class="text-2xl font-bold" th:text="${deck.name}">Deck Name</h2>
+                    <span class="badge badge-ghost font-semibold" th:text="|Total: ${totalCards}|">Total: 0</span>
+                </div>
+
+                <div th:if="${totalCards == 0}" class="alert alert-warning">
+                    <span>No flashcards yet. Add cards before studying.</span>
+                </div>
+
+                <div th:if="${totalCards > 0}" class="card bg-base-100 shadow-xl border">
+                    <div class="card-body" id="study-container" th:attr="data-cards=${cards}">
+                        <div class="flex items-center justify-between">
+                            <h3 class="card-title">Study Mode</h3>
+                            <span id="indexBadge" class="badge badge-outline badge-primary">1 / 1</span>
+                        </div>
+
+                        <label class="swap swap-flip w-full cursor-pointer">
+                            <input id="flipToggle" type="checkbox" />
+
+                            <div class="swap-off w-full">
+                                <div class="rounded-xl bg-base-200 p-6 min-h-44 min-w-100 max-w-100 flex flex-col justify-center">
+                                    <p class="text-sm opacity-70 mb-2 text-center">Prompt</p>
+                                    <p id="questionText" class="text-lg font-medium break-words text-center">Question</p>
+                                </div>
+                            </div>
     
-    <button class="btn-action" id="flip">Flip</button>
-
-    <!-- previous next -->
-    <div class="nav-row" style="margin-top:12px;">
-        <a class="btn-action" id="previous">Previous</a>
-
-        <a class="btn-action" id="next">Next</a>
-    </div>
-</main>
-
-<script src="/study.js"></script>
-
+                            <div class="swap-on w-full">
+                                <div class="rounded-xl bg-success/10 p-6 min-h-44 w-full min-w-100 max-w-100 flex flex-col justify-center">
+                                    <p class="text-sm opacity-70 mb-2 text-center">Answer</p>
+                                    <p id="answerText" class="text-lg font-medium break-words text-center">Answer</p>
+                                </div>
+                            </div>
+                        </label>
+                        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
+                            <button class="btn min-w-60" id="prevBtn">Previous</button>
+                            <button class="btn min-w-60" id="nextBtn">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    <script src="/study.js"></script>
 </body>
 </html>

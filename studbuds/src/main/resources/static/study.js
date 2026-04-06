@@ -1,35 +1,30 @@
-const cards = JSON.parse(document.getElementById('flashcard').dataset.cards);
+const cards = JSON.parse(document.getElementById('study-container').dataset.cards);
 let index = 0;
 
 // DOM elements
 const questionText = document.getElementById('questionText'); 
 const answerText = document.getElementById('answerText'); 
-const total = document.getElementById('total'); 
-const prevBtn = document.getElementById('previous'); 
-const nextBtn = document.getElementById('next'); 
-const flipBtn = document.getElementById('flip');
-const innerCard = document.getElementById('inner-card');
+const indexDisplay = document.getElementById('indexBadge'); 
+const prevBtn = document.getElementById('prevBtn'); 
+const nextBtn = document.getElementById('nextBtn');
+const innerCard = document.getElementById('study-container');
+const flipToggle = document.getElementById('flipToggle');
 
 // Render card's content
 function renderCard() { 
-    questionText.textContent = cards[index].question;
-    answerText.style.visibility = 'hidden';
-    answerText.textContent = cards[index].answer; 
-    total.textContent = (index+1) + ' / ' + cards.length; 
-    prevBtn.style.display = (index === 0) ? 'none' : 'block'; 
-    nextBtn.style.display = (index === cards.length - 1) ? 'none' : 'block';
-    innerCard.classList.remove('is-flipped');
-}
+    flipToggle.checked = false;
     
-// Flip card on click
-function flipCard() {
-    answerText.style.visibility = 'visible'
-    innerCard.classList.toggle('is-flipped');
+    questionText.textContent = cards[index].question;
+    answerText.textContent = cards[index].answer; 
+    indexDisplay.textContent = (index+1) + ' / ' + cards.length; 
 }
 
 prevBtn.addEventListener('click', () => {
     if(index > 0) {
         index--;
+        renderCard();
+    } else {
+        index = cards.length-1;
         renderCard();
     }
 })
@@ -38,11 +33,10 @@ nextBtn.addEventListener('click', () => {
     if(index < cards.length-1) {
         index++;
         renderCard();
+    } else {
+        index = 0;
+        renderCard();
     }
-})
-
-flip.addEventListener('click', () => {
-    flipCard();
 })
 
 // calculate_XP(flashcard_num, time, correct cards)
