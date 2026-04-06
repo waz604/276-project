@@ -126,12 +126,10 @@ public class ProfileController {
             accountWeekStart = sevenWeeksAgo;
         }
 
-        // Don't go further back than 7 weeks
-        LocalDate baseStart;
-        if (accountWeekStart.isAfter(sevenWeeksAgo)) {
+        // Always show at least 7 weeks; extend further back only if account was created earlier
+        LocalDate baseStart = sevenWeeksAgo;
+        if (accountWeekStart.isBefore(sevenWeeksAgo)) {
             baseStart = accountWeekStart;
-        } else {
-            baseStart = sevenWeeksAgo;
         }
 
         LocalDate startDate;
@@ -163,14 +161,27 @@ public class ProfileController {
 
         // calculate level from total XP (mirrors XP.js formula)
         int level = calculateLevel(totalXp);
+        int[] levelProgress = calculateLevelProgress(totalXp);
+        int currentLevel = levelProgress[0];
+        int nextLevel = levelProgress[1];
+        int levelProgressPercent = levelProgress[2];
 
         model.addAttribute("totalXp", totalXp);
         model.addAttribute("level", level);
+        model.addAttribute("currentLevel", currentLevel);
+        model.addAttribute("nextLevel", nextLevel);
+        model.addAttribute("levelProgressPercent", levelProgressPercent);
         model.addAttribute("currentStreak", currentStreak);
         model.addAttribute("longestStreak", longestStreak);
         model.addAttribute("mostActiveDay", mostActiveDay);
         model.addAttribute("heatmap", heatmap);
         model.addAttribute("heatmapDates", heatmapDates);
+        String joinedMonth = "Unknown";
+        if (user.getCreatedAt() != null) {
+            String month = user.getCreatedAt().getMonth().toString();
+            joinedMonth = month.charAt(0) + month.substring(1).toLowerCase() + " " + user.getCreatedAt().getYear();
+        }
+        model.addAttribute("joinedMonth", joinedMonth);
 
         return "profile";
     }
@@ -222,6 +233,28 @@ public class ProfileController {
 
         return level;
     }
+
+    private int[] calculateLevelProgress(int totalXp) {
+    int level = 1;
+    int xpToNextLevel = 100;
+    int remaining = totalXp;
+
+    while (remaining >= xpToNextLevel && level < 20) {
+        remaining -= xpToNextLevel;
+        level++;
+        xpToNextLevel = level * 100;
+    }
+
+    if (level >= 20) {
+        return new int[] { xpToNextLevel, xpToNextLevel, 100 };
+    }
+
+    int currentLevel = remaining;
+    int progressPercent = (int) Math.round((currentLevel * 100.0) / xpToNextLevel);
+
+    return new int[] { currentLevel, xpToNextLevel, progressPercent };
+}
+
 
     private User findUser(HttpServletRequest request) {
         
