@@ -140,6 +140,7 @@ public class LoginController {
         User addedUser = new User();
         addedUser.setName(newName);
         addedUser.setPassword(newPwd);
+        addedUser.setCreatedAt(java.time.LocalDate.now());
         userRepo.save(addedUser);
         response.setStatus(201);
 

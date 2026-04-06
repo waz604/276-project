@@ -126,12 +126,10 @@ public class ProfileController {
             accountWeekStart = sevenWeeksAgo;
         }
 
-        // Don't go further back than 7 weeks
-        LocalDate baseStart;
-        if (accountWeekStart.isAfter(sevenWeeksAgo)) {
+        // Always show at least 7 weeks; extend further back only if account was created earlier
+        LocalDate baseStart = sevenWeeksAgo;
+        if (accountWeekStart.isBefore(sevenWeeksAgo)) {
             baseStart = accountWeekStart;
-        } else {
-            baseStart = sevenWeeksAgo;
         }
 
         LocalDate startDate;
@@ -171,6 +169,12 @@ public class ProfileController {
         model.addAttribute("mostActiveDay", mostActiveDay);
         model.addAttribute("heatmap", heatmap);
         model.addAttribute("heatmapDates", heatmapDates);
+        String joinedMonth = "Unknown";
+        if (user.getCreatedAt() != null) {
+            String month = user.getCreatedAt().getMonth().toString();
+            joinedMonth = month.charAt(0) + month.substring(1).toLowerCase() + " " + user.getCreatedAt().getYear();
+        }
+        model.addAttribute("joinedMonth", joinedMonth);
 
         return "profile";
     }
