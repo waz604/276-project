@@ -1,0 +1,53 @@
+.rank-one {
+    background-color: #fff9ba;
+    font-weight: bold;
+}
+
+.rank-two {
+    background-color: #dfdfdf;
+}
+
+.rank-three {
+    background-color: #fdba76;
+}
+
+.leaderboard {
+    position: fixed; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f4f1ee;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 700px;
+    padding: 20px;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.page-content {
+    max-width: 640px;
+    margin: 48px auto;
+    padding: 0 24px;
+}
+
+.page-content h1 {
+    margin-bottom: 8px;
+}
+
+.page-content .subtitle {
+    margin-bottom: 32px;
+}
+
+h1 {
+    font-size: 1.55rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    margin-bottom: 6px;
+}
+
+.subtitle {
+    font-size: 0.875rem;
+    color: #888;
+    margin-bottom: 32px;
+    font-weight: 300;
+}
