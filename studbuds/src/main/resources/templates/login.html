@@ -56,10 +56,12 @@
 
                         <fieldset class="fieldset">
                             <label class="label" for="uname">Username</label>
-                            <input type="text" id="uname" name="uname" class="input w-full" placeholder="Enter your username" autocomplete="username">
+                            <input type="text" id="uname" name="uname" class="input w-full" placeholder="Enter your username" autocomplete="username" required>
+                            <p class="fieldset-label text-error hidden" id="uname-error">Username is required.</p>
 
-                            <label class="label" for="psw">Password</label>
-                            <input type="password" id="psw" name="psw" class="input w-full" placeholder="Enter your password" autocomplete="current-password">
+                            <label class="label mt-2" for="psw">Password</label>
+                            <input type="password" id="psw" name="psw" class="input w-full" placeholder="Enter your password" autocomplete="current-password" required>
+                            <p class="fieldset-label text-error hidden" id="psw-error">Password is required.</p>
 
                             <button type="submit" class="btn btn-neutral w-full mt-4" id="loginBtn">Login</button>
                             <a href="/add" class="btn btn-outline w-full mt-2">Create New Account</a>

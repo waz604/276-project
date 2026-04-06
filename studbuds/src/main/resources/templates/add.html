@@ -24,6 +24,13 @@
 </head>
 <body class="bg-gradient-to-l from-amber-100 to-gray-400">
 
+    <div id="successMsg" role="alert" class="alert alert-success fixed top-6 left-1/2 -translate-x-1/2 w-auto max-w-sm z-50 shadow-lg" style="display:none">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <span>Account created! Redirecting to login...</span>
+    </div>
+
     <div class="hero min-h-screen">
         <div class="hero-content flex-col lg:flex-row-reverse">
 
@@ -34,7 +41,7 @@
 
             <div class="divider divider-horizontal"> </div>
 
-            <div class="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl bg-gradient-to-r from-zinc-100 to-zinc-300">
+            <div class="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl bg-gradient-to-r from-zinc-100 to-zinc-300 overflow-hidden">
                 <div class="card-body">
 
                     <div role="alert" class="alert alert-error alert-soft" id="errorMsg" style="display:none">
@@ -44,10 +51,24 @@
                     <form action="/create" method="post" id="addForm" novalidate>
                         <fieldset class="fieldset">
                             <label class="label" for="uname">Username</label>
-                            <input type="text" id="uname" name="name" class="input w-full" placeholder="Enter your username" autocomplete="username">
+                            <label class="input w-full">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-4 w-4 opacity-50">
+                                    <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                                </svg>
+                                <input type="text" id="uname" name="name" class="validator" placeholder="Enter your username"
+                                    autocomplete="username" required minlength="3" maxlength="30" pattern="[A-Za-z0-9\-]+">
+                            </label>
+                            <p class="fieldset-label text-error hidden w-full break-words" id="uname-hint">Must be 3 to 30 characters, letters, numbers or dash only.</p>
 
-                            <label class="label" for="psw">Password</label>
-                            <input type="password" id="psw" name="password" class="input w-full" placeholder="Enter your password" autocomplete="current-password">
+                            <label class="label mt-2" for="psw">Password</label>
+                            <label class="input w-full">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-4 w-4 opacity-50">
+                                    <path d="M12 1C8.676 1 6 3.676 6 7v1H4v15h16V8h-2V7c0-3.324-2.676-6-6-6zm0 2c2.276 0 4 1.724 4 4v1H8V7c0-2.276 1.724-4 4-4zm0 9a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/>
+                                </svg>
+                                <input type="password" id="psw" name="password" class="validator" placeholder="Enter your password"
+                                    autocomplete="current-password" required minlength="8">
+                            </label>
+                            <p class="fieldset-label text-error hidden w-full break-words" id="psw-hint">Must be at least 8 characters, including a number and a special character (!@#$%).</p>
 
                             <button type="submit" class="btn btn-neutral w-full mt-4">Create User</button>
                             <a href="/login" class="btn btn-outline w-full mt-2">Already have an account?</a>
