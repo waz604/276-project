@@ -1,34 +1,58 @@
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" data-theme="silk" class="bg-gradient-to-tr from-slate-200 to-amber-50">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudBuds - My Decks</title>
+    <title>StudBuds - Tutorial</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/shared.css">
+    <link rel="stylesheet" href="/home.css">
     <link rel="stylesheet" href="/flashcard.css">
+    <link rel="stylesheet" href="/tutorial.css">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
-<body class="page">
-
-<nav class="navbar">
-    <span class="logo-text">StudBuds</span>
-    <a href="/logout" class="btn-logout">Logout</a>
-</nav>
-
-<div style="height: 16px;"></div>
-<a href="/profile" class="returnbtn">Return to Profile</a>
-
+<body class="page bg-gradient-to-tr from-slate-200 to-amber-50">
+    <div class="navbar bg-base-100 shadow-sm sticky top-0 z-50">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+                    </svg>
+                </div>
+                <ul tabindex="-1" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                    <li><a href="/home">Home</a></li>
+                    <li><a href="/decks">My Flashcard Decks</a></li>
+                    <li><a href="/tutorial">Tutorial</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+            </div>
+            <a href="/home" class="btn btn-ghost text-xl logo-text">StudBuds</a>
+        </div>
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="/decks">My Decks</a></li>
+            </ul>
+        </div>
+        <div class="navbar-end">
+            <a href="/profile" class="btn mr-2">Return to Profile</a>
+            <a href="/logout" class="btn">Logout</a>
+        </div>
+    </div>
 
 <div>
-    <button type = button class="flashcard-tutorial-btn">How do the Flashcards work?</button>
+    <button type = button class="flashcard-tutorial-btn">How do the flashcards work?</button>
     <button type = button class="challenge-tutorial-btn">How does the Time Challenge work?</button>
-    <!-- <button type = button class="XP-tutorial-btn">How can I gain XP?</button> -->
+    <button type = button class="XP-tutorial-btn">How can I gain XP?</button>
+
 
     <!---------------------------------- Flashcard Tutorial ----------------------------------------->
     <div class = "tutorial-card-flashcards">
-        <div class="slideshow-container">
+        <div class="slideshow-container" >
 
             <div class = "tutorial-header-container">
 
@@ -47,7 +71,7 @@
                 <br>
 
                 <img class = "tutorialImg" src="tutorial-imgs/deckcreation.png" 
-                style="display: block; margin: 0 auto; width: 80%; max-height: 300px;">
+                style="width: 80%">
             </div>
 
             <div class="mySlides fade">
@@ -55,7 +79,7 @@
                 <br>
 
                 <img class = "tutorialImg" src="tutorial-imgs/viewcards.png" 
-                style="display: block; margin: 0 auto; width: 80%; max-height: 300px;">
+                style="width: 80%">
             </div>
 
             <div class="mySlides fade">
@@ -63,7 +87,7 @@
                 <br>
 
                 <img class = "tutorialImg" src="tutorial-imgs/createcards.png" 
-                style="display: block; margin: 0 auto; width: 80%; max-height: 300px;">
+                style="width: 80%">
             </div>
 
             <div class="mySlides fade">
@@ -71,7 +95,7 @@
                 <br>
 
                 <img class = "tutorialImg" src="tutorial-imgs/studycards.png" 
-                style="display: block; margin: 0 auto; width: 80%; max-height: 300px;">
+                style="width: 80%">
             </div>
 
             
@@ -80,14 +104,11 @@
                 <br>
 
                 <img class = "tutorialImg" src="tutorial-imgs/flipcards.png" 
-                style="display: block; margin: 0 auto; width: 80%; max-height: 300px;">
+                style="width: 80%">
             </div>
 
             <div class="mySlides fade">
-                <div class="text">Try it out!</div>
-                <br>
-
-                <a href="/decks" class ="decks-btn">My Flashcard Decks</a>
+                <a href="/decks" class ="decks-btn">Try it out here!</a>
             </div>
 
             <!-- Next and previous buttons -->
@@ -130,7 +151,7 @@
                 <br>
 
                 <img class = "tutorialImg" src="tutorial-imgs/timechallenge.png" 
-                style="display: block; margin: 0 auto; width: 80%; max-height: 300px;">
+                style="width: 80%">
             </div>
 
             <div class="mySlides fade">
@@ -138,7 +159,7 @@
                 <br>
 
                 <img class = "tutorialImg" src="tutorial-imgs/timechallenge-example.png" 
-                style="display: block; margin: 0 auto; width: 80%; max-height: 300px;">
+                style="width: 80%">
             </div>
 
             <div class="mySlides fade">
@@ -146,14 +167,11 @@
                 <br>
 
                 <img class = "tutorialImg" src="tutorial-imgs/timechallenge-example2.png" 
-                style="display: block; margin: 0 auto; width: 80%; max-height: 300px;">
+                style="width: 80%">
             </div>
 
             <div class="mySlides fade">
-                <div class="text">Try it out!</div>
-                <br>
-
-                <a href="/decks" class = "decks-btn">My Flashcard Decks</a>
+                <a href="/decks" class ="decks-btn">Try it out here!</a>
             </div>
             <!-- Next and previous buttons -->
             <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
@@ -172,7 +190,7 @@
         </div>
     </div>
 
-<!--  --------------------  Saving for Iteration 3  -----------------------------------
+<!--  --------------------  XP Tutorial  ----------------------------------->
     <div class = "tutorial-card-XP">
         <div class="slideshow-container">
 
@@ -192,7 +210,7 @@
                 <br>
 
                 <img class = "tutorialImg" src="tutorial-imgs/earnXP.png" 
-                style="display: block; margin: 0 auto; width: 80%; max-height: 300px;">
+                style="width: 80%">
             </div>
 
             <div class="mySlides fade">
@@ -200,7 +218,7 @@
                 <br>
 
                 <img class = "tutorialImg" src="tutorial-imgs/timechallenge.png" 
-                style="display: block; margin: 0 auto; width: 80%; max-height: 300px;">
+                style="width: 80%">
             </div>
 
             <div class="mySlides fade">
@@ -208,7 +226,7 @@
                 <br>
 
                 <img class = "tutorialImg" src="tutorial-imgs/XP.png" 
-                style="display: block; margin: 0 auto; width: 80%; max-height: 300px;">
+                style="width: 80%">
             </div>
 
             <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
@@ -225,7 +243,6 @@
         </div>
     </div>
 </div>
--->
 
     <script src="/tutorial.js"></script>
 </body>

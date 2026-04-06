@@ -4,6 +4,32 @@ body.page {
     color: var(--color-base-content) !important;
 }
 
+[data-theme="night"] .c-features__item,
+[data-theme="night"] .c-features__item-info {
+    background: var(--color-base-100) !important;
+    border-color: var(--color-base-300) !important;
+}
+
+[data-theme="night"] .c-features__item-title {
+    color: var(--color-base-content) !important;
+}
+
+[data-theme="night"] .hero-title {
+    border-right-color: var(--color-base-content) !important;
+}
+
+[data-theme="night"] .mouse {
+    border-color: var(--color-base-content) !important;
+}
+
+[data-theme="night"] .mouse::before {
+    background-color: var(--color-base-content) !important;
+}
+
+[data-theme="night"] .site-footer {
+    border-top-color: var(--color-base-300) !important;
+}
+
 .navbar {
     background: var(--color-base-200) !important;
     border-bottom-color: var(--color-base-300) !important;
