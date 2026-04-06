@@ -4,6 +4,18 @@ const errorText  = document.getElementById('errorText');
 const unameInput = document.getElementById('uname');
 const pswInput   = document.getElementById('psw');
 const googleIdInput = document.getElementById('google_id_input');
+const unameError = document.getElementById('uname-error');
+const pswError   = document.getElementById('psw-error');
+
+function setFieldError(input, errorEl, hasError) {
+    if (hasError) {
+        input.classList.add('input-error');
+        errorEl.classList.remove('hidden');
+    } else {
+        input.classList.remove('input-error');
+        errorEl.classList.add('hidden');
+    }
+}
 
 form.addEventListener('submit', function (e) {
     const uname = unameInput.value.trim();
@@ -11,6 +23,9 @@ form.addEventListener('submit', function (e) {
     const isGoogleUser = googleIdInput && googleIdInput.value !== "";
 
     if (!isGoogleUser) {
+        setFieldError(unameInput, unameError, !uname);
+        setFieldError(pswInput, pswError, !psw);
+
         if (!uname || !psw) {
             e.preventDefault();
 
@@ -30,11 +45,14 @@ form.addEventListener('submit', function (e) {
 });
 
 if (unameInput && pswInput) {
-    [unameInput, pswInput].forEach(function (input) {
-        input.addEventListener('input', function () {
-            errorMsg.classList.remove('visible');
-        });    
-    })
+    unameInput.addEventListener('input', function () {
+        setFieldError(unameInput, unameError, false);
+        errorMsg.style.display = 'none';
+    });
+    pswInput.addEventListener('input', function () {
+        setFieldError(pswInput, pswError, false);
+        errorMsg.style.display = 'none';
+    });
 };
 
 // https://developers.google.com/identity/gsi/web/reference/js-reference#google.accounts.id.renderButton
