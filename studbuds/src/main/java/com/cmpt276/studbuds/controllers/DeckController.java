@@ -122,6 +122,20 @@ public class DeckController {
 
         return "flashcards";
     }
+
+    @GetMapping("/decks/{id}/quiz")
+    public String quizPage(Model model, HttpServletRequest request, @PathVariable long id)
+    {   
+        User user = findUser(request);
+        Deck deck = findDeck(user, id);
+
+        model.addAttribute("deck", deck);
+        model.addAttribute("flashcards", deck.flashcardsJson());
+        model.addAttribute("numCards", deck.getFlashcards().size());
+
+        return "quiz";
+    }
+    
     
     // === Helper Methods === //
     private User findUser(HttpServletRequest request) {

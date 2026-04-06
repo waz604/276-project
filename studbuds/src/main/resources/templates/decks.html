@@ -72,7 +72,7 @@
                         <p th:text="${#lists.size(deck.flashcards)} + ' cards'">0 cards</p>
                         <a th:href="@{/decks/{id}/cards(id=${deck.id})}" class="btn">View Cards</a>
                         <a th:href="@{/decks/{id}/study(id=${deck.id})}" class="btn">Study</a>
-                        <a th:href="@{/decks/{id}/challenge(id=${deck.id})}" class="btn">Quiz Mode</a>
+                        <a th:href="@{/decks/{id}/quiz(id=${deck.id})}" class="btn">Quiz Mode</a>
                         <a th:href="@{/decks/{id}/challenge(id=${deck.id})}" class="btn">Challenge</a>
                         <form th:action="@{/decks/{id}/delete(id=${deck.id})}" method="get">
                             <button type="submit" class="btn btn-error w-full">Delete Deck</button>
