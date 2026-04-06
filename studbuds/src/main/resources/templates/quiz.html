@@ -78,13 +78,25 @@
             <input type="text" id="userAnswer" placeholder="Enter answer here" />
           </label>
 
-          <button class="btn btn-success mt-2 min-w-60">
+          <button id="submitAnswer" class="btn btn-success mt-2 min-w-60">
             Submit Answer
           </button> 
-          <button id="nextBtn" class="btn mt-2 min-w-60">Next Card</button>
+          <button id="skipBtn" class="btn mt-2 min-w-60">Skip</button>
 
           <div id="result" class="hidden w-full"></div>
-
+         
+          <dialog id="final_results" class="modal">
+            <div class="modal-box flex flex-col justify-center items-center">
+              <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+              </form>
+              <h3 class="text-lg font-bold text-center">Results of Quiz</h3>
+              <p id="result_text" class="py-4">Results</p>
+              <form th:action="@{/decks/{id}/cards(id=${deck.id})}">
+                <button class="btn">View this Deck</button>
+              </form>
+            </div>
+          </dialog>
         </div>
       </div>
     </main>

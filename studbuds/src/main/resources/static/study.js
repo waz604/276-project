@@ -17,13 +17,14 @@ function renderCard() {
     questionText.textContent = cards[index].question;
     answerText.textContent = cards[index].answer; 
     indexDisplay.textContent = (index+1) + ' / ' + cards.length; 
-    prevBtn.style.display = (index === 0) ? 'none' : 'block'; 
-    nextBtn.style.display = (index === cards.length - 1) ? 'none' : 'block';
 }
 
 prevBtn.addEventListener('click', () => {
     if(index > 0) {
         index--;
+        renderCard();
+    } else {
+        index = cards.length-1;
         renderCard();
     }
 })
@@ -31,6 +32,9 @@ prevBtn.addEventListener('click', () => {
 nextBtn.addEventListener('click', () => {
     if(index < cards.length-1) {
         index++;
+        renderCard();
+    } else {
+        index = 0;
         renderCard();
     }
 })
