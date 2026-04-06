@@ -110,6 +110,23 @@
         </div>
 
         <!--stats -->
+        <div class="w-full max-w-md mx-auto mt-4">
+    <div class="card bg-base-100 shadow-sm p-2 text-center">
+        <div class="text-xs text-base-content/70">Level</div>
+        <div class="text-2xl font-bold" th:text="${level}">1</div>
+
+        <div class="text-xs mt-0.5">
+            <span th:text="${currentLevel}">0</span> /
+            <span th:text="${nextLevel}">100</span> XP
+        </div>
+
+        <progress
+            class="progress progress-primary w-64 h-2 mx-auto mt-1"
+            th:value="${levelProgressPercent}"
+            max="100">
+        </progress>
+    </div>
+</div>
         <h2>My Stats</h2>
 
         <div class="stats-layout">
