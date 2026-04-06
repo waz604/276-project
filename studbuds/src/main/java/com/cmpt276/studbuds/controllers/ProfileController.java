@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -206,6 +207,42 @@ public class ProfileController {
         if(user == null) throw new NullUserException("user not found");
         
         return "tutorial";
+    }
+
+    @GetMapping("/leaderboard")
+    public String displayLeaderboard(HttpServletRequest request, Model model) {
+        Integer userId = (Integer) request.getSession().getAttribute("userId");
+        if(userId == null) throw new NullUserException("userId not found");
+        
+        User user = userRepository.findById(userId).orElse(null);
+        if(user == null) throw new NullUserException("user not found");
+
+        List<User> userList = userRepository.findAll(); 
+        
+        Map<Integer, Integer> userXpMap = new HashMap<>();
+        Map<Integer, Integer> userLevelMap = new HashMap<>();
+
+        for (User u : userList) {
+            List<XpLog> userLogs = xpLogRepository.findByUser(u);
+            
+            int total = userLogs.stream()
+                            .mapToInt(XpLog::getXpEarned)
+                            .sum();
+            int level = calculateLevel(total);
+
+            userXpMap.put(u.getUid(), total);
+            userLevelMap.put(u.getUid(), level);
+        }
+
+        model.addAttribute("xp", userXpMap);
+        model.addAttribute("level", userLevelMap);
+        
+        // Sort list of users based on XP and take the top 10 users
+        userList.sort((u1, u2) -> Integer.compare(userXpMap.get(u2.getUid()), userXpMap.get(u1.getUid())));
+        List<User> topTen = userList.size() > 10 ? userList.subList(0, 10) : userList;
+
+        model.addAttribute("us", topTen);
+        return "leaderboard";
     }
 
     // Saves XP earned during a study session to the database
