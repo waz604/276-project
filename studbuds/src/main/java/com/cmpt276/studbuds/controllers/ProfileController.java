@@ -163,9 +163,16 @@ public class ProfileController {
 
         // calculate level from total XP (mirrors XP.js formula)
         int level = calculateLevel(totalXp);
+        int[] levelProgress = calculateLevelProgress(totalXp);
+        int currentLevel = levelProgress[0];
+        int nextLevel = levelProgress[1];
+        int levelProgressPercent = levelProgress[2];
 
         model.addAttribute("totalXp", totalXp);
         model.addAttribute("level", level);
+        model.addAttribute("currentLevel", currentLevel);
+        model.addAttribute("nextLevel", nextLevel);
+        model.addAttribute("levelProgressPercent", levelProgressPercent);
         model.addAttribute("currentStreak", currentStreak);
         model.addAttribute("longestStreak", longestStreak);
         model.addAttribute("mostActiveDay", mostActiveDay);
@@ -222,6 +229,28 @@ public class ProfileController {
 
         return level;
     }
+
+    private int[] calculateLevelProgress(int totalXp) {
+    int level = 1;
+    int xpToNextLevel = 100;
+    int remaining = totalXp;
+
+    while (remaining >= xpToNextLevel && level < 20) {
+        remaining -= xpToNextLevel;
+        level++;
+        xpToNextLevel = level * 100;
+    }
+
+    if (level >= 20) {
+        return new int[] { xpToNextLevel, xpToNextLevel, 100 };
+    }
+
+    int currentLevel = remaining;
+    int progressPercent = (int) Math.round((currentLevel * 100.0) / xpToNextLevel);
+
+    return new int[] { currentLevel, xpToNextLevel, progressPercent };
+}
+
 
     private User findUser(HttpServletRequest request) {
         
