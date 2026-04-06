@@ -3,6 +3,18 @@ const errorMsg   = document.getElementById('errorMsg');
 const errorText  = document.getElementById('errorText');
 const unameInput = document.getElementById('uname');
 const pswInput   = document.getElementById('psw');
+const unameHint  = document.getElementById('uname-hint');
+const pswHint    = document.getElementById('psw-hint');
+
+function setFieldError(input, hintEl, hasError) {
+    if (hasError) {
+        input.classList.add('input-error');
+        hintEl.classList.remove('hidden');
+    } else {
+        input.classList.remove('input-error');
+        hintEl.classList.add('hidden');
+    }
+}
 
 // Validate user password for numbers & special characters
 function getPasswordErrorMsg(password) {
@@ -29,48 +41,60 @@ function getPasswordErrorMsg(password) {
     return "";
 }
 
+function validateUsername(uname) {
+    if (!uname) return 'Please enter your username.';
+    if (uname.length < 3) return 'Username must be at least 3 characters.';
+    if (!/^[A-Za-z0-9\-]+$/.test(uname)) return 'Username can only contain letters, numbers or dash.';
+    return '';
+}
+
+function validatePassword(psw) {
+    if (!psw) return 'Please enter your password.';
+    if (psw.length < 8) return 'Your password must be at least 8 characters.';
+    return getPasswordErrorMsg(psw);
+}
+
+const successMsg = document.getElementById('successMsg');
+
 form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
     const uname = unameInput.value.trim();
     const psw   = pswInput.value.trim();
 
-    let message = "";
+    const unameMsg = validateUsername(uname);
+    const pswMsg   = validatePassword(psw);
 
-    // MISSING FIELDS
-    if (!uname || !psw) {
-        e.preventDefault();
+    setFieldError(unameInput, unameHint, !!unameMsg);
+    setFieldError(pswInput,   pswHint,   !!pswMsg);
 
-        if (!uname && !psw) {
-            message = 'Please enter your username and password.';
-        } else if (!uname) {
-            message = 'Please enter your username.';
-        } else {
-            message = 'Please enter your password.';
-        }
-    }
-
-    // INVALID PASSWORD LENGTH
-    else if (psw.length < 8) {
-        message = 'Your password must be at least 8 characters.';
-    }
-
-    // PSW DOES NOT CONTAIN NUMBER OR SPECIAL CHARACTER
-    else { 
-        message = getPasswordErrorMsg(psw);
-    }
-
-    // If there is an error, display it depending on which field is incorrect
+    const message = unameMsg || pswMsg;
     if (message) {
-        e.preventDefault();
         errorText.textContent = message;
-        
-        errorMsg.classList.remove('visible');
-        void errorMsg.offsetWidth;
-        errorMsg.classList.add('visible');
+        errorMsg.style.display = 'flex';
+        return;
     }
+
+    const data = new FormData(form);
+    fetch('/create', { method: 'POST', body: new URLSearchParams(data), redirect: 'follow' })
+        .then(function (res) {
+            if (res.ok && res.url.includes('/login')) {
+                errorMsg.style.display = 'none';
+                successMsg.style.display = 'flex';
+                setTimeout(function () { window.location.href = '/login'; }, 1500);
+            } else {
+                return res.text().then(function (html) {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const serverError = doc.querySelector('#errorMsg span, .alert-error span');
+                    errorText.textContent = serverError ? serverError.textContent : 'Something went wrong. Please try again.';
+                    errorMsg.style.display = 'flex';
+                });
+            }
+        })
+        .catch(function () {
+            errorText.textContent = 'Network error. Please try again.';
+            errorMsg.style.display = 'flex';
+        });
 });
 
-[unameInput, pswInput].forEach(function (input) {
-    input.addEventListener('input', function () {
-        errorMsg.classList.remove('visible');
-    });
-});
