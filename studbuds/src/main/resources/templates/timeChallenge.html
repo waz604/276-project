@@ -20,6 +20,7 @@
     />
     <link rel="stylesheet" href="/home.css" />
     <link rel="stylesheet" href="/flashcard.css" />
+    <link rel="stylesheet" href="/XP_system/style.css" />
 
     <link
       href="https://cdn.jsdelivr.net/npm/daisyui@5"
@@ -201,7 +202,15 @@
             encodeURIComponent(score) +
             "&timeRemaining=" +
             encodeURIComponent(timeRemaining),
-        }).catch((err) => {
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          // Animate the XP bar without double-saving (server already saved it)
+          if (data.xp > 0 && typeof display_XP === 'function') {
+            display_XP(data.xp);
+          }
+        })
+        .catch((err) => {
           console.error("failed to save time challenge xp", err);
         });
       }
@@ -339,5 +348,6 @@
         location.reload();
       }
     </script>
+    <script src="/XP_system/XP.js"></script>
   </body>
 </html>

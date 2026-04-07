@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XP Testing</title>
+    <!-- shared site styles -->
+    <link rel="stylesheet" href="/shared.css">
+    <!-- XP bar overlay styles -->
+    <link rel="stylesheet" href="XP_system/style.css">
+</head>
+<body class="page">
+
+<nav class="navbar">
+    <span class="logo-text">StudBuds</span>
+    <a href="/profile" class="btn-logout">Profile</a>
+</nav>
+
+<main class="page-content" style="text-align:center; padding-top: 80px;">
+    <h1>XP System Test</h1>
+    <p class="subtitle">Use the buttons below to award XP and watch the bar animate.</p>
+
+    <div style="display:flex; gap:12px; justify-content:center; margin-top:32px;">
+        <button class="btn-action" style="width:auto; padding:12px 28px;"
+                onclick="give_XP(50)">+50 XP</button>
+        <button class="btn-action" style="width:auto; padding:12px 28px;"
+                onclick="give_XP(100)">+100 XP</button>
+        <button class="btn-action" style="width:auto; padding:12px 28px;"
+                onclick="give_XP(500)">+500 XP</button>
+    </div>
+</main>
+
+<!-- XP logic — self-injects the bar, no extra HTML needed -->
+<script src="XP_system/XP.js"></script>
+
+</body>
+</html>
