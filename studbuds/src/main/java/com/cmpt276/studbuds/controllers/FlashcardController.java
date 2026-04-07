@@ -41,6 +41,7 @@ public class FlashcardController {
         if(flashcards == null) throw new NullFlashcardException(deck.getId());
 
         int totalCards = flashcards.size();
+        
         if(totalCards == 0) 
         {   
             String errorMsg = "You cannot study on an empty deck";
