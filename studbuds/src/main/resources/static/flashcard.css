@@ -218,6 +218,15 @@ html, body {
     transform: rotateY(180deg);
 }
 
+[data-theme="night"] .flip-card-front,
+[data-theme="night"] .flip-card-back,
+[data-theme="abyss"] .flip-card-front,
+[data-theme="abyss"] .flip-card-back {
+    background: var(--color-base-200) !important;
+    border-color: var(--color-base-300) !important;
+    color: var(--color-base-content) !important;
+}
+
 .nav-row {
     display: flex;
     gap: 12px;
