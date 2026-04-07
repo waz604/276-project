@@ -16,9 +16,11 @@ import java.util.ArrayList;
 @Entity
 @Table(name="users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int uid;
+
     private String name;
 
     @Enumerated(EnumType.STRING)
@@ -43,59 +45,24 @@ public class User {
         this.createdAt = LocalDate.now();
     }
 
-    public String getName() {
-        return name;
-    }
+    public int getUid() { return uid; }
+    public void setUid(int uid) { this.uid = uid; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getPassword() {
-        return password;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public roleType getRole() { return role; }
+    public void setRole(roleType role) { this.role = role; }
 
-    public int getUid() {
-        return uid;
-    }
+    public LocalDate getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDate createdAt) { this.createdAt = createdAt; }
 
-    public void setUid(int uid) {
-        this.uid = uid;
-    }
-    
-    public roleType getRole() {
-        return role;
-    }
+    public List<Deck> getDecks() { return this.decks; }
+    public void setDecks(List<Deck> decks) { this.decks = decks; }
 
-    public void setRole(roleType role) {
-        this.role = role;
-    }
-
-    public LocalDate getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDate createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public List<Deck> getDecks() {
-        return this.decks;
-    }
-
-    public void setDecks(List<Deck> decks) {
-        this.decks = decks;
-    }
-
-    public String getGoogleId() {
-        return this.googleID;
-    }
-
-    public void setGoogleId(String googleID) {
-        this.googleID = googleID;
-    }
+    public String getGoogleId() { return this.googleID; }
+    public void setGoogleId(String googleID) { this.googleID = googleID; }
 }

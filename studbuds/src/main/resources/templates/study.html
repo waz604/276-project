@@ -6,6 +6,7 @@
     <title>StudBuds - Study Mode</title>
     <link rel="stylesheet" href="/shared.css">
     <link rel="stylesheet" href="/flashcard.css">
+    <link rel="stylesheet" href="/XP_system/style.css">
 </head>
 <body class="page">
 
@@ -49,9 +50,20 @@
 
         <a class="btn-action" id="next">Next</a>
     </div>
+
+    <!-- Finish button: hidden until user reaches the last card -->
+    <div style="margin-top:16px; text-align:center;">
+        <button class="btn-action" id="finishBtn"
+                th:attr="data-deck-id=${deck.id}, data-total-cards=${#lists.size(cards)}"
+                style="display:none; background:#4caf50;">
+            ✓ Finish &amp; Earn XP
+        </button>
+        <p id="xpMsg" style="display:none; margin-top:8px; font-weight:bold;"></p>
+    </div>
 </main>
 
 <script src="/study.js"></script>
+<script src="/XP_system/XP.js"></script>
 
 </body>
 </html>

@@ -27,10 +27,10 @@ public class LoginController {
     @Autowired
     private UserRepository userRepo;
 
-    // Redirect root to login
+    // Redirect root to home
     @GetMapping("/")
     public RedirectView process() {
-    return new RedirectView("home");
+        return new RedirectView("home");
     }
 
     // Show login page, or redirect already-logged-in users to the right place
@@ -46,44 +46,41 @@ public class LoginController {
     @PostMapping("/login")
     public String login(@RequestParam Map<String,String> formData, Model model,
                         HttpServletRequest request, HttpSession session) {
-        String name = formData.get("uname");
-        String psw  = formData.get("psw");
+        String name     = formData.get("uname");
+        String psw      = formData.get("psw");
         String googleId = formData.get("google_id");
 
         boolean isGoogleUser = (googleId != null && !googleId.isBlank());
-
 
         // Guard against blank values reaching the DB
         if (name == null || name.isBlank()) {
             return "login";
         }
 
-        // If the user is NOT a google user, block them if they are missing a password
+        // If the user is NOT a Google user, block them if they are missing a password
         if (!isGoogleUser && (psw == null || psw.isBlank())) {
             return "login";
         }
 
-    // Google user login
-    if (isGoogleUser) {
-        return userRepo.findByGoogleID(googleId)
-            .map(existingUser -> {
-                session.setAttribute("session_user", existingUser);
-                session.setAttribute("userId", existingUser.getUid());
-                return "redirect:/profile";
-            })
-            .orElseGet(() -> {
-                // Create new Google User
-                User newUser = new User();
-                newUser.setName(name);
-                newUser.setGoogleId(googleId);
-                newUser.setPassword(null);
-                userRepo.save(newUser);
-                
-                session.setAttribute("session_user", newUser);
-                session.setAttribute("userId", newUser.getUid());
-                return "redirect:/profile";
-            });
-    }
+        // Google user login
+        if (isGoogleUser) {
+            return userRepo.findByGoogleID(googleId)
+                .map(existingUser -> {
+                    session.setAttribute("session_user", existingUser);
+                    session.setAttribute("userId", existingUser.getUid());
+                    return "redirect:/profile";
+                })
+                .orElseGet(() -> {
+                    User newUser = new User();
+                    newUser.setName(name);
+                    newUser.setGoogleId(googleId);
+                    newUser.setPassword(null);
+                    userRepo.save(newUser);
+                    session.setAttribute("session_user", newUser);
+                    session.setAttribute("userId", newUser.getUid());
+                    return "redirect:/profile";
+                });
+        }
 
         // Check hardcoded admin account first, never touches the DB
         if (name.equals(ADMIN_USERNAME) && psw.equals(ADMIN_PASSWORD)) {
@@ -126,13 +123,12 @@ public class LoginController {
         return "add";
     }
 
-    // Add user
+    // Register new user
     @PostMapping("/create")
     public String addUser(@RequestParam Map<String, String> newuser, HttpServletResponse response) {
         String newName = newuser.get("name");
-        String newPwd = newuser.get("password");
+        String newPwd  = newuser.get("password");
 
-        // Avoid empty user from entering the database
         if (newName == null || newName.isBlank() || newPwd == null || newPwd.isBlank()) {
             return "add";
         }
@@ -142,7 +138,6 @@ public class LoginController {
         addedUser.setPassword(newPwd);
         userRepo.save(addedUser);
         response.setStatus(201);
-
         return "redirect:/login";
     }
 
@@ -153,25 +148,22 @@ public class LoginController {
         return "home";
     }
 
+    // Delete user (ADMIN ONLY)
+    @PostMapping("/delete/{id}")
+    public String deleteStaffRating(@PathVariable int id, HttpSession session) {
+        User currentUser = (User) session.getAttribute("session_user");
+        if (currentUser == null || currentUser.getRole() != User.roleType.ADMIN) {
+            return "redirect:/login";
+        }
+        userRepo.deleteById(id);
+        return "redirect:/view";
+    }
+
     // Helper: pick destination based on role
     private String redirectForRole(User user) {
         if (user.getRole() == User.roleType.ADMIN) {
             return "redirect:/view";
         }
         return "redirect:/profile";
-    }
-
-    // Delete user (ADMIN ONLY)
-    @PostMapping("/delete/{id}")
-    public String deleteStaffRating(@PathVariable int id, HttpSession session) {
-        User currentUser = (User) session.getAttribute("session_user");
-    
-        // Check if logged in AND if ADMIN
-        if (currentUser == null || currentUser.getRole() != User.roleType.ADMIN) {
-            return "redirect:/login";
-        }
-
-        userRepo.deleteById(id);
-        return "redirect:/view";
     }
 }
