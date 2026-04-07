@@ -14,7 +14,6 @@ let score = 0;
 function renderCard() {
     questionText.textContent = cards[index].question;
     indexDisplay.textContent = (index+1) + ' / ' + cards.length;
-    skipBtn.style.display = (index === cards.length - 1) ? 'none' : 'block';
 }
 
 function nextCard() {

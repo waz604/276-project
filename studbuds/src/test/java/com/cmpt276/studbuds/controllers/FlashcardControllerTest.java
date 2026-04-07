@@ -12,6 +12,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -223,7 +224,8 @@ public class FlashcardControllerTest {
                .get("/decks/1/study")
                .session(session))
                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-               .andExpect(MockMvcResultMatchers.redirectedUrl("/decks/1/cards"));
+               .andExpect(MockMvcResultMatchers.redirectedUrl("/decks/1/cards"))
+               .andExpect(MockMvcResultMatchers.flash().attribute("errorMsg", "You cannot study on an empty deck"));
     }
 
     // Missing Session/Valid Account Tests
