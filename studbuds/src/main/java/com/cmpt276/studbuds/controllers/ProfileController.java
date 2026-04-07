@@ -2,6 +2,7 @@ package com.cmpt276.studbuds.controllers;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -57,7 +58,7 @@ public class ProfileController {
 
         //current
         int currentStreak = 0;
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now(ZoneId.of("America/Vancouver"));
         LocalDate check = today;
 
         while (dailyXp.containsKey(check) && dailyXp.get(check) > 0) {
@@ -250,7 +251,7 @@ public class ProfileController {
     @ResponseBody
     public void awardXp(@RequestParam int amount, HttpServletRequest request) {
         User user = findUser(request);
-        xpLogRepository.save(new XpLog(user, LocalDate.now(), amount));
+        xpLogRepository.save(new XpLog(user, LocalDate.now(ZoneId.of("America/Vancouver")), amount));
     }
 
     // === Helper Methods === //
@@ -334,7 +335,7 @@ public void awardTimeChallengeXp(
     }
 
     if (xp > 0) {
-        xpLogRepository.save(new XpLog(user, LocalDate.now(), xp));
+        xpLogRepository.save(new XpLog(user, LocalDate.now(ZoneId.of("America/Vancouver")), xp));
     }
 }
 }

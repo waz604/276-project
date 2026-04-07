@@ -146,7 +146,7 @@ public class LoginController {
         User addedUser = new User();
         addedUser.setName(newName);
         addedUser.setPassword(newPwd);
-        addedUser.setCreatedAt(java.time.LocalDate.now());
+        addedUser.setCreatedAt(java.time.LocalDate.now(java.time.ZoneId.of("America/Vancouver")));
         userRepo.save(addedUser);
         response.setStatus(201);
 
