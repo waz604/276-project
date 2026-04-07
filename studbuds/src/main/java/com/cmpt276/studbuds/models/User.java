@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -40,7 +41,7 @@ public class User {
         this.name = name;
         this.password = password;
         this.googleID = googleID;
-        this.createdAt = LocalDate.now();
+        this.createdAt = LocalDate.now(ZoneId.of("America/Vancouver"));
     }
 
     public String getName() {
