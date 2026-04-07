@@ -122,8 +122,14 @@ public class LoginController {
     }
 
     @GetMapping("/add")
-    public String showAddUserPage() {
-        return "add";
+    public String showAddUserPage(HttpSession session) {
+        User user = (User) session.getAttribute("session_user");
+
+        // Route to profile page if user is logged in
+        if (user != null) {
+                return "redirect:/profile";
+        } else return "add";
+        
     }
 
     // Add user
