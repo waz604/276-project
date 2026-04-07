@@ -1,0 +1,13 @@
+.ban-btn {
+    background-color: rgb(235, 110, 110);
+    width: 100%;
+}
+
+.ban-btn:hover {
+    background-color: rgb(179, 82, 82);
+}
+
+table,th,td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
