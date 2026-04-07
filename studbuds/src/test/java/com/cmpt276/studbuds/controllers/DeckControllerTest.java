@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.cmpt276.studbuds.models.Deck;
+import com.cmpt276.studbuds.models.FlashCard;
 import com.cmpt276.studbuds.models.User;
 import com.cmpt276.studbuds.models.UserRepository;
 
@@ -168,7 +169,6 @@ public class DeckControllerTest {
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/login"));
     }
 
-  
     @Test
     void getDeck_userNotFound_redirectsToLogin() throws Exception {
         Mockito.when(userRepository.findById(1)).thenReturn(Optional.empty());
@@ -176,5 +176,33 @@ public class DeckControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/decks/1/cards").session(session))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/login"));
+    }
+ 
+    //for quiz mode
+    @Test
+    void quizMode_success() throws Exception {
+        Deck testDeck = new Deck("empty", testUser);
+        testDeck.setId(1);
+        FlashCard card = new FlashCard("question", "answer", testDeck);
+        testDeck.getFlashcards().add(card);
+        testUser.getDecks().add(testDeck);
+
+         mockMvc.perform(MockMvcRequestBuilders.get("/decks/1/quiz")
+               .session(session))
+               .andExpect(MockMvcResultMatchers.status().isOk())
+               .andExpect(MockMvcResultMatchers.view().name("quiz"));
+    }
+
+    @Test
+    void quizMode_emptyDeck() throws Exception {
+        Deck testDeck = new Deck("empty", testUser);
+        testDeck.setId(1);
+        testUser.getDecks().add(testDeck);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/decks/1/quiz")
+               .session(session))
+               .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+               .andExpect(MockMvcResultMatchers.redirectedUrl("/decks/1/cards"))
+               .andExpect(MockMvcResultMatchers.flash().attribute("errorMsg", "You cannot do quiz mode on empty deck"));
     }
 }

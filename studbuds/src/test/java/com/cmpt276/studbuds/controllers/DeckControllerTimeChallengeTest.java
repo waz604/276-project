@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.cmpt276.studbuds.models.User;
+import com.cmpt276.studbuds.models.Deck;
 import com.cmpt276.studbuds.models.UserRepository;
 
 @WebMvcTest(DeckController.class)
@@ -64,5 +65,19 @@ public class DeckControllerTimeChallengeTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/decks/999/challenge").session(session))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/decks"));
+    }
+
+    @Test
+    void getTimeChallenge_emptyDeck() throws Exception {
+        Deck testDeck = new Deck("testDeck", testUser);
+        testDeck.setId(1);
+        testUser.getDecks().add(testDeck);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/decks/1/challenge")
+               .session(session))
+               .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+               .andExpect(MockMvcResultMatchers.redirectedUrl("/decks/1/cards"))
+               .andExpect(MockMvcResultMatchers.flash()
+                                               .attribute("errorMsg", "You cannot do Time Challenge mode on empty deck"));
     }
 }
