@@ -44,14 +44,12 @@
             </ul>
         </div>
         <div class="navbar-end">
-            <a href="/profile" class="btn mr-2">Return to Profile</a>
-
-                <label class="flex cursor-pointer gap-2 items-center" style="display:flex; align-items:center;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
-                    <input type="checkbox" value="night" class="toggle theme-controller" />
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                </label>
-
+            <label class="flex cursor-pointer gap-2 items-center mr-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+                <input type="checkbox" value="night" class="toggle theme-controller" />
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            </label>
+            <a href="/decks" class="btn mr-2">Return to Decks</a>
             <a href="/logout" class="btn">Logout</a>
         </div>
     </div>
@@ -112,7 +110,7 @@
 
             
             <div class="mySlides fade">
-                <div class="text">Flip the card to see its answer and click "Next" to study the next card!</div>
+                <div class="text">Click the card to view the answer and click "Next" to see the next card!</div>
                 <br>
 
                 <img class = "tutorialImg" src="tutorial-imgs/flipcards.png" 
@@ -218,26 +216,34 @@
             </div>
 
             <div class="mySlides fade">
-                <div class="text">You can earn XP by completing flashcard sets.</div>
+                <div class="text">Earn XP by completing the Time Challenge or Quiz Mode.</div>
                 <br>
 
-                <img class = "tutorialImg" src="tutorial-imgs/earnXP.png" 
+                <img class = "tutorialImg" src="tutorial-imgs/XP-gain.png" 
                 style="width: 80%">
             </div>
 
             <div class="mySlides fade">
-                <div class="text">You can also earn XP by completing the Time Challenge.</div>
+                <div class="text">Earn 20 XP by completing the Time Challenge plus an additional 10 XP for each correct answer.</div>
                 <br>
 
-                <img class = "tutorialImg" src="tutorial-imgs/timechallenge.png" 
+                <img class = "tutorialImg" src="tutorial-imgs/XP-challenge.png" 
                 style="width: 80%">
             </div>
 
             <div class="mySlides fade">
-                <div class="text">Earn an XP multilpier by maintaining a login streak!</div>
+                <div class="text">Earn an XP multiplier of 1.2x or 1.5x by completing the deck quickly!</div>
                 <br>
 
-                <img class = "tutorialImg" src="tutorial-imgs/XP.png" 
+                <img class = "tutorialImg" src="tutorial-imgs/XP-challenge.png" 
+                style="width: 80%">
+            </div>
+
+                        <div class="mySlides fade">
+                <div class="text">Earn 5 XP by completing Quiz Mode.</div>
+                <br>
+
+                <img class = "tutorialImg" src="tutorial-imgs/XP-quiz.png" 
                 style="width: 80%">
             </div>
 
@@ -251,6 +257,7 @@
                 <span class="dot" onclick="currentSlide(1)"></span>
                 <span class="dot" onclick="currentSlide(2)"></span>
                 <span class="dot" onclick="currentSlide(3)"></span>
+                <span class="dot" onclick="currentSlide(4)"></span>
             </div>
         </div>
     </div>

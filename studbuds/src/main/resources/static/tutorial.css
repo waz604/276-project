@@ -151,10 +151,22 @@ html, body {
     bottom: 44%;
 }
 
+/* Set button colour based on "light" or "dark" mode */
+[data-theme="silk"] .button-activated {
+    --btn-color: rgb(177, 218, 177);
+    color: #166534;
+}
+
+[data-theme="night"] .button-activated {
+    --btn-color: rgb(99, 139, 99);
+    color: rgb(218, 245, 218);;
+}
+
 
 /* Button Toggles */
 
 .button-activated {
+    background-color: var(--btn-color) !important;
     outline: 2px solid oklch(var(--p));
     outline-offset: 2px;
 }
@@ -190,3 +202,8 @@ html, body {
     margin-bottom: 20px;
 }
 
+.decks-btn {
+    width: 30%;
+    height: 15%;
+    font-size: 20px;
+}
