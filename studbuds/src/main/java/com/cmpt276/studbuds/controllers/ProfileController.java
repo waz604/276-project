@@ -132,10 +132,7 @@ public class ProfileController {
         }
 
         int level = calculateLevel(totalXp);
-        int[] levelProgress = calculateLevelProgress(totalXp);
-        int currentLevel = levelProgress[0];
-        int nextLevel = levelProgress[1];
-        int levelProgressPercent = levelProgress[2];
+       
 
         model.addAttribute("totalXp",       totalXp);
         model.addAttribute("level",         level);
