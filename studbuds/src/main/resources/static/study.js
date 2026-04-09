@@ -7,62 +7,51 @@ let xpAlreadyAwarded = false;
 
 // DOM elements
 const questionText = document.getElementById('questionText'); 
-const answerText   = document.getElementById('answerText'); 
-const total        = document.getElementById('total'); 
-const prevBtn      = document.getElementById('previous'); 
-const nextBtn      = document.getElementById('next'); 
-const flipBtn      = document.getElementById('flip');
-const innerCard    = document.getElementById('inner-card');
-const finishBtn    = document.getElementById('finishBtn');
-const xpMsg        = document.getElementById('xpMsg');
+const answerText = document.getElementById('answerText'); 
+const indexDisplay = document.getElementById('indexBadge'); 
+const prevBtn = document.getElementById('prevBtn'); 
+const nextBtn = document.getElementById('nextBtn');
+const innerCard = document.getElementById('study-container');
+const flipToggle = document.getElementById('flipToggle');
+const finishBtn = document.getElementById('finishBtn');
+const xpMsg = document.getElementById('xpMsg');
 
 // Render card's content
 function renderCard() { 
-    questionText.textContent = cards[index].question;
-    answerText.style.visibility = 'hidden';
-    answerText.textContent = cards[index].answer; 
-    total.textContent = (index + 1) + ' / ' + cards.length; 
-    prevBtn.style.display = (index === 0) ? 'none' : 'block'; 
-    nextBtn.style.display = (index === cards.length - 1) ? 'none' : 'block';
-    innerCard.classList.remove('is-flipped');
-
-    // Show the Finish button once the user reaches the last card
-    if (index === cards.length - 1 && !xpAlreadyAwarded) {
-        finishBtn.style.display = 'inline-block';
-    }
-}
+    flipToggle.checked = false;
     
-// Flip card on click
-function flipCard() {
-    answerText.style.visibility = 'visible';
-    innerCard.classList.toggle('is-flipped');
+    questionText.textContent = cards[index].question;
+    answerText.textContent = cards[index].answer; 
+    indexDisplay.textContent = (index+1) + ' / ' + cards.length; 
 }
 
 prevBtn.addEventListener('click', () => {
-    if (index > 0) {
+    if(index > 0) {
         index--;
         renderCard();
     } else {
         index = cards.length-1;
         renderCard();
     }
-});
+})
 
 nextBtn.addEventListener('click', () => {
-    if (index < cards.length - 1) {
+    if(index < cards.length-1) {
         index++;
         renderCard();
     } else {
         index = 0;
         renderCard();
     }
-});
+    // Show the Finish button once the user reaches the last card
+    if (index === cards.length - 1 && !xpAlreadyAwarded) {
+        finishBtn.style.display = 'inline-block';
+    }
+})
 
-flip.addEventListener('click', () => {
-    flipCard();
-});
+// calculate_XP(flashcard_num, time, correct cards)
 
-// ── XP awarding ───────────────────────────────────────────────────────────────
+//  XP awarding 
 
 finishBtn.addEventListener('click', () => {
     if (xpAlreadyAwarded) return;

@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.cmpt276.studbuds.exceptions.NullUserException;
@@ -40,72 +39,102 @@ public class ProfileController {
     @Autowired
     private XpLogRepository xpLogRepository;
 
-    // ── Page routes ───────────────────────────────────────────────────────────
-
     @GetMapping("/profile")
     public String getProfile(Model model, HttpServletRequest request) {
 
         User user = findUser(request);
+
         model.addAttribute("username", user.getName());
 
+        // stats logic
         List<XpLog> logs = xpLogRepository.findByUser(user);
 
-        // Aggregate XP by day
+        //add xp per days
         Map<LocalDate, Integer> dailyXp = new LinkedHashMap<>();
         for (XpLog log : logs) {
             dailyXp.merge(log.getDate(), log.getXpEarned(), Integer::sum);
+
         }
 
         int totalXp = dailyXp.values().stream().mapToInt(Integer::intValue).sum();
 
-        // Current streak — count backwards from today through consecutive active days
+        //current
         int currentStreak = 0;
         LocalDate today = LocalDate.now(ZoneId.of("America/Vancouver"));
         LocalDate check = today;
+
         while (dailyXp.containsKey(check) && dailyXp.get(check) > 0) {
             currentStreak++;
             check = check.minusDays(1);
         }
 
-        // Longest streak
+        //longest
         int longestStreak = 0;
         int tempStreak = 0;
+
         List<LocalDate> sortedDates = new ArrayList<>(dailyXp.keySet());
         Collections.sort(sortedDates);
+
         for (int i = 0; i < sortedDates.size(); i++) {
             if (i == 0 || sortedDates.get(i).minusDays(1).equals(sortedDates.get(i - 1))) {
                 tempStreak++;
-            } else {
-                tempStreak = 1;
+
+            } 
+            else {
+                tempStreak = 1; 
+
             }
             longestStreak = Math.max(longestStreak, tempStreak);
         }
 
-        // Most active day of week
         Map<DayOfWeek, Integer> dayTotals = new EnumMap<>(DayOfWeek.class);
         for (Map.Entry<LocalDate, Integer> entry : dailyXp.entrySet()) {
+
             DayOfWeek day = entry.getKey().getDayOfWeek();
-            dayTotals.merge(day, entry.getValue(), Integer::sum);
+
+            int xpForDay = entry.getValue();
+
+
+            if (dayTotals.containsKey(day)) {
+                dayTotals.put(day, dayTotals.get(day) + xpForDay);
+            } 
+            else {
+                dayTotals.put(day, xpForDay);
+            }
+
         }
 
         String mostActiveDay = "N/A";
         if (!dayTotals.isEmpty()) {
             DayOfWeek bestDay = null;
             for (Map.Entry<DayOfWeek, Integer> entry : dayTotals.entrySet()) {
+
                 if (bestDay == null || entry.getValue() > dayTotals.get(bestDay)) {
                     bestDay = entry.getKey();
                 }
+
             }
             String fullName = bestDay.name();
             mostActiveDay = fullName.charAt(0) + fullName.substring(1).toLowerCase();
+        
         }
 
-        // Heatmap — always show at least 7 weeks for visual alignment
-        LocalDate sevenWeeksAgo   = today.minusWeeks(6).with(DayOfWeek.MONDAY);
-        LocalDate accountWeekStart = (user.getCreatedAt() != null)
-                ? user.getCreatedAt().with(DayOfWeek.MONDAY)
-                : sevenWeeksAgo;
-        LocalDate baseStart = accountWeekStart.isAfter(sevenWeeksAgo) ? accountWeekStart : sevenWeeksAgo;
+        // heatmap: always show at least 7 weeks then it will be aligned more beautifully,
+        LocalDate sevenWeeksAgo = today.minusWeeks(6).with(DayOfWeek.MONDAY);
+        // Use account creation date as the earliest start if available, otherwise fall back to 7 weeks ago
+        LocalDate accountWeekStart;
+        
+        if (user.getCreatedAt() != null) {
+            accountWeekStart = user.getCreatedAt().with(DayOfWeek.MONDAY);
+        } else {
+            accountWeekStart = sevenWeeksAgo;
+        }
+
+        // Always show at least 7 weeks; extend further back only if account was created earlier
+        LocalDate baseStart = sevenWeeksAgo;
+        if (accountWeekStart.isBefore(sevenWeeksAgo)) {
+            baseStart = accountWeekStart;
+        }
 
         LocalDate startDate;
         if (sortedDates.isEmpty()) {
@@ -118,11 +147,14 @@ public class ProfileController {
         List<List<int[]>> heatmap = new ArrayList<>();
         List<String> heatmapDates = new ArrayList<>();
         LocalDate cursor = startDate;
-        LocalDate end    = today.with(DayOfWeek.SUNDAY);
+        LocalDate end = today.with(DayOfWeek.SUNDAY);
 
+        //grid (i used the help of copilot to help me figure out the way to make the grid 2d)
         while (!cursor.isAfter(end)) {
+
             List<int[]> week = new ArrayList<>();
             for (int d = 0; d < 7; d++) {
+
                 int xp = dailyXp.getOrDefault(cursor, 0);
                 week.add(new int[]{xp});
                 heatmapDates.add(cursor.toString());
@@ -131,42 +163,92 @@ public class ProfileController {
             heatmap.add(week);
         }
 
+        // calculate level from total XP (mirrors XP.js formula)
         int level = calculateLevel(totalXp);
-       
+        int[] levelProgress = calculateLevelProgress(totalXp);
+        int currentLevel = levelProgress[0];
+        int nextLevel = levelProgress[1];
+        int levelProgressPercent = levelProgress[2];
 
-        model.addAttribute("totalXp",       totalXp);
-        model.addAttribute("level",         level);
+        model.addAttribute("totalXp", totalXp);
+        model.addAttribute("level", level);
+        model.addAttribute("currentLevel", currentLevel);
+        model.addAttribute("nextLevel", nextLevel);
+        model.addAttribute("levelProgressPercent", levelProgressPercent);
         model.addAttribute("currentStreak", currentStreak);
         model.addAttribute("longestStreak", longestStreak);
         model.addAttribute("mostActiveDay", mostActiveDay);
-        model.addAttribute("heatmap",       heatmap);
-        model.addAttribute("heatmapDates",  heatmapDates);
+        model.addAttribute("heatmap", heatmap);
+        model.addAttribute("heatmapDates", heatmapDates);
+        String joinedMonth = "Unknown";
+        if (user.getCreatedAt() != null) {
+            String month = user.getCreatedAt().getMonth().toString();
+            joinedMonth = month.charAt(0) + month.substring(1).toLowerCase() + " " + user.getCreatedAt().getYear();
+        }
+        model.addAttribute("joinedMonth", joinedMonth);
 
         return "profile";
     }
 
     @PostMapping("/profile/edit")
     public String editUsername(@RequestParam String username, HttpServletRequest request) {
+
         User user = findUser(request);
+
         user.setName(username.trim());
         userRepository.save(user);
+
         return "redirect:/profile";
     }
 
     @GetMapping("/tutorial")
     public String displayTutorial(HttpServletRequest request) {
         Integer userId = (Integer) request.getSession().getAttribute("userId");
-        if (userId == null) throw new NullUserException("userId not found");
+        if(userId == null) throw new NullUserException("userId not found");
+        
         User user = userRepository.findById(userId).orElse(null);
-        if (user == null) throw new NullUserException("user not found");
+        if(user == null) throw new NullUserException("user not found");
+        
         return "tutorial";
     }
 
-    // ── XP endpoints ──────────────────────────────────────────────────────────
+    @GetMapping("/leaderboard")
+    public String displayLeaderboard(HttpServletRequest request, Model model) {
+        Integer userId = (Integer) request.getSession().getAttribute("userId");
+        if(userId == null) throw new NullUserException("userId not found");
+        
+        User user = userRepository.findById(userId).orElse(null);
+        if(user == null) throw new NullUserException("user not found");
 
-    // POST /xp/award
-    // Saves a raw XP amount (used by XP.js _saveXpToServer during study mode).
-    // Rejects zero or negative amounts with 400 Bad Request.
+        List<User> userList = userRepository.findAll(); 
+        
+        Map<Integer, Integer> userXpMap = new HashMap<>();
+        Map<Integer, Integer> userLevelMap = new HashMap<>();
+
+        for (User u : userList) {
+            List<XpLog> userLogs = xpLogRepository.findByUser(u);
+            
+            int total = userLogs.stream()
+                            .mapToInt(XpLog::getXpEarned)
+                            .sum();
+            int level = calculateLevel(total);
+
+            userXpMap.put(u.getUid(), total);
+            userLevelMap.put(u.getUid(), level);
+        }
+
+        model.addAttribute("xp", userXpMap);
+        model.addAttribute("level", userLevelMap);
+        
+        // Sort list of users based on XP and take the top 10 users
+        userList.sort((u1, u2) -> Integer.compare(userXpMap.get(u2.getUid()), userXpMap.get(u1.getUid())));
+        List<User> topTen = userList.size() > 10 ? userList.subList(0, 10) : userList;
+
+        model.addAttribute("us", topTen);
+        return "leaderboard";
+    }
+
+    // Saves XP earned during a study session to the database
     @PostMapping("/xp/award")
     @ResponseBody
     public void awardXp(@RequestParam int amount, HttpServletRequest request) {
@@ -179,18 +261,7 @@ public class ProfileController {
 
     // POST /xp/study-session
     // Awards XP for completing a regular (non-timed) study session.
-    // All calculation is done server-side to prevent manipulation.
-    //
-    // Formula (SRD):
-    //   Anti-cheat : timeSeconds < totalCards        → 0 XP (impossibly fast)
-    //   Anti-farm  : same deckId within 5 min        → 0 XP
-    //   Base XP    = totalCards * 10
-    //   Speed bonus:
-    //     t ≤ totalCards * 5   → +50%
-    //     t ≤ totalCards * 12  → +25%
-    //     otherwise            → no bonus
-    //
-    // Returns JSON: { "xp": N }
+    
     @PostMapping("/xp/study-session")
     @ResponseBody
     public Map<String, Integer> awardStudySessionXp(
@@ -237,56 +308,10 @@ public class ProfileController {
         return result;
     }
 
-    // POST /xp/time-challenge
-    // Awards XP for a completed time challenge.
-    // All calculation is done server-side — the client sends raw game results only.
-    //
-    // Formula (SRD):
-    //   perfect score AND timeRemaining > 0 → base = totalCards * 10
-    //     timeRemaining >= totalCards * 5   → base * 1.5
-    //     timeRemaining >= totalCards * 2   → base * 1.25
-    //     otherwise                         → base
-    //   any other result                    → 0 XP, nothing saved
-    //
-    // Returns JSON: { "xp": N }
-    @PostMapping("/xp/time-challenge")
-    @ResponseBody
-    public Map<String, Integer> awardTimeChallengeXp(
-            @RequestParam int totalCards,
-            @RequestParam int score,
-            @RequestParam int timeRemaining,
-            HttpServletRequest request) {
+   
 
-        User user = findUser(request);
-
-        double xp = 0;
-
-        if (score > 0 && timeRemaining > 0) {
-            // Base XP scaled by accuracy: (correct / total) * totalCards * 10
-            xp = ((double) score / totalCards) * totalCards * 10.0;
-
-            // Speed bonus based on time remaining
-            if (timeRemaining >= totalCards * 5) {
-                xp *= 1.5;
-            } else if (timeRemaining >= totalCards * 2) {
-                xp *= 1.25;
-            }
-        }
-
-        int finalXp = (int) Math.round(xp);
-        if (finalXp > 0) {
-            xpLogRepository.save(new XpLog(user, LocalDate.now(), finalXp));
-        }
-
-        Map<String, Integer> result = new HashMap<>();
-        result.put("xp", finalXp);
-        return result;
-    }
-
-    // ── Helpers ───────────────────────────────────────────────────────────────
-
-    // Calculates level from total XP — mirrors lvl_checker() in XP.js exactly.
-    // If you change one, change both.
+    // Calculates level from total XP
+    
     private int calculateLevel(int totalXp) {
         int level     = 1;
         int remaining = totalXp;
@@ -327,24 +352,74 @@ public class ProfileController {
         }
     }
 
+    private int[] calculateLevelProgress(int totalXp) {
+        int level     = 1;
+        int remaining = totalXp;
+        while (level < 20) {
+            int needed = xpForLevel(level);
+            if (remaining < needed) break;
+            remaining -= needed;
+            level++;
+        }
+        if (level >= 20) {
+            int cap = xpForLevel(20);
+            return new int[] { cap, cap, 100 };
+        }
+        int xpToNextLevel = xpForLevel(level);
+        int progressPercent = (int) Math.round((remaining * 100.0) / xpToNextLevel);
+        return new int[] { remaining, xpToNextLevel, progressPercent };
+    }
+
+
     private User findUser(HttpServletRequest request) {
+        
         Integer userId = (Integer) request.getSession().getAttribute("userId");
-        if (userId == null) throw new NullUserException("userId not found");
+        if(userId == null) throw new NullUserException("userId not found");
+        
         User user = userRepository.findById(userId).orElse(null);
-        if (user == null) throw new NullUserException("user not found");
+        if(user == null) throw new NullUserException("user not found");
+
         return user;
     }
 
-    // ── Exception handling ────────────────────────────────────────────────────
-
-    // Returns 401 JSON (not a redirect) so XP.js fetch() calls degrade
-    // gracefully — a 302 redirect would cause the XP bar to never seed on load.
+    // === Exception Handling Methods === //
     @ExceptionHandler(NullUserException.class)
+    public String nullUserHandler() {
+        return "redirect:/login";
+    }
+
+
+  @PostMapping("/xp/time-challenge")
     @ResponseBody
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public Map<String, String> nullUserHandler() {
-        Map<String, String> err = new HashMap<>();
-        err.put("error", "not logged in");
-        return err;
+    public Map<String, Integer> awardTimeChallengeXp(
+            @RequestParam int totalCards,
+            @RequestParam int score,
+            @RequestParam int timeRemaining,
+            HttpServletRequest request) {
+
+        User user = findUser(request);
+
+        double xp = 0;
+
+        if (score > 0 && timeRemaining > 0) {
+            // Base XP scaled by accuracy: (correct / total) * totalCards * 10
+            xp = ((double) score / totalCards) * totalCards * 10.0;
+
+            // Speed bonus based on time remaining
+            if (timeRemaining >= totalCards * 5) {
+                xp *= 1.5;
+            } else if (timeRemaining >= totalCards * 2) {
+                xp *= 1.25;
+            }
+        }
+
+        int finalXp = (int) Math.round(xp);
+        if (finalXp > 0) {
+            xpLogRepository.save(new XpLog(user, LocalDate.now(), finalXp));
+        }
+
+        Map<String, Integer> result = new HashMap<>();
+        result.put("xp", finalXp);
+        return result;
     }
 }

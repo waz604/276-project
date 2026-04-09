@@ -1,9 +1,8 @@
-// ─────────────────────────────────────────────────────────────────────────────
 // XP System
 // Drop this script into any page that needs give_XP().
 // It self-injects a fixed overlay bar at the bottom of the viewport.
-// No HTML required -- just <script src="/XP_system/XP.js"></script>.
-// ─────────────────────────────────────────────────────────────────────────────
+// No HTML required,  just <script src="/XP_system/XP.js"></script>.
+
 
 var CurrXp      = 0;
 let CurrentLvl  = 1;
@@ -12,14 +11,14 @@ let totalXP     = 0;
 
 const MAX_LEVEL = 20;
 
-// ── Timing constants (ms) ─────────────────────────────────────────────────────
+// Timing constants (ms) 
 const FILL_TO_100_MS  = 900;   // bar animates to 100%
 const BOUNCE_MS       = 550;   // squash-and-stretch
 const LEVELUP_HOLD_MS = 1800;  // gold bar fully visible -- LEVEL UP text shows
 const SNAP_DELAY_MS   = 250;   // pause at 0% before filling new level
 const HIDE_DELAY_MS   = 2800;  // idle time before bar slides away
 
-// ── Self-inject the overlay bar ───────────────────────────────────────────────
+//Self-inject the overlay bar
 (function injectXpBar() {
     if (document.getElementById('xp-overlay')) return;
 
@@ -42,7 +41,6 @@ const HIDE_DELAY_MS   = 2800;  // idle time before bar slides away
     _initFromServer();
 })();
 
-// ── Server sync ───────────────────────────────────────────────────────────────
 
 // On page load: fetch the user's saved total XP, derive level/progress from it,
 // and silently apply it to the bar state without any animation.
@@ -61,7 +59,7 @@ function _initFromServer() {
             totalXP = saved;
             document.getElementById('totXP').textContent = totalXP;
 
-            // Walk the level curve to find CurrentLvl and CurrXp
+            // walk the level curve to find CurrentLvl and CurrXp
             var remaining = saved;
             CurrentLvl  = 1;
             while (CurrentLvl < MAX_LEVEL) {
@@ -72,7 +70,7 @@ function _initFromServer() {
             }
 
             if (CurrentLvl >= MAX_LEVEL) {
-                // Permanently at max
+                // permanently at max
                 CurrentLvl  = MAX_LEVEL;
                 XpToNextLvl = lvl_checker(MAX_LEVEL);
                 CurrXp      = XpToNextLvl;
@@ -104,11 +102,11 @@ function _initFromServer() {
                 document.getElementById('xp-level-next').textContent  = CurrentLvl + 1;
             }
         })
-        .catch(function() {}); // silently ignore network errors
+        .catch(function() {}); 
 }
 
-// Posts an XP award to the server so it persists in the database.
-// Called internally by give_XP
+// posts an XP award to the server so it persists in the database.
+// called internally by give_XP
 function _saveXpToServer(amount) {
     var body = new URLSearchParams();
     body.append('amount', amount);
@@ -120,17 +118,17 @@ function _saveXpToServer(amount) {
     }).catch(function() {});
 }
 
-// ── Core XP logic ─────────────────────────────────────────────────────────────
+//  Core XP logic 
 
 function give_XP(amount) {
-    // At max level: accumulate totalXP and briefly show the bar, but don't touch the fill
+    // at max level: accumulate totalXP and briefly show the bar, but don't touch the fill
     if (CurrentLvl >= MAX_LEVEL) {
         totalXP += amount;
         _saveXpToServer(amount);
         document.getElementById('totXP').textContent = totalXP;
         _spawnFloater('+' + amount + ' XP');
 
-        // Slide the bar up so the player sees the updated total XP
+        // slide the bar up so the player sees the updated total XP
         const overlay = document.getElementById('xp-overlay');
         if (!_isVisible) {
             overlay.classList.remove('xp-overlay--hidden');
@@ -149,13 +147,13 @@ function give_XP(amount) {
     CurrXp  += amount;
     totalXP += amount;
 
-    // Persist to database
+    // persist to database
     _saveXpToServer(amount);
 
-    // Update total XP display immediately
+    // update total XP display immediately
     document.getElementById('totXP').textContent = totalXP;
 
-    // Safety check — clamp to MAX_LEVEL if anything is already overflowed
+    // safety check, clamp to MAX_LEVEL if anything is already overflowed
     max_lvl_checker();
     let simXp   = CurrXp;
     let simLvl  = CurrentLvl;
@@ -171,14 +169,14 @@ function give_XP(amount) {
 
     const reachesMax = (simLvl >= MAX_LEVEL);
     if (reachesMax) {
-        // At max level the bar sits permanently at 100%
+        // at max level the bar sits permanently at 100%
         simXp   = simNext;
     }
 
     if (levelsGained > 0) {
         _animateLevelUpSequence(prevXp, levelsGained, simLvl, simXp, simNext, reachesMax);
     } else {
-        // Normal gain — no level-up
+        // normal gain, no level-up
         CurrXp = simXp;
         change_Percent();
         document.getElementById('myXP').textContent = CurrXp + ' / ' + XpToNextLvl;
@@ -193,21 +191,21 @@ function change_Percent() {
     if (legacy) legacy.style.width = pct + '%';
 }
 
-// Safety net: clamps level and XP state to MAX_LEVEL if anything overflows.
-// Call this any time level state changes.
+// safety net: clamps level and XP state to MAX_LEVEL if anything overflows.
+// call this any time level state changes.
 function max_lvl_checker() {
     if (CurrentLvl > MAX_LEVEL) {
         console.warn('[XP] Level overflow detected (' + CurrentLvl + '). Resetting to ' + MAX_LEVEL + '.');
         CurrentLvl  = MAX_LEVEL;
         XpToNextLvl = lvl_checker(MAX_LEVEL);
-        CurrXp      = XpToNextLvl; // full bar at max
+        CurrXp = XpToNextLvl; // full bar at max
     }
     if (CurrentLvl === MAX_LEVEL && CurrXp > XpToNextLvl) {
         CurrXp = XpToNextLvl;
     }
 }
 
-// Returns the XP required to level up FROM the given level.
+// returns the XP required to level up FROM the given level.
 // e.g. lvl_checker(1) returns 100 means you need 100 XP while at level 1 to reach level 2.
 function lvl_checker(level) {
     switch (level) {
@@ -235,10 +233,10 @@ function lvl_checker(level) {
     }
 }
 
-// ── Multi-level animation engine ──────────────────────────────────────────────
+//  Multi-level animation
 
-let _hideTimer   = null;
-let _isVisible   = false;
+let _hideTimer = null;
+let _isVisible = false;
 let _levelUpLock = false;
 
 function _animateLevelUpSequence(prevXp, levelsGained, finalLvl, finalXp, finalNext, reachesMax) {
@@ -246,20 +244,20 @@ function _animateLevelUpSequence(prevXp, levelsGained, finalLvl, finalXp, finalN
     clearTimeout(_hideTimer);
 
     const overlay = document.getElementById('xp-overlay');
-    const fill    = document.getElementById('xp-fill');
+    const fill = document.getElementById('xp-fill');
 
-    // Slide bar in if hidden
+    // slide bar in if hidden
     if (!_isVisible) {
         overlay.classList.remove('xp-overlay--hidden');
         overlay.classList.add('xp-overlay--visible');
         _isVisible = true;
 
         fill.style.transition = 'none';
-        fill.style.width      = Math.min((prevXp / XpToNextLvl) * 100, 100) + '%';
+        fill.style.width = Math.min((prevXp / XpToNextLvl) * 100, 100) + '%';
         void fill.offsetWidth;
     }
 
-    // Show a floater indicating how many levels gained
+    // show a floater indicating how many levels gained
     _spawnFloater(levelsGained > 1 ? '+' + levelsGained + ' levels!' : 'LEVEL UP!');
 
     _doOneLevelUp(0, levelsGained, finalLvl, finalXp, finalNext, reachesMax);
@@ -272,17 +270,17 @@ function _doOneLevelUp(stepIndex, totalLevels, finalLvl, finalXp, finalNext, rea
     const isLastStep  = (stepIndex === totalLevels - 1);
     const isMaxAtStep = isLastStep && reachesMax;
 
-    // Step A — fill to 100%
+    // step A: fill to 100%
     fill.style.transition = `width ${FILL_TO_100_MS}ms cubic-bezier(0.33, 1, 0.68, 1)`;
-    fill.style.width      = '100%';
+    fill.style.width = '100%';
 
     setTimeout(() => {
-        // Step B — bounce
+        //Step B: bounce
         fill.classList.add('xp-fill--levelup-bounce');
 
         setTimeout(() => {
-            // Step C , freeze gold, show LEVEL UP text inside the bar.
-            // We don't know if this is max yet (increment hasn't happened),
+            // step C: freeze gold, show LEVEL UP text inside the bar.
+            // we don't know if this is max yet (increment hasn't happened),
             // so start with the generic levelup-hold; nowAtMax check below
             // will immediately upgrade to max-level if needed.
             fill.classList.remove('xp-fill--levelup-bounce');
@@ -300,11 +298,11 @@ function _doOneLevelUp(stepIndex, totalLevels, finalLvl, finalXp, finalNext, rea
             CurrentLvl++;
             // Hard clamp, never let CurrentLvl exceed MAX_LEVEL
             if (CurrentLvl >= MAX_LEVEL) {
-                CurrentLvl  = MAX_LEVEL;
+                CurrentLvl = MAX_LEVEL;
                 XpToNextLvl = lvl_checker(MAX_LEVEL);
-                CurrXp      = XpToNextLvl;
+                CurrXp = XpToNextLvl;
             } else {
-                CurrXp      = 0;
+                CurrXp = 0;
                 XpToNextLvl = lvl_checker(CurrentLvl);
             }
             max_lvl_checker();
@@ -339,7 +337,7 @@ function _doOneLevelUp(stepIndex, totalLevels, finalLvl, finalXp, finalNext, rea
                 setTimeout(() => el.classList.remove('xp-badge--pop'), 600);
             });
 
-            // ─────────────────────────────────────────────────────────────────
+            
             if (nowAtMax) {
                 // MAX LEVEL reached,golden bar stays permanently ──────────
                 setTimeout(() => {
@@ -347,7 +345,7 @@ function _doOneLevelUp(stepIndex, totalLevels, finalLvl, finalXp, finalNext, rea
                     fill.classList.remove('xp-fill--levelup-hold');
                     fill.classList.add('xp-fill--max-level');
                     fill.style.transition = 'none';
-                    fill.style.width      = '100%';
+                    fill.style.width = '100%';
 
                     myXP.classList.remove('xp-text--levelup');
                     myXP.classList.add('xp-text--maxlevel');
@@ -368,11 +366,11 @@ function _doOneLevelUp(stepIndex, totalLevels, finalLvl, finalXp, finalNext, rea
                     document.getElementById('xp-level-next').classList.remove('xp-badge--gold');
 
                     // Apply final state
-                    CurrXp      = finalXp;
+                    CurrXp = finalXp;
                     XpToNextLvl = finalNext;
 
                     fill.style.transition = 'none';
-                    fill.style.width      = '0%';
+                    fill.style.width = '0%';
                     void fill.offsetWidth;
 
                     myXP.textContent = CurrXp + ' / ' + XpToNextLvl;
@@ -382,7 +380,7 @@ function _doOneLevelUp(stepIndex, totalLevels, finalLvl, finalXp, finalNext, rea
                     setTimeout(() => {
                         const newPct = Math.min((CurrXp / XpToNextLvl) * 100, 100);
                         fill.style.transition = 'width 0.7s cubic-bezier(0.34, 1.2, 0.64, 1)';
-                        fill.style.width      = newPct + '%';
+                        fill.style.width = newPct + '%';
 
                         _levelUpLock = false;
                         clearTimeout(_hideTimer);
@@ -392,7 +390,7 @@ function _doOneLevelUp(stepIndex, totalLevels, finalLvl, finalXp, finalNext, rea
                 }, LEVELUP_HOLD_MS);
 
             } else {
-                // More levels to animate, chain to next step ─────────────────
+                
                 setTimeout(() => {
                     myXP.classList.remove('xp-text--levelup');
                     fill.classList.remove('xp-fill--levelup-hold');
@@ -400,7 +398,7 @@ function _doOneLevelUp(stepIndex, totalLevels, finalLvl, finalXp, finalNext, rea
                     document.getElementById('xp-level-next').classList.remove('xp-badge--gold');
 
                     fill.style.transition = 'none';
-                    fill.style.width      = '0%';
+                    fill.style.width = '0%';
                     void fill.offsetWidth;
 
                     setTimeout(() => {
@@ -418,7 +416,7 @@ function _doOneLevelUp(stepIndex, totalLevels, finalLvl, finalXp, finalNext, rea
 // Normal (no level-up) animation, slides bar in and fills to new percent
 function _animateXpGain(prevXp, amount) {
     const overlay = document.getElementById('xp-overlay');
-    const fill    = document.getElementById('xp-fill');
+    const fill = document.getElementById('xp-fill');
 
     if (!_isVisible) {
         overlay.classList.remove('xp-overlay--hidden');
@@ -426,7 +424,7 @@ function _animateXpGain(prevXp, amount) {
         _isVisible = true;
 
         fill.style.transition = 'none';
-        fill.style.width      = Math.min((prevXp / XpToNextLvl) * 100, 100) + '%';
+        fill.style.width = Math.min((prevXp / XpToNextLvl) * 100, 100) + '%';
         void fill.offsetWidth;
     }
 
@@ -453,7 +451,7 @@ function _hideBar() {
 }
 
 function _spawnFloater(text) {
-    const wrap    = document.getElementById('xp-bar-wrap');
+    const wrap = document.getElementById('xp-bar-wrap');
     const floater = document.createElement('div');
     floater.className   = 'xp-floater';
     floater.textContent = text;
@@ -461,7 +459,6 @@ function _spawnFloater(text) {
     setTimeout(() => floater.remove(), 1100);
 }
 
-// ── Legacy stubs ──────────────────────────────────────────────────────────────
 function triggerXpGainAnimation() {}
 function triggerLevelUpAnimation() {}
 
@@ -493,14 +490,14 @@ function display_XP(amount) {
 
     const prevXp = CurrXp;
 
-    CurrXp  += amount;
+    CurrXp += amount;
     totalXP += amount;
 
     document.getElementById('totXP').textContent = totalXP;
 
     max_lvl_checker();
-    let simXp   = CurrXp;
-    let simLvl  = CurrentLvl;
+    let simXp = CurrXp;
+    let simLvl = CurrentLvl;
     let simNext = XpToNextLvl;
     let levelsGained = 0;
 

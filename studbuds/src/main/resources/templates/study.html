@@ -15,7 +15,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/flashcard.css">
+    <link rel="stylesheet" href="/home.css">
     <link rel="stylesheet" href="/XP_system/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="/theme.js"></script>
 </head>
 <body class="page bg-gradient-to-tr from-slate-200 to-amber-50"
       data-day-classes="bg-gradient-to-tr from-slate-200 to-amber-50"
@@ -84,28 +89,30 @@
                                 </div>
                             </div>
     
-    <button class="btn-action" id="flip">Flip</button>
-
-    <!-- previous next -->
-    <div class="nav-row" style="margin-top:12px;">
-        <a class="btn-action" id="previous">Previous</a>
-
-        <a class="btn-action" id="next">Next</a>
-    </div>
-
-    <!-- Finish button: hidden until user reaches the last card -->
-    <div style="margin-top:16px; text-align:center;">
-        <button class="btn-action" id="finishBtn"
-                th:attr="data-deck-id=${deck.id}, data-total-cards=${#lists.size(cards)}"
-                style="display:none; background:#4caf50;">
-            ✓ Finish &amp; Earn XP
-        </button>
-        <p id="xpMsg" style="display:none; margin-top:8px; font-weight:bold;"></p>
-    </div>
-</main>
-
-<script src="/study.js"></script>
-<script src="/XP_system/XP.js"></script>
-
+                            <div class="swap-on w-full">
+                                <div class="rounded-xl bg-success/10 p-6 min-h-44 w-full min-w-100 max-w-100 flex flex-col justify-center">
+                                    <p class="text-sm opacity-70 mb-2 text-center">Answer</p>
+                                    <p id="answerText" class="text-lg font-medium break-words text-center">Answer</p>
+                                </div>
+                            </div>
+                        </label>
+                        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
+                            <button class="btn min-w-60" id="prevBtn">Previous</button>
+                            <button class="btn min-w-60" id="nextBtn">Next</button>
+                        </div>
+                        <div style="margin-top:16px; text-align:center;">
+                            <button class="btn-action" id="finishBtn"
+                                th:attr="data-deck-id=${deck.id}, data-total-cards=${#lists.size(cards)}"
+                                style="display:none; background:#4caf50;">
+                                ✓ Finish &amp; Earn XP
+                            </button>
+                            <p id="xpMsg" style="display:none; margin-top:8px; font-weight:bold;"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    <script src="/study.js"></script>
+    <script src="/XP_system/XP.js"></script>
 </body>
 </html>
