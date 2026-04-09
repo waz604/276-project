@@ -19,6 +19,7 @@ Only the following files were affected:
 - study.js
 - XP.js
 - study.html
+
 To my knowledge, no other files were changed.
 
 The intent was not to add new features, but to position the working framework correctly within the project.
