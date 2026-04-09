@@ -1,0 +1,261 @@
+/*
+   XP Bar Overlay  —  xp-bar.css
+   Include this on any page that loads XP.js.
+ */
+
+/* ── Overlay container ───────────────────────────────────────────────────── */
+
+#xp-overlay {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9990;
+    padding: 10px 24px 14px;
+    background: transparent;
+    font-family: 'Sora', 'Segoe UI', Arial, sans-serif;
+
+    /* Start hidden below the viewport */
+    transform: translateY(110%);
+    transition: transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
+    will-change: transform;
+}
+
+#xp-overlay.xp-overlay--visible {
+    transform: translateY(0%);
+}
+
+#xp-overlay.xp-overlay--hidden {
+    transform: translateY(110%);
+    transition: transform 0.5s cubic-bezier(0.55, 0, 1, 0.45);
+}
+
+/* ── Inner layout: badge | track | badge ─────────────────────────────────── */
+
+#xp-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+/* ── Level badges ────────────────────────────────────────────────────────── */
+
+#xp-level-badge,
+#xp-level-next {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3a2f8f, #6c5ce7);
+    box-shadow: 0 0 10px rgba(108, 92, 231, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 13px;
+    color: #fff;
+    letter-spacing: -0.5px;
+    transition: transform 0.15s ease, background 0.3s ease;
+}
+
+/* Gold badges during level-up hold */
+#xp-level-badge.xp-badge--gold,
+#xp-level-next.xp-badge--gold {
+    background: linear-gradient(135deg, #e65100, #ffd740);
+    box-shadow: 0 0 14px rgba(255, 215, 64, 0.75);
+    color: #1a1a1a;
+}
+
+/* ── Track ───────────────────────────────────────────────────────────────── */
+
+#xp-track {
+    flex: 1;
+    height: 22px;
+    background: #1a1a2e;
+    border-radius: 11px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.55);
+}
+
+/* ── Fill bar ────────────────────────────────────────────────────────────── */
+
+#xp-fill {
+    position: absolute;
+    inset: 0;
+    width: 0%;
+    height: 100%;
+    border-radius: 11px;
+    background: linear-gradient(90deg, #1565c0 0%, #29b6f6 60%, #80deea 100%);
+    box-shadow: 0 0 10px rgba(41, 182, 246, 0.45),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: width 0.6s cubic-bezier(0.34, 1.4, 0.64, 1);
+    will-change: width;
+}
+
+/* Shimmer sweep */
+#xp-fill::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        105deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.22) 50%,
+        transparent 70%
+    );
+    background-size: 220% 100%;
+    animation: xp-shimmer 2s linear infinite;
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+@keyframes xp-shimmer {
+    0%   { background-position: 220% 0; }
+    100% { background-position: -220% 0; }
+}
+
+/* ── Level-up bounce ─────────────────────────────────────────────────────── */
+
+@keyframes xp-bounce {
+    0%   { transform: scaleX(1)     scaleY(1);    }
+    25%  { transform: scaleX(1.012) scaleY(1.18); box-shadow: 0 0 28px rgba(41,182,246,0.8); }
+    50%  { transform: scaleX(0.995) scaleY(0.94); }
+    72%  { transform: scaleX(1.006) scaleY(1.06); }
+    100% { transform: scaleX(1)     scaleY(1);    }
+}
+
+#xp-fill.xp-fill--levelup-bounce {
+    animation: xp-bounce 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+    background: linear-gradient(90deg, #e65100 0%, #ffd740 55%, #fff176 100%);
+    box-shadow: 0 0 22px rgba(255, 215, 64, 0.75),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* ── Level-up hold — gold bar frozen at 100% while LEVEL UP text shows ───── */
+
+#xp-fill.xp-fill--levelup-hold {
+    background: linear-gradient(90deg, #e65100 0%, #ffd740 55%, #fff176 100%);
+    box-shadow: 0 0 28px rgba(255, 215, 64, 0.85),
+                inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    animation: xp-gold-pulse 1s ease-in-out infinite alternate;
+    transition: none;
+}
+
+/* ── Max level — permanently golden bar ──────────────────────────────────── */
+
+#xp-fill.xp-fill--max-level {
+    background: linear-gradient(90deg, #e65100 0%, #ffd740 55%, #fff176 100%);
+    box-shadow: 0 0 32px rgba(255, 215, 64, 0.9),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    animation: xp-gold-pulse 1.4s ease-in-out infinite alternate;
+    width: 100% !important;
+    transition: none;
+}
+
+@keyframes xp-gold-pulse {
+    0%   { box-shadow: 0 0 18px rgba(255, 215, 64, 0.6),  inset 0 1px 0 rgba(255,255,255,0.25); }
+    100% { box-shadow: 0 0 38px rgba(255, 215, 64, 1.0),  inset 0 1px 0 rgba(255,255,255,0.45); }
+}
+
+/* ── XP text inside track ────────────────────────────────────────────────── */
+
+#myXP {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+    pointer-events: none;
+    z-index: 1;
+    transition: font-size 0.15s ease, letter-spacing 0.15s ease;
+}
+
+/* LEVEL UP text — bold, exciting, uppercase */
+#myXP.xp-text--levelup {
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #1a1a1a;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
+    animation: xp-levelup-text-pulse 0.5s ease-in-out infinite alternate;
+}
+
+/* MAX LEVEL text — permanent gold bar label */
+#myXP.xp-text--maxlevel {
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #1a1a1a;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.35);
+}
+
+@keyframes xp-levelup-text-pulse {
+    0%   { transform: scale(1);    }
+    100% { transform: scale(1.04); }
+}
+
+/* ── Total XP label below the bar ───────────────────────────────────────── */
+
+#xp-total-label {
+    text-align: center;
+    margin-top: 5px;
+    font-size: 10px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.55);
+    letter-spacing: 0.4px;
+}
+
+#totXP {
+    color: #000;
+    font-weight: 700;
+}
+
+/* ── Floating "+XP" chip ─────────────────────────────────────────────────── */
+
+@keyframes xp-float-up {
+    0%   { opacity: 1; transform: translateX(-50%) translateY(0)    scale(1);    }
+    20%  { opacity: 1; transform: translateX(-50%) translateY(-6px)  scale(1.12); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-48px) scale(0.9); }
+}
+
+.xp-floater {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #80deea;
+    font-weight: 800;
+    font-size: 13px;
+    text-shadow: 0 0 8px rgba(128, 222, 234, 0.85);
+    pointer-events: none;
+    white-space: nowrap;
+    animation: xp-float-up 1.05s ease-out forwards;
+    z-index: 10;
+}
+
+
+/* ── Badge pop on level-up ───────────────────────────────────────────────── */
+
+@keyframes xp-badge-pop {
+    0%   { transform: scale(1);    }
+    35%  { transform: scale(1.45); }
+    70%  { transform: scale(0.95); }
+    100% { transform: scale(1);    }
+}
+
+#xp-level-badge.xp-badge--pop,
+#xp-level-next.xp-badge--pop {
+    animation: xp-badge-pop 0.55s ease-out;
+}

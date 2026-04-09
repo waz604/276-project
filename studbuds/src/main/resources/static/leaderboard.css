@@ -1,0 +1,85 @@
+.user-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 4px;
+}
+
+.user-table td,
+.user-table th {
+    padding: 10px 16px;
+}
+
+.rank-one {
+    background-color: #fff9ba;
+    font-weight: bold;
+    color: #1a1a1a;
+}
+
+.rank-two {
+    background-color: #dfdfdf;
+    color: #1a1a1a;
+}
+
+.rank-three {
+    background-color: #fdba76;
+    color: #1a1a1a;
+}
+
+.rank-one td,
+.rank-two td,
+.rank-three td {
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+.rank-one td:first-child,
+.rank-two td:first-child,
+.rank-three td:first-child {
+    border-radius: 10px 0 0 10px;
+}
+
+.rank-one td:last-child,
+.rank-two td:last-child,
+.rank-three td:last-child {
+    border-radius: 0 10px 10px 0;
+}
+
+.leaderboard {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 20px;
+    width: 90%;
+    max-width: 700px;
+    padding: 20px;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.page-content {
+    max-width: 640px;
+    margin: 48px auto;
+    padding: 0 24px;
+}
+
+.page-content h1 {
+    margin-bottom: 8px;
+}
+
+.page-content .subtitle {
+    margin-bottom: 32px;
+}
+
+h1 {
+    font-size: 1.55rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    margin-bottom: 6px;
+}
+
+.subtitle {
+    font-size: 0.875rem;
+    color: #888;
+    margin-bottom: 32px;
+    font-weight: 300;
+}

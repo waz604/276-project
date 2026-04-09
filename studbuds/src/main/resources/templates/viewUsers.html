@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" data-theme="silk" class="bg-gradient-to-tr from-slate-200 to-amber-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin View</title>
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="favicon/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="MyWebSite" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/home.css">
+    <link rel="stylesheet" href="/flashcard.css">
+    <link rel="stylesheet" href="/leaderboard.css">
+    <link rel="stylesheet" href="/admin.css">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="page bg-gradient-to-tr from-slate-200 to-amber-50">
+    <div class="navbar bg-base-100 shadow-sm sticky top-0 z-50">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+                    </svg>
+                </div>
+                <ul tabindex="-1" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                    <li><a href="/home">Home</a></li>
+                    <li><a href="/decks">My Flashcard Decks</a></li>
+                    <li><a href="/tutorial">Tutorial</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+            </div>
+            <a href="/home" class="btn btn-ghost text-xl logo-text">StudBuds</a>
+        </div>
+        <div class="navbar-end">
+            <a href="/logout" class="btn">Logout</a>
+        </div>
+    </div>
+
+    <div class="page-content" style="max-width: 700px;">
+        <h1>All Users</h1>
+        <p class="subtitle" th:text="${#lists.size(us)} + ' registered accounts'">0 accounts</p>
+
+        <table class="user-table w-full">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Ban</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="user : ${us}">
+                    <td th:text="${user.uid}">1</td>
+                    <td th:text="${user.name}">username</td>
+                    <td>
+                        <form th:action="@{/delete/{id}(id=${user.uid})}" method="post">
+                            <button class ="ban-btn" type="submit" onclick="return confirm('Are you sure you want to permanently ban this user?')">Ban</button> 
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p th:if="${#lists.isEmpty(us)}" style="color:#888; margin-top:16px;">No users found.</p>
+    </div>
+
+</body>
+</html>
